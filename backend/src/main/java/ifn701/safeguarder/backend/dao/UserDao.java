@@ -26,7 +26,8 @@ public class UserDao extends DAOBase {
 
     public void insertANewUser(User user) {
         Connection con = getConnection();
-        String sql = "INSERT INTO patient (fullname) VALUES(?)";
+        String sql = "INSERT INTO user (fullname) VALUES(?)";
+
         PreparedStatement ps = null;
         try {
             ps = con.prepareStatement(sql);

@@ -5,9 +5,6 @@ import java.sql.Connection;
 import ifn701.safeguarder.backend.connection.ConnectionProvider;
 
 
-/**
- * Created by lua on 15/08/2015.
- */
 public class DAOBase {
     private static Connection connection;
 
