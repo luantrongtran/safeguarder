@@ -1,21 +1,32 @@
 package ifn701.safeguarder;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity{
+import ifn701.safeguarder.backgroundservices.LocationAutoTracker;
+
+
+public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+
+    public long updateCurrentLocationInterval = 10*1000;//10s
+    private AlarmManager alarmManager;
+    private PendingIntent currentLocationPendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +35,40 @@ public class MapsActivity extends FragmentActivity{
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         // mapFragment.getMapAsync(this);
+
+        scheduleAutoService();
     }
+
+    @Override
+    protected void onStop() {
+        cancelServiceOnStop();
+        super.onStop();
+    }
+
+    public void setUpDummyData() {
+        //Setup dummy data for logging in information.
+        SharedPreferences userInfoPref = getApplicationContext().
+                getSharedPreferences(Constants.sharedPreferences_user_info, MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = userInfoPref.edit();
+        editor.putInt(Constants.sharedPreferences_user_info_id, 1);
+        editor.commit();
+
+        SharedPreferences userSettingsPref = getApplication()
+                .getSharedPreferences(Constants.sharedPreferences_user_settings, MODE_PRIVATE);
+        SharedPreferences.Editor editor_settings = userSettingsPref.edit();
+        editor_settings.putFloat(Constants.sharedPreferences_user_settings_radius, 10);
+        editor_settings.commit();
+    }
+
+    public void scheduleAutoService() {
+        scheduleUpdateCurrentLocationService();
+    }
+
+    public void cancelServiceOnStop() {
+//        stopUpdateCurrentLocationService();
+    }
+
     //    @Override
 //    public void onMapReady(GoogleMap map) {
 //        // Add a marker in Sydney, Australia, and move the camera.
@@ -42,11 +86,11 @@ public class MapsActivity extends FragmentActivity{
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
      * installed) and the map has not already been instantiated.. This will ensure that we only ever
      * call {@link #setUpMap()} once when {@link #mMap} is not null.
-     * <p/>
+     * <p>
      * If it isn't installed {@link SupportMapFragment} (and
      * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt for the user to
      * install/update the Google Play services APK on their device.
-     * <p/>
+     * <p>
      * A user can return to this FragmentActivity after following the prompt and correctly
      * installing/updating/enabling the Google Play services. Since the FragmentActivity may not
      * have been completely destroyed during this process (it is likely that it would only be
@@ -69,7 +113,7 @@ public class MapsActivity extends FragmentActivity{
     /**
      * This is where we can add markers or lines, add listeners or move the camera. In this case, we
      * just add a marker near Africa.
-     * <p/>
+     * <p>
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
@@ -108,5 +152,23 @@ public class MapsActivity extends FragmentActivity{
         // Zoom in the Google Map
         mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
         mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("You are here!").snippet("Consider yourself located"));
+    }
+
+    public void scheduleUpdateCurrentLocationService(){
+        Intent intent = new Intent(getApplicationContext(), LocationAutoTracker.class);
+
+        currentLocationPendingIntent = PendingIntent.
+                getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long milliSeconds = System.currentTimeMillis();
+        alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+
+        alarmManager.
+                setInexactRepeating(AlarmManager.RTC_WAKEUP, milliSeconds,
+                        updateCurrentLocationInterval, currentLocationPendingIntent);
+    }
+
+    public void stopUpdateCurrentLocationService() {
+        alarmManager.cancel(currentLocationPendingIntent);
     }
 }

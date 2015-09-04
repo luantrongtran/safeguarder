@@ -15,6 +15,7 @@ public class UserCRUDTest extends LocalDatabaseTest{
 
     UserDao userDao;
     UserDao spyUserDao;
+
     @Before
     public void setUp(){
         userDao = new UserDao();

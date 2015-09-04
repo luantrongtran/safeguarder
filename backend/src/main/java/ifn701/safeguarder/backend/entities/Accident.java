@@ -1,6 +1,7 @@
 package ifn701.safeguarder.backend.entities;
 
 import java.sql.Blob;
+import java.sql.ResultSet;
 import java.sql.Timestamp;
 
 public class Accident {
@@ -34,27 +35,27 @@ public class Accident {
         this.type = type;
     }
 
-    public Timestamp getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(Timestamp time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
-    public float getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public void setLat(float lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
-    public float getLon() {
+    public double getLon() {
         return lon;
     }
 
-    public void setLon(float lon) {
+    public void setLon(double lon) {
         this.lon = lon;
     }
 
@@ -102,12 +103,15 @@ public class Accident {
     private int userId;
     private String name;
     private String type;
-    private Timestamp time;
-    private float lat;
-    private float lon;
+    private long time;
+    private double lat;
+    private double lon;
     private int observation_level;
     private String description;
     private Blob image1;
     private Blob image2;
     private Blob image3;
+
+    public Accident() {
+    }
 }

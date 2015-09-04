@@ -1,5 +1,10 @@
 package ifn701.safeguarder;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -42,14 +47,20 @@ public class MainActivity extends AppCompatActivity implements ISayHi {
     }
 
     public void sayHi(View view) {
-        EditText nameEdt = (EditText)findViewById(R.id.txtName);
-        String name = nameEdt.getText().toString();
-        SayHi sh = new SayHi(this);
-        sh.execute(name);
+//        EditText nameEdt = (EditText)findViewById(R.id.txtName);
+//        String name = nameEdt.getText().toString();
+//        SayHi sh = new SayHi(this);
+//        sh.execute(name);
+
+        scheduleUpdateNewEventsAlarm();
     }
 
     @Override
     public void processData(String greeting) {
         Toast.makeText(this, greeting, Toast.LENGTH_SHORT).show();
+    }
+
+    public void scheduleUpdateNewEventsAlarm(){
+
     }
 }
