@@ -2,6 +2,7 @@ package ifn701.safeguarder.backgroundservices;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import ifn701.safeguarder.BackendApiProvider;
 import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
+import ifn701.safeguarder.Parcelable.AccidentListParcelable;
 import ifn701.safeguarder.Parcelable.AccidentParcelable;
 import ifn701.safeguarder.backend.myApi.MyApi;
 import ifn701.safeguarder.backend.myApi.model.Accident;
@@ -40,6 +42,11 @@ public class UpdateAccidentsInRangeService extends IntentService {
                     = myApi.getAccidentInRange(currentLat, currentLon, radius).execute();
             Intent in = new Intent(ACTION);
 
+            AccidentListParcelable accidentListParcelable
+                    = new AccidentListParcelable(accidentList);
+            in.putExtra(Constants.broadCastService_UpdateAccidentsList, accidentListParcelable);
+
+            LocalBroadcastManager.getInstance(this).sendBroadcast(in);
         } catch (IOException e) {
             e.printStackTrace();
         }

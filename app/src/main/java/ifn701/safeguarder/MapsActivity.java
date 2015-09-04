@@ -2,14 +2,18 @@ package ifn701.safeguarder;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,7 +21,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import ifn701.safeguarder.Parcelable.AccidentListParcelable;
 import ifn701.safeguarder.backgroundservices.LocationAutoTracker;
+import ifn701.safeguarder.backgroundservices.UpdateAccidentInRangeReceiver;
+import ifn701.safeguarder.backgroundservices.UpdateAccidentsInRangeService;
 
 
 public class MapsActivity extends FragmentActivity {
@@ -28,6 +35,9 @@ public class MapsActivity extends FragmentActivity {
     private AlarmManager alarmManager;
     private PendingIntent currentLocationPendingIntent;
 
+    public long updateAccidentListInterval = 10*1000;//10s
+    private PendingIntent updateAccidentListPendingIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,12 +47,23 @@ public class MapsActivity extends FragmentActivity {
         // mapFragment.getMapAsync(this);
 
         scheduleAutoService();
+        registerReceiver();
     }
 
     @Override
     protected void onStop() {
         cancelServiceOnStop();
         super.onStop();
+    }
+
+    /**
+     * Register all necessary receivers
+     */
+    public void registerReceiver() {
+        IntentFilter onAccidentListUpdatedFilter
+                = new IntentFilter(UpdateAccidentsInRangeService.ACTION);
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(onAccidentListUpdated, onAccidentListUpdatedFilter);
     }
 
     public void setUpDummyData() {
@@ -63,6 +84,7 @@ public class MapsActivity extends FragmentActivity {
 
     public void scheduleAutoService() {
         scheduleUpdateCurrentLocationService();
+        scheduleUpdateAccidentList();
     }
 
     public void cancelServiceOnStop() {
@@ -168,7 +190,32 @@ public class MapsActivity extends FragmentActivity {
                         updateCurrentLocationInterval, currentLocationPendingIntent);
     }
 
+    public void scheduleUpdateAccidentList() {
+        Intent intent = new Intent(getApplicationContext(), UpdateAccidentInRangeReceiver.class);
+
+        updateAccidentListPendingIntent = PendingIntent.
+                getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long milliSeconds = System.currentTimeMillis();
+        alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.
+                setInexactRepeating(AlarmManager.RTC_WAKEUP, milliSeconds,
+                        updateAccidentListInterval, updateAccidentListPendingIntent);
+    }
+
     public void stopUpdateCurrentLocationService() {
         alarmManager.cancel(currentLocationPendingIntent);
     }
+
+    private BroadcastReceiver onAccidentListUpdated = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            AccidentListParcelable parcelableExtra
+                    = (AccidentListParcelable) intent
+                    .getParcelableExtra(Constants.broadCastService_UpdateAccidentsList);
+
+            int size = parcelableExtra.getAccidentList().getAccidentList().size();
+            Log.e(Constants.APPLIATION_ID, "Accident no: " + size);
+        }
+    };
 }

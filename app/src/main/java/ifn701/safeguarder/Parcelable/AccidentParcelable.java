@@ -48,8 +48,8 @@ public class AccidentParcelable implements Parcelable {
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        public AccidentParcelable createFromParcel(Parcel in) {
-            AccidentParcelable lp = new AccidentParcelable(in);
+        public AccidentListParcelable createFromParcel(Parcel in) {
+            AccidentListParcelable lp = new AccidentListParcelable(in);
             return lp;
         }
 

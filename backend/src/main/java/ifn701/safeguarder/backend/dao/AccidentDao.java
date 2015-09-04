@@ -16,7 +16,7 @@ public class AccidentDao extends DAOBase {
 	
 	public static String tableName = "accident";
     public static String colId = "id";
-    public static String colUserId = "user_id=";
+    public static String colUserId = "user_id";
     public static String colName = "name";
     public static String colType = "type";
     public static String colTime = "time";
