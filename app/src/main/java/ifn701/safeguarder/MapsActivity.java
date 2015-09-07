@@ -21,6 +21,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
+import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
 import ifn701.safeguarder.Parcelable.AccidentListParcelable;
 import ifn701.safeguarder.backgroundservices.LocationAutoTracker;
 import ifn701.safeguarder.backgroundservices.UpdateAccidentInRangeReceiver;
@@ -38,6 +40,9 @@ public class MapsActivity extends FragmentActivity {
     public long updateAccidentListInterval = 10*1000;//10s
     private PendingIntent updateAccidentListPendingIntent;
 
+    public static AccidentManager accidentManager = new AccidentManager();
+    public static UserDrawer userDrawer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +50,8 @@ public class MapsActivity extends FragmentActivity {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         // mapFragment.getMapAsync(this);
+
+        setUpDummyData();
 
         scheduleAutoService();
         registerReceiver();
@@ -60,6 +67,10 @@ public class MapsActivity extends FragmentActivity {
      * Register all necessary receivers
      */
     public void registerReceiver() {
+        registerAccidentListUpdateReceiver();
+    }
+
+    public void registerAccidentListUpdateReceiver() {
         IntentFilter onAccidentListUpdatedFilter
                 = new IntentFilter(UpdateAccidentsInRangeService.ACTION);
         LocalBroadcastManager.getInstance(this)
@@ -71,15 +82,12 @@ public class MapsActivity extends FragmentActivity {
         SharedPreferences userInfoPref = getApplicationContext().
                 getSharedPreferences(Constants.sharedPreferences_user_info, MODE_PRIVATE);
 
-        SharedPreferences.Editor editor = userInfoPref.edit();
-        editor.putInt(Constants.sharedPreferences_user_info_id, 1);
-        editor.commit();
+        UserInfoPreferences userInfoPrefs = new UserInfoPreferences(getApplicationContext());
+        userInfoPrefs.setUserId(1);
 
-        SharedPreferences userSettingsPref = getApplication()
-                .getSharedPreferences(Constants.sharedPreferences_user_settings, MODE_PRIVATE);
-        SharedPreferences.Editor editor_settings = userSettingsPref.edit();
-        editor_settings.putFloat(Constants.sharedPreferences_user_settings_radius, 10);
-        editor_settings.commit();
+        UserSettingsPreferences userSettingsPreferences
+                = new UserSettingsPreferences(getApplicationContext());
+        userSettingsPreferences.setRadius(200);
     }
 
     public void scheduleAutoService() {
@@ -91,17 +99,12 @@ public class MapsActivity extends FragmentActivity {
 //        stopUpdateCurrentLocationService();
     }
 
-    //    @Override
-//    public void onMapReady(GoogleMap map) {
-//        // Add a marker in Sydney, Australia, and move the camera.
-//        LatLng sydney = new LatLng(-34, 151);
-//        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-//    }
     @Override
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+
+        userDrawer = new UserDrawer(getApplicationContext(), mMap);
     }
 
     /**
@@ -139,7 +142,7 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker").snippet("Snippet"));
+//        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker").snippet("Snippet"));
 
         // Enable MyLocation Layer of Google Map
         mMap.setMyLocationEnabled(true);
@@ -173,34 +176,28 @@ public class MapsActivity extends FragmentActivity {
 
         // Zoom in the Google Map
         mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
-        mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("You are here!").snippet("Consider yourself located"));
+//        mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("You are here!").snippet("Consider yourself located"));
     }
 
     public void scheduleUpdateCurrentLocationService(){
         Intent intent = new Intent(getApplicationContext(), LocationAutoTracker.class);
-
         currentLocationPendingIntent = PendingIntent.
                 getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        long milliSeconds = System.currentTimeMillis();
-        alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-
-        alarmManager.
-                setInexactRepeating(AlarmManager.RTC_WAKEUP, milliSeconds,
-                        updateCurrentLocationInterval, currentLocationPendingIntent);
+        scheduleTask(currentLocationPendingIntent, updateCurrentLocationInterval);
     }
 
     public void scheduleUpdateAccidentList() {
         Intent intent = new Intent(getApplicationContext(), UpdateAccidentInRangeReceiver.class);
-
         updateAccidentListPendingIntent = PendingIntent.
                 getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        scheduleTask(updateAccidentListPendingIntent, updateAccidentListInterval);
+    }
 
-        long milliSeconds = System.currentTimeMillis();
+    public void scheduleTask(PendingIntent pendingIntent, long interval) {
         alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
         alarmManager.
-                setInexactRepeating(AlarmManager.RTC_WAKEUP, milliSeconds,
-                        updateAccidentListInterval, updateAccidentListPendingIntent);
+                setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
+                        interval, pendingIntent);
     }
 
     public void stopUpdateCurrentLocationService() {
@@ -214,8 +211,10 @@ public class MapsActivity extends FragmentActivity {
                     = (AccidentListParcelable) intent
                     .getParcelableExtra(Constants.broadCastService_UpdateAccidentsList);
 
-            int size = parcelableExtra.getAccidentList().getAccidentList().size();
-            Log.e(Constants.APPLIATION_ID, "Accident no: " + size);
+
+            accidentManager.setAccidentList(parcelableExtra.getAccidentList());
+
+            accidentManager.updateAccidentMarkers(mMap);
         }
     };
 }

@@ -40,7 +40,7 @@ public class AccidentDao extends DAOBase {
         Connection connection  = getConnection();
         Vector<Accident> accidentVector = new Vector<Accident>();
         String sql = "SELECT * FROM " + tableName + " " +
-                "WHERE get_distance_between_2_points_in_km(" + colLat + "," + colLon + ", ?, ?) < ?";
+                "WHERE get_distance_between_2_points_in_m(" + colLat + "," + colLon + ", ?, ?) < ?";
 
 
         try {
