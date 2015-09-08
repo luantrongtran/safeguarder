@@ -29,7 +29,7 @@ public class LocalConnectionTest extends LocalDatabaseTest{
         when(mockProp.getProperty("properties.driverClassName")).thenReturn("com.mysql.jdbc.Driver");
         when(mockProp.getProperty("properties.url")).thenReturn("jdbc:mysql://localhost:3306/dementia");
         when(mockProp.getProperty("properties.username")).thenReturn("root");
-        when(mockProp.getProperty("properties.password")).thenReturn("1231988");
+        when(mockProp.getProperty("properties.password")).thenReturn("123456");
 
         ConnectionProperty conProp = new ConnectionProperty(mockProp);
 

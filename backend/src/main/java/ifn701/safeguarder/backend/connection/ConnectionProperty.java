@@ -2,9 +2,6 @@ package ifn701.safeguarder.backend.connection;
 
 import java.util.Properties;
 
-/**
- * Created by lua on 15/08/2015.
- */
 public class ConnectionProperty {
     private String driverClassName;
     private String url;

@@ -34,11 +34,21 @@ public class Accident {
         this.type = type;
     }
 
-    public Timestamp getTime() {
+    /*
+    public class GetCurrentTimeStamp
+    {
+        public static void main( String[] args )
+        {
+         java.util.Date date= new java.util.Date();
+         System.out.println(new Timestamp(date.getTime()));
+        }
+    }
+     */
+    public long getTime() {
         return time;
     }
 
-    public void setTime(Timestamp time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -102,7 +112,7 @@ public class Accident {
     private int userId;
     private String name;
     private String type;
-    private Timestamp time;
+    private long time;
     private float lat;
     private float lon;
     private int observation_level;
