@@ -1,39 +1,50 @@
 package ifn701.safeguarder;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
 import ifn701.safeguarder.Parcelable.AccidentListParcelable;
+import ifn701.safeguarder.activities.LeftMenuAdapter;
 import ifn701.safeguarder.backgroundservices.LocationAutoTracker;
+import ifn701.safeguarder.backgroundservices.LocationTrackerService;
 import ifn701.safeguarder.backgroundservices.UpdateAccidentInRangeReceiver;
 import ifn701.safeguarder.backgroundservices.UpdateAccidentsInRangeService;
 
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends AppCompatActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
-    public long updateCurrentLocationInterval = 10*1000;//10s
+    public long updateCurrentLocationInterval = 13*1000;//10s
     private AlarmManager alarmManager;
     private PendingIntent currentLocationPendingIntent;
 
@@ -42,6 +53,17 @@ public class MapsActivity extends FragmentActivity {
 
     public static AccidentManager accidentManager = new AccidentManager();
     public static UserDrawer userDrawer;
+
+    //Navigation menu
+    private Toolbar toolbar;
+
+    RecyclerView mRecyclerView;
+    public static RecyclerView.Adapter mLeftMenuAdapter;
+    RecyclerView.LayoutManager mLayoutManager;
+    DrawerLayout drawer;
+
+//    ActionBarDrawerToggle mDrawerToggle;
+    //end navigation menu
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +77,8 @@ public class MapsActivity extends FragmentActivity {
 
         scheduleAutoService();
         registerReceiver();
+
+        setUpNavigationMenu();
     }
 
     @Override
@@ -67,7 +91,8 @@ public class MapsActivity extends FragmentActivity {
      * Register all necessary receivers
      */
     public void registerReceiver() {
-        registerAccidentListUpdateReceiver();
+//        registerAccidentListUpdateReceiver();
+        registerCurrentLocationUpdateReceiver();
     }
 
     public void registerAccidentListUpdateReceiver() {
@@ -77,17 +102,94 @@ public class MapsActivity extends FragmentActivity {
                 .registerReceiver(onAccidentListUpdated, onAccidentListUpdatedFilter);
     }
 
+    public void registerCurrentLocationUpdateReceiver() {
+        IntentFilter onCurrentLocationUpdatedFilter
+                = new IntentFilter(LocationTrackerService.ACTION);
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(onCurrentLocationUpdated, onCurrentLocationUpdatedFilter);
+    }
+
     public void setUpDummyData() {
         //Setup dummy data for logging in information.
-        SharedPreferences userInfoPref = getApplicationContext().
-                getSharedPreferences(Constants.sharedPreferences_user_info, MODE_PRIVATE);
-
         UserInfoPreferences userInfoPrefs = new UserInfoPreferences(getApplicationContext());
         userInfoPrefs.setUserId(1);
+        userInfoPrefs.setProfilePicture("https://s-media-cache-ak0.pinimg.com/236x/66/eb/cb/66ebcb0b01921e17422650a3fb778954.jpg");
+        userInfoPrefs.setFullname("Peter Pan");
 
         UserSettingsPreferences userSettingsPreferences
                 = new UserSettingsPreferences(getApplicationContext());
         userSettingsPreferences.setRadius(200);
+    }
+
+    private void setUpNavigationMenu() {
+        //Navigation Menu
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+//        setSupportActionBar(toolbar);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
+
+        mRecyclerView.setHasFixedSize(true);
+
+        mLeftMenuAdapter = new LeftMenuAdapter(getApplicationContext());
+
+        mRecyclerView.setAdapter(mLeftMenuAdapter);
+
+        final GestureDetector oneTouchGesture = new GestureDetector(MapsActivity.this,
+                new GestureDetector.SimpleOnGestureListener(){
+                    @Override
+                    public boolean onSingleTapUp(MotionEvent e) {
+                        return true;
+                    }
+                });
+        mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+
+                View view = rv.findChildViewUnder(e.getX(), e.getY());
+
+                if (view != null && oneTouchGesture.onTouchEvent(e)) {
+                    drawer.closeDrawers();
+                    int clickedIndex = rv.getChildAdapterPosition(view);
+                    if (clickedIndex == 0) {
+                        //If the header was clicked
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            }
+        });
+
+        mLayoutManager = new LinearLayoutManager(this);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+
+        drawer = (DrawerLayout) findViewById(R.id.DrawerLayout);
+//        mDrawerToggle = new ActionBarDrawerToggle(this, drawer,toolbar,R.string.drawer_open,R.string.drawer_close){
+//
+//            @Override
+//            public void onDrawerOpened(View drawerView) {
+//                super.onDrawerOpened(drawerView);
+//
+//            }
+//
+//            @Override
+//            public void onDrawerClosed(View drawerView) {
+//                super.onDrawerClosed(drawerView);
+//
+//            }
+//        };
+//        drawer.setDrawerListener(mDrawerToggle);
+//        mDrawerToggle.syncState();
     }
 
     public void scheduleAutoService() {
@@ -182,14 +284,16 @@ public class MapsActivity extends FragmentActivity {
     public void scheduleUpdateCurrentLocationService(){
         Intent intent = new Intent(getApplicationContext(), LocationAutoTracker.class);
         currentLocationPendingIntent = PendingIntent.
-                getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                getBroadcast(getApplicationContext(), LocationAutoTracker.id
+                        , intent, PendingIntent.FLAG_UPDATE_CURRENT);
         scheduleTask(currentLocationPendingIntent, updateCurrentLocationInterval);
     }
 
     public void scheduleUpdateAccidentList() {
         Intent intent = new Intent(getApplicationContext(), UpdateAccidentInRangeReceiver.class);
         updateAccidentListPendingIntent = PendingIntent.
-                getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                getBroadcast(getApplicationContext(), UpdateAccidentInRangeReceiver.id
+                        , intent, PendingIntent.FLAG_UPDATE_CURRENT);
         scheduleTask(updateAccidentListPendingIntent, updateAccidentListInterval);
     }
 
@@ -198,6 +302,7 @@ public class MapsActivity extends FragmentActivity {
         alarmManager.
                 setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
                         interval, pendingIntent);
+//        alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
     }
 
     public void stopUpdateCurrentLocationService() {
@@ -213,8 +318,19 @@ public class MapsActivity extends FragmentActivity {
 
 
             accidentManager.setAccidentList(parcelableExtra.getAccidentList());
-
             accidentManager.updateAccidentMarkers(mMap);
         }
     };
+
+    private BroadcastReceiver onCurrentLocationUpdated = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i(Constants.APPLIATION_ID, "Receive current location updated");
+            userDrawer.updateCurrentLocationInterestedArea();
+        }
+    };
+
+    public void toggleLeftMenu(View view) {
+        drawer.openDrawer(Gravity.LEFT);
+    }
 }

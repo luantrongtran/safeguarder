@@ -9,7 +9,7 @@ import android.util.Log;
  * This class track the current location based on what scheduled in the MapsActivity
  */
 public class LocationAutoTracker extends BroadcastReceiver {
-
+    public static int id = 2;
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.e("MyApp", "abc");

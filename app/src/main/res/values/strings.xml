@@ -4,4 +4,14 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_maps">SafeGuarder</string>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <!-- Left menu titles -->
+    <string name="left_menu_notification">notification</string>
+    <string name="left_menu_observation">observations</string>
+    <string name="left_menu_zone_setting">Zones Setting</string>
+    <string name="left_menu_event_fiilter">Events Filter</string>
+    <string name="left_menu_help">Help</string>
 </resources>

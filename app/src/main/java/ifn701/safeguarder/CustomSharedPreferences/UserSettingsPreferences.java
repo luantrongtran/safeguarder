@@ -24,6 +24,6 @@ public class UserSettingsPreferences {
     public float getRadius() {
         return sharedPreferences
                 .getFloat(Constants.sharedPreferences_user_settings_radius,
-                        Constants.sharedPreferences_float_default_value);
+                        Constants.sharedPreferences_default_radius);
     }
 }

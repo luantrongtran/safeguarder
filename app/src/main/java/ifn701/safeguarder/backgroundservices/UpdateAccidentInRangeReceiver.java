@@ -8,6 +8,7 @@ import android.content.Intent;
  * Created by lua on 3/09/2015.
  */
 public class UpdateAccidentInRangeReceiver extends BroadcastReceiver {
+    public static int id = 1;
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent updateAccidentInRangeServiceIntent

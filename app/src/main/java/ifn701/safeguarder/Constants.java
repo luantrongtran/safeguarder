@@ -11,6 +11,9 @@ public class Constants {
     public static int sharedPreferences_integer_default_value = -1;
     public static float sharedPreferences_float_default_value = -1f;
     public static long sharedPreferences_long_default_value = -1l;
+    public static String sharedPreferences_string_default_value = "";
+
+    public static float sharedPreferences_default_radius = 10f;
 
     public static String sharedPreferences_current_location = "current_location";
     public static String sharedPreferences_current_location_lat = "current_location_lat";
@@ -18,6 +21,9 @@ public class Constants {
 
     public static String sharedPreferences_user_info = "user_info";
     public static String sharedPreferences_user_info_id = "user_id";
+    public static String sharedPreferences_user_info_profile_picture = "profile_picture";
+    public static String sharedPreferences_user_info_email = "user_email";
+    public static String getSharedPreferences_user__info_fullname = "fullname";
 
     public static String sharedPreferences_user_settings = "user_setting";
     public static String sharedPreferences_user_settings_radius = "radius";

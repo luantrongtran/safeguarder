@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -21,16 +22,11 @@ import ifn701.safeguarder.GPSTracker;
  * SharedPreferences
  */
 public class LocationTrackerService extends IntentService {
-
-    public GoogleApiClient mGoogleApiClient;
-    private static int UPDATE_INTERVAL = 6*1000; // sec
-    private static int FASTEST_INTERVAL = 5*1000; // sec
-    private static int DISPLACEMENT = 10; // 10m
+    public static String ACTION = LocationTrackerService.class.getCanonicalName();
 
     public LocationTrackerService(){
         super("UpdateLocationService");
     }
-
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -43,5 +39,8 @@ public class LocationTrackerService extends IntentService {
         curLocPrefs.setLon(lon);
 
         Log.e(Constants.APPLIATION_ID, "update location service: " + lat + ", " + lon);
+
+        Intent in = new Intent(ACTION);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(in);
     }
 }
