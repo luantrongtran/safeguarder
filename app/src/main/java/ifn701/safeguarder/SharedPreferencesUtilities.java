@@ -8,9 +8,9 @@ import android.content.SharedPreferences;
  * http://stackoverflow.com/questions/16319237/cant-put-double-sharedpreferences
  *
  */
-public class SharedPreferencesUtitlies {
+public class SharedPreferencesUtilities {
     public static void putDoubleIntoSharedPreferences(SharedPreferences.Editor editor, String key, double value) {
-        editor.putLong(key, Double.doubleToRawLongBits(value));
+        editor.putLong(key, Double.doubleToRawLongBits(value)).apply();
     }
 
     public static double getDoubleFromSharedPreferences(SharedPreferences sharedPref, String key, double defaultValue) {

@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!--
  The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -23,11 +22,13 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
 
         <meta-data
@@ -47,11 +48,22 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".backgroundservices.UpdateAccidentInRangeReceiver"/>
-        <service android:name=".backgroundservices.UpdateAccidentsInRangeService"/>
+        <receiver android:name=".backgroundservices.UpdateAccidentInRangeReceiver" />
 
-        <receiver android:name=".backgroundservices.LocationAutoTracker"/>
-        <service android:name=".backgroundservices.LocationTrackerService"/>
+        <service android:name=".backgroundservices.UpdateAccidentsInRangeService" />
+
+        <receiver android:name=".backgroundservices.LocationAutoTracker" />
+
+        <service android:name=".backgroundservices.LocationTrackerService" />
+
+        <activity
+            android:name=".activities.HomeSettingActivity"
+            android:label="@string/title_activity_home_setting" >
+        </activity>
+        <activity
+            android:name=".activities.ZoneSettingActivity"
+            android:label="@string/title_activity_zone_setting" >
+        </activity>
     </application>
 
 </manifest>

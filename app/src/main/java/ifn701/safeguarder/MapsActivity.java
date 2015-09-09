@@ -34,6 +34,7 @@ import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
 import ifn701.safeguarder.Parcelable.AccidentListParcelable;
 import ifn701.safeguarder.activities.LeftMenuAdapter;
+import ifn701.safeguarder.activities.ZoneSettingActivity;
 import ifn701.safeguarder.backgroundservices.LocationAutoTracker;
 import ifn701.safeguarder.backgroundservices.LocationTrackerService;
 import ifn701.safeguarder.backgroundservices.UpdateAccidentInRangeReceiver;
@@ -156,6 +157,11 @@ public class MapsActivity extends AppCompatActivity {
                         return false;
                     }
 
+                    int index = clickedIndex - 1;
+                    if (index == LeftMenuAdapter.ZONE_SETTING) {
+                        goToSettings();
+                    }
+
                     return true;
                 }
 
@@ -174,22 +180,11 @@ public class MapsActivity extends AppCompatActivity {
 
 
         drawer = (DrawerLayout) findViewById(R.id.DrawerLayout);
-//        mDrawerToggle = new ActionBarDrawerToggle(this, drawer,toolbar,R.string.drawer_open,R.string.drawer_close){
-//
-//            @Override
-//            public void onDrawerOpened(View drawerView) {
-//                super.onDrawerOpened(drawerView);
-//
-//            }
-//
-//            @Override
-//            public void onDrawerClosed(View drawerView) {
-//                super.onDrawerClosed(drawerView);
-//
-//            }
-//        };
-//        drawer.setDrawerListener(mDrawerToggle);
-//        mDrawerToggle.syncState();
+    }
+
+    public void goToSettings() {
+        Intent intent = new Intent(this, ZoneSettingActivity.class);
+        startActivity(intent);
     }
 
     public void scheduleAutoService() {

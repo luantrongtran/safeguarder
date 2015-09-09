@@ -8,10 +8,20 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
+    <string name="home_setting_search_address_failed">Cannot find the address</string>
+
+    <string name="zone_setting_radius">Radius(m)</string>
+    <string name="zone_setting_update_radius">Update radius</string>
+    <string name="zone_setting_update_radius_success">Update radius successfully</string>
+    <string name="zone_setting_update_home_location">Update home location</string>
+    <string name="zone_setting_update_home_location_success">Update home location successfully</string>
+
     <!-- Left menu titles -->
     <string name="left_menu_notification">notification</string>
     <string name="left_menu_observation">observations</string>
     <string name="left_menu_zone_setting">Zones Setting</string>
     <string name="left_menu_event_fiilter">Events Filter</string>
     <string name="left_menu_help">Help</string>
+    <string name="title_activity_home_setting">Map</string>
+    <string name="title_activity_zone_setting">ZoneSettingActivity</string>
 </resources>

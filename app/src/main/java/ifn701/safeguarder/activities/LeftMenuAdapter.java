@@ -22,6 +22,8 @@ public class LeftMenuAdapter extends RecyclerView.Adapter<LeftMenuAdapter.LeftMe
 
     private static final int TYPE_ITEM = 1;
 
+    public static final int ZONE_SETTING = 2;
+
     Context context;
     Drawable patientIcon;
 

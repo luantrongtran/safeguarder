@@ -14,7 +14,7 @@ import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
  * Created by lua on 7/09/2015.
  */
 public class UserDrawer {
-    private Circle currentLocationInterestedArea;
+    private static Circle currentLocationInterestedArea;
     private int currentLocationInterestedAreaFillColor = 0x330000FF;
     private int currentLocationInterestedAreaStrokeColor = 0x800000CC;
 
@@ -24,7 +24,9 @@ public class UserDrawer {
     public UserDrawer (Context context, GoogleMap gMap) {
         this.context = context;
         this.gMap = gMap;
-        drawCurrentLocationInterestedArea();
+        if(currentLocationInterestedArea == null) {
+            drawCurrentLocationInterestedArea();
+        }
     }
 
     public void drawCurrentLocationInterestedArea() {

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import ifn701.safeguarder.Constants;
-import ifn701.safeguarder.SharedPreferencesUtitlies;
+import ifn701.safeguarder.SharedPreferencesUtilities;
 
 public class CurrentLocationPreferences {
     SharedPreferences sharedPreferences;
@@ -17,7 +17,7 @@ public class CurrentLocationPreferences {
 
     public void setLat(double lat) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        SharedPreferencesUtitlies
+        SharedPreferencesUtilities
                 .putDoubleIntoSharedPreferences(editor,
                         Constants.sharedPreferences_current_location_lat, lat);
 
@@ -25,14 +25,14 @@ public class CurrentLocationPreferences {
     }
 
     public double getLat() {
-        return SharedPreferencesUtitlies.getDoubleFromSharedPreferences(sharedPreferences,
+        return SharedPreferencesUtilities.getDoubleFromSharedPreferences(sharedPreferences,
                 Constants.sharedPreferences_current_location_lat,
                 Constants.sharedPreferences_float_default_value);
     }
 
     public void setLon(double lon) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        SharedPreferencesUtitlies
+        SharedPreferencesUtilities
                 .putDoubleIntoSharedPreferences(editor,
                         Constants.sharedPreferences_current_location_lon, lon);
 
@@ -40,7 +40,7 @@ public class CurrentLocationPreferences {
     }
 
     public double getLon() {
-        return SharedPreferencesUtitlies.getDoubleFromSharedPreferences(sharedPreferences,
+        return SharedPreferencesUtilities.getDoubleFromSharedPreferences(sharedPreferences,
                 Constants.sharedPreferences_current_location_lon,
                 Constants.sharedPreferences_float_default_value);
     }
