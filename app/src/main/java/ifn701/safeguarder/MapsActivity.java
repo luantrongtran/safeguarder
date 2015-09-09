@@ -184,7 +184,12 @@ public class MapsActivity extends AppCompatActivity {
 
     public void goToSettings() {
         Intent intent = new Intent(this, ZoneSettingActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        userDrawer.updateCurrentLocationInterestedArea();
     }
 
     public void scheduleAutoService() {
