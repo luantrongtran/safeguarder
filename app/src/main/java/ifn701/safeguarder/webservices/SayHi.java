@@ -13,9 +13,6 @@ import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.backend.myApi.MyApi;
 import ifn701.safeguarder.backend.myApi.model.MyBean;
 
-/**
- * Created by lua on 2/08/2015.
- */
 public class SayHi extends AsyncTask<String, Void, MyBean> {
 
     private ISayHi sayHi = null;

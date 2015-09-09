@@ -6,6 +6,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
@@ -15,6 +17,10 @@ import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
  */
 public class UserDrawer {
     private static Circle currentLocationInterestedArea;
+    private static Circle homeLocationInterestedArea;
+    private static Marker homeLocationMarker;
+
+
     private int currentLocationInterestedAreaFillColor = 0x330000FF;
     private int currentLocationInterestedAreaStrokeColor = 0x800000CC;
 
@@ -57,5 +63,30 @@ public class UserDrawer {
 
         currentLocationInterestedArea.setCenter(position);
         currentLocationInterestedArea.setRadius(radius);
+    }
+
+    public void drawHomeLocation() {
+
+        UserSettingsPreferences userSettingsPreferences = new UserSettingsPreferences(context);
+        if(userSettingsPreferences.getHomeLocationAddress().isEmpty() == true) {
+            return;
+        }
+
+        LatLng position = new LatLng(userSettingsPreferences.getHomeLocationLat(),
+                userSettingsPreferences.getHomeLocationLat());
+        float radius = userSettingsPreferences.getRadius();
+        CircleOptions circleOptions = new CircleOptions()
+                .center(position)
+                .radius(radius)
+                .fillColor(currentLocationInterestedAreaFillColor)
+                .strokeColor(currentLocationInterestedAreaStrokeColor);
+
+        MarkerOptions markerOptions = new MarkerOptions().position(position);
+
+        if(homeLocationInterestedArea != null) {
+            homeLocationInterestedArea.remove();
+        }
+        homeLocationInterestedArea = gMap.addCircle(circleOptions);
+        homeLocationMarker = gMap.addMarker(markerOptions);
     }
 }

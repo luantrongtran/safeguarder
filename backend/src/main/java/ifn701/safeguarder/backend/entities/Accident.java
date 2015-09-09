@@ -112,6 +112,4 @@ public class Accident {
     private Blob image2;
     private Blob image3;
 
-    public Accident() {
-    }
 }

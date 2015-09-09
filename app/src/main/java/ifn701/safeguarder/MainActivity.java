@@ -1,10 +1,5 @@
 package ifn701.safeguarder;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,10 +8,17 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+//import ifn701.safeguarder.backend.entities.accidentApi.model.*;
+import ifn701.safeguarder.webservices.AccidentService;
+import ifn701.safeguarder.webservices.IAccidentService;
 import ifn701.safeguarder.webservices.ISayHi;
 import ifn701.safeguarder.webservices.SayHi;
 
-public class MainActivity extends AppCompatActivity implements ISayHi {
+public class MainActivity extends AppCompatActivity implements ISayHi, IAccidentService {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,20 +49,35 @@ public class MainActivity extends AppCompatActivity implements ISayHi {
     }
 
     public void sayHi(View view) {
-//        EditText nameEdt = (EditText)findViewById(R.id.txtName);
-//        String name = nameEdt.getText().toString();
-//        SayHi sh = new SayHi(this);
-//        sh.execute(name);
+        EditText nameEdt = (EditText)findViewById(R.id.txtName);
+        String name = nameEdt.getText().toString();
+        SayHi sh = new SayHi(this);
+        sh.execute(name);
+    }
 
-        scheduleUpdateNewEventsAlarm();
+//    public void accidentReport(View view) {
+//        Accident acc = new Accident();
+//        acc.setUserId(1);
+//        acc.setName("AccidentName");
+//        acc.setDescription("AccidentDescription");
+//        acc.setLat(1.1f);
+//        acc.setType("Accident Type");
+//
+//        AccidentService as = new AccidentService(this);
+//        as.execute(acc);
+//    }
+
+    public void imageUpload(View view) {
+
+    }
+
+    @Override
+    public void processReport() {
+        Toast.makeText(this, "ReportTest", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void processData(String greeting) {
         Toast.makeText(this, greeting, Toast.LENGTH_SHORT).show();
-    }
-
-    public void scheduleUpdateNewEventsAlarm(){
-
     }
 }

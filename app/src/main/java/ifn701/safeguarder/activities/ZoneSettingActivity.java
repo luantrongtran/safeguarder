@@ -72,6 +72,7 @@ public class ZoneSettingActivity extends AppCompatActivity {
             Toast.makeText(ZoneSettingActivity.this,
                     R.string.zone_setting_update_home_location_success
                     , Toast.LENGTH_SHORT).show();
+
         }
     }
 

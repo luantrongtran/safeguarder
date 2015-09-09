@@ -4,7 +4,7 @@ package ifn701.safeguarder;
  * Created by lua on 16/08/2015.
  */
 public class Constants {
-    public static String webServiceUrl = "http://192.168.0.106:8080/_ah/api/";
+    public static String webServiceUrl = "http://172.19.58.164:8080/_ah/api/";
 
     public static String APPLIATION_ID = "safeguarder";
 
@@ -38,5 +38,4 @@ public class Constants {
     public static String search_location_address = "search_location_address";
     public static String search_location_lat = "search_location_lat";
     public static String search_location_lon = "search_location_lon";
-
 }

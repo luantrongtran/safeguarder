@@ -8,6 +8,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Vector;
 
 import ifn701.safeguarder.BackendApiProvider;
 import ifn701.safeguarder.Constants;
@@ -42,7 +43,8 @@ public class UpdateAccidentsInRangeService extends IntentService {
             AccidentList accidentList
                     = myApi.getAccidentInRange(currentLat, currentLon, radius).execute();
             if(accidentList == null || accidentList.getAccidentList() == null){
-                return;
+                accidentList = new AccidentList();
+                accidentList.setAccidentList(new Vector<Accident>());
             }
 
             Log.i(Constants.APPLIATION_ID, "update accident list service: "

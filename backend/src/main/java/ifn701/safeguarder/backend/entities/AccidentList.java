@@ -15,4 +15,8 @@ public class AccidentList {
     }
 
     Vector<Accident> accidentList;
+
+    public AccidentList() {
+        accidentList = new Vector<>();
+    }
 }

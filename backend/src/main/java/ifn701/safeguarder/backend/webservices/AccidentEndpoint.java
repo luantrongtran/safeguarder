@@ -6,6 +6,7 @@ import com.google.api.server.spi.config.ApiNamespace;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import javax.inject.Named;
 
@@ -27,21 +28,50 @@ import ifn701.safeguarder.backend.entities.Location;
         )
 )
 public class AccidentEndpoint {
+    private static final Logger logger = Logger.getLogger(AccidentEndpoint.class.getName());
 
     /**
-     *
-     * @param lat the latitude of the centroid
-     * @param lon the longtitude of the centroid
+     * @param lat    the latitude of the centroid
+     * @param lon    the longtitude of the centroid
      * @param radius the radius of the centroid indicated by lat and lon
      * @return all the accidents within the radius of the centroid indicated by lat and long
      */
-    @ApiMethod (name = "getAccidentInRange")
-    public AccidentList getAccidents(@Named("lat") double lat, @Named("lon") double lon, @Named("radius")float radius) {
+    @ApiMethod(name = "getAccidentInRange")
+    public AccidentList getAccidents(@Named("lat") double lat, @Named("lon") double lon, @Named("radius") float radius) {
         AccidentDao accidentDao = new AccidentDao();
 
         Vector<Accident> accidentVector = accidentDao.getAccidentsInSelectedArea(lat, lon, radius);
         AccidentList accidentList = new AccidentList();
         accidentList.setAccidentList(accidentVector);
         return accidentList;
+    }
+
+    /**
+     * This method gets the <code>Accident</code> object associated with the specified <code>id</code>.
+     *
+     * @param id The id of the object to be returned.
+     * @return The <code>Accident</code> associated with <code>id</code>.
+     */
+    @ApiMethod(name = "getAccident")
+    public Accident getAccident(@Named("id") Long id) {
+        // TODO: Implement this function
+        logger.info("Calling getAccident method");
+        return null;
+    }
+
+    /**
+     * This inserts a new <code>Accident</code> object.
+     *
+     * @param accident The object to be added.
+     * @return The object to be added.
+     */
+    @ApiMethod(name = "insertAccident")
+    public Accident insertAccident(Accident accident) {
+        // TODO: Implement this function
+        //logger.info("Calling insertAccident method");
+        AccidentDao accidentdao = new AccidentDao();
+        accidentdao.insertANewAccident(accident);
+
+        return accident;
     }
 }

@@ -109,4 +109,22 @@ public class AccidentCRUDTest extends LocalDatabaseTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void testInsertANewAccident() {
+        Accident mockAccident = mock(Accident.class);
+        when(mockAccident.getUserId()).thenReturn(1);
+        when(mockAccident.getName()).thenReturn("AccidentName");
+        when(mockAccident.getType()).thenReturn("AccidentType");
+        when(mockAccident.getTime()).thenReturn(System.currentTimeMillis());
+        when(mockAccident.getLat()).thenReturn(1.1d);
+        when(mockAccident.getLon()).thenReturn(1.1d);
+        when(mockAccident.getObservation_level()).thenReturn(1);
+        when(mockAccident.getDescription()).thenReturn("Accident Description");
+        //when(mockAccident.getImage1()).thenReturn(1));
+        //when(mockAccident.getImage2()).thenReturn(1));
+        //when(mockAccident.getImage3()).thenReturn(1));
+
+        spyAccidentDao.insertANewAccident(mockAccident);
+    }
 }

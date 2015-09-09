@@ -24,6 +24,8 @@ import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,6 +36,7 @@ import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
 import ifn701.safeguarder.Parcelable.AccidentListParcelable;
 import ifn701.safeguarder.activities.LeftMenuAdapter;
+import ifn701.safeguarder.activities.ReportActivity;
 import ifn701.safeguarder.activities.ZoneSettingActivity;
 import ifn701.safeguarder.backgroundservices.LocationAutoTracker;
 import ifn701.safeguarder.backgroundservices.LocationTrackerService;
@@ -63,6 +66,8 @@ public class MapsActivity extends AppCompatActivity {
     RecyclerView.LayoutManager mLayoutManager;
     DrawerLayout drawer;
 
+    boolean isCurrentLocation;
+
 //    ActionBarDrawerToggle mDrawerToggle;
     //end navigation menu
 
@@ -74,6 +79,7 @@ public class MapsActivity extends AppCompatActivity {
                 .findFragmentById(R.id.map);
         // mapFragment.getMapAsync(this);
 
+        isCurrentLocation = true;
         setUpDummyData();
 
         scheduleAutoService();
@@ -92,7 +98,7 @@ public class MapsActivity extends AppCompatActivity {
      * Register all necessary receivers
      */
     public void registerReceiver() {
-//        registerAccidentListUpdateReceiver();
+        registerAccidentListUpdateReceiver();
         registerCurrentLocationUpdateReceiver();
     }
 
@@ -190,6 +196,7 @@ public class MapsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         userDrawer.updateCurrentLocationInterestedArea();
+        userDrawer.drawHomeLocation();
     }
 
     public void scheduleAutoService() {
@@ -316,7 +323,6 @@ public class MapsActivity extends AppCompatActivity {
                     = (AccidentListParcelable) intent
                     .getParcelableExtra(Constants.broadCastService_UpdateAccidentsList);
 
-
             accidentManager.setAccidentList(parcelableExtra.getAccidentList());
             accidentManager.updateAccidentMarkers(mMap);
         }
@@ -332,5 +338,54 @@ public class MapsActivity extends AppCompatActivity {
 
     public void toggleLeftMenu(View view) {
         drawer.openDrawer(Gravity.LEFT);
+    }
+
+    public void createNewReport(View view) {
+        Intent intent = new Intent(this, ReportActivity.class);
+        startActivity(intent);
+    }
+
+    public void switchLocation(View view) {
+
+        double lat, lon;
+        if(isCurrentLocation == false) {
+            //switch to home location
+            ((TextView)findViewById(R.id.switchLocationText)).setText(R.string.current_location);
+            GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
+            lat = gpsTracker.getLatitude();
+            lon = gpsTracker.getLongitude();
+
+            panToLatLng(new LatLng(lat,lon), 18);
+            isCurrentLocation = !isCurrentLocation;
+        } else {
+            ((TextView)findViewById(R.id.switchLocationText)).setText(R.string.home_location);
+            UserSettingsPreferences userSettingsPreferences
+                    = new UserSettingsPreferences(getApplicationContext());
+
+            if(userSettingsPreferences.getHomeLocationAddress().isEmpty() == false){
+                lat = userSettingsPreferences.getHomeLocationLat();
+                lon = userSettingsPreferences.getHomeLocationLon();
+
+                isCurrentLocation = !isCurrentLocation;
+                panToLatLng(new LatLng(lat,lon), 18);
+            } else {
+                Toast.makeText(MapsActivity.this, R.string.home_location_not_set,
+                        Toast.LENGTH_SHORT).show();
+                ((TextView)findViewById(R.id.switchLocationText)).setText(R.string.current_location);
+                GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
+                lat = gpsTracker.getLatitude();
+                lon = gpsTracker.getLongitude();
+                panToLatLng(new LatLng(lat,lon), 18);
+            }
+        }
+
+    }
+
+    public void panToLatLng(LatLng latLng, int zoomLevel) {
+        // Show the current location in Google Map
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        // Zoom in the Google Map
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(zoomLevel));
     }
 }
