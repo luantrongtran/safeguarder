@@ -28,6 +28,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -44,11 +53,14 @@ import ifn701.safeguarder.backgroundservices.LocationAutoTracker;
 import ifn701.safeguarder.backgroundservices.LocationTrackerService;
 import ifn701.safeguarder.backgroundservices.UpdateAccidentInRangeReceiver;
 import ifn701.safeguarder.backgroundservices.UpdateAccidentsInRangeService;
+import ifn701.safeguarder.webservices.GooglePlacesSearch;
 
 
-public class MapsActivity extends AppCompatActivity {
+public class MapsActivity extends AppCompatActivity
+        implements ConnectionCallbacks, OnConnectionFailedListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private GoogleApiClient googleApiClient;
 
     public long updateCurrentLocationInterval = 13*1000;//10s
     private AlarmManager alarmManager;
@@ -85,6 +97,7 @@ public class MapsActivity extends AppCompatActivity {
                 .findFragmentById(R.id.map);
         // mapFragment.getMapAsync(this);
 
+        setUpGoogleApiClient();
         setUpComponents();
 
         setUpDummyData();
@@ -93,13 +106,29 @@ public class MapsActivity extends AppCompatActivity {
         registerReceiver();
 
         setUpNavigationMenu();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        googleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
         cancelServiceOnStop();
+        googleApiClient.disconnect();
         super.onStop();
+    }
+
+    public void setUpGoogleApiClient() {
+        googleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
     }
 
     protected void setUpComponents() {
@@ -413,6 +442,9 @@ public class MapsActivity extends AppCompatActivity {
 
         switchLocationText.setText(R.string.my_location);
         panToLatLng(new LatLng(lat, lon));
+
+        GooglePlacesSearch placesSearch = new GooglePlacesSearch(getApplicationContext());
+        placesSearch.execute("");
     }
 
     public void panToHomeLocation(){
@@ -443,4 +475,21 @@ public class MapsActivity extends AppCompatActivity {
                 .zoom(17)                   // Sets the zoom
                 .build();                   // Creates a CameraPosition from the builder
     }
+
+    //Google Api clients callback methods
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.e(Constants.APPLIATION_ID, "Google API client connected");
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.e(Constants.APPLIATION_ID, "Google API client suspended");
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.e(Constants.APPLIATION_ID, "Google API client failed");
+    }
+    //End google Api clients callback methods
 }

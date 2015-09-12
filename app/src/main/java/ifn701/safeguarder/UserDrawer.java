@@ -86,6 +86,10 @@ public class UserDrawer {
             homeLocationInterestedArea.remove();
         }
         homeLocationInterestedArea = gMap.addCircle(circleOptions);
+
+        if(homeLocationMarker != null) {
+            homeLocationMarker.remove();
+        }
         homeLocationMarker = gMap.addMarker(markerOptions);
     }
 }
