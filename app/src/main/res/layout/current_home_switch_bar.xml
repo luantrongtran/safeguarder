@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/current_home_switch_bar_top_border"
+    android:paddingTop="20px"
+    android:paddingBottom="20px"
+    >
+
+    <LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+        android:layout_weight="1"
+        android:background="@drawable/current_home_switch_bar_splitter"
+        android:id="@+id/currentLocationButton"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/currentLocationImage"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_cached_black_24dp"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/currentLocationTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/current_location"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" android:layout_weight="1"
+        android:id="@+id/homeLocationButton"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_cached_black_24dp"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/home_location"
+            android:gravity="center" />
+    </LinearLayout>
+</LinearLayout >

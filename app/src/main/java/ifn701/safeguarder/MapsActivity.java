@@ -1,6 +1,6 @@
 package ifn701.safeguarder;
 
-import android.annotation.TargetApi;
+import android.animation.ObjectAnimator;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -10,11 +10,9 @@ import android.content.IntentFilter;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,12 +22,16 @@ import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
@@ -57,16 +59,20 @@ public class MapsActivity extends AppCompatActivity {
 
     public static AccidentManager accidentManager = new AccidentManager();
     public static UserDrawer userDrawer;
+    boolean isLocationSwitcherShowed = false;
+
+    UserSettingsPreferences userSettingsPreferences;
 
     //Navigation menu
     private Toolbar toolbar;
+    private TextView switchLocationText;
 
     RecyclerView mRecyclerView;
     public static RecyclerView.Adapter mLeftMenuAdapter;
     RecyclerView.LayoutManager mLayoutManager;
-    DrawerLayout drawer;
+    DrawerLayout leftMenuDrawer;
 
-    boolean isCurrentLocation;
+    LinearLayout locationSwitcher;
 
 //    ActionBarDrawerToggle mDrawerToggle;
     //end navigation menu
@@ -79,19 +85,45 @@ public class MapsActivity extends AppCompatActivity {
                 .findFragmentById(R.id.map);
         // mapFragment.getMapAsync(this);
 
-        isCurrentLocation = true;
+        setUpComponents();
+
         setUpDummyData();
 
         scheduleAutoService();
         registerReceiver();
 
         setUpNavigationMenu();
+
     }
 
     @Override
     protected void onStop() {
         cancelServiceOnStop();
         super.onStop();
+    }
+
+    protected void setUpComponents() {
+        locationSwitcher = (LinearLayout) findViewById(R.id.locationSwitcherBar);
+        switchLocationText = (TextView) findViewById(R.id.switchLocationText);
+        userSettingsPreferences = new UserSettingsPreferences(getApplicationContext());
+
+        findViewById(R.id.currentLocationButton).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.e(Constants.APPLIATION_ID, "Pan to my location");
+                panToMyLocation();
+                return false;
+            }
+        });
+
+        findViewById(R.id.homeLocationButton).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.e(Constants.APPLIATION_ID, "Pan to home location");
+                panToHomeLocation();
+                return false;
+            }
+        });
     }
 
     /**
@@ -156,7 +188,7 @@ public class MapsActivity extends AppCompatActivity {
                 View view = rv.findChildViewUnder(e.getX(), e.getY());
 
                 if (view != null && oneTouchGesture.onTouchEvent(e)) {
-                    drawer.closeDrawers();
+                    leftMenuDrawer.closeDrawers();
                     int clickedIndex = rv.getChildAdapterPosition(view);
                     if (clickedIndex == 0) {
                         //If the header was clicked
@@ -185,7 +217,7 @@ public class MapsActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
 
-        drawer = (DrawerLayout) findViewById(R.id.DrawerLayout);
+        leftMenuDrawer = (DrawerLayout) findViewById(R.id.DrawerLayout);
     }
 
     public void goToSettings() {
@@ -251,8 +283,6 @@ public class MapsActivity extends AppCompatActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-//        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker").snippet("Snippet"));
-
         // Enable MyLocation Layer of Google Map
         mMap.setMyLocationEnabled(true);
 
@@ -277,8 +307,9 @@ public class MapsActivity extends AppCompatActivity {
         // Get longitude of the current location
         double longitude = myLocation.getLongitude();
 
+//        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
         // Create a LatLng object for the current location
-        LatLng latLng = new LatLng(latitude, longitude);
+        LatLng latLng = new LatLng(latitude,longitude);
 
         // Show the current location in Google Map
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -337,7 +368,7 @@ public class MapsActivity extends AppCompatActivity {
     };
 
     public void toggleLeftMenu(View view) {
-        drawer.openDrawer(Gravity.LEFT);
+        leftMenuDrawer.openDrawer(Gravity.LEFT);
     }
 
     public void createNewReport(View view) {
@@ -346,46 +377,70 @@ public class MapsActivity extends AppCompatActivity {
     }
 
     public void switchLocation(View view) {
+        switchLocation_();
+    }
 
-        double lat, lon;
-        if(isCurrentLocation == false) {
-            //switch to home location
-            ((TextView)findViewById(R.id.switchLocationText)).setText(R.string.current_location);
-            GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
-            lat = gpsTracker.getLatitude();
-            lon = gpsTracker.getLongitude();
+    private void switchLocation_() {
+//        float x = locationSwitcher.getX();
+//        float y = locationSwitcher.getY();
+//        float toolbarHeight = toolbar.getMeasuredHeight() + 20;
+//
+//        Log.e(Constants.APPLIATION_ID, "Switch location");
+//        Log.e(Constants.APPLIATION_ID, x + ", " + y);
+//        Log.e(Constants.APPLIATION_ID, toolbarHeight + "");
 
-            panToLatLng(new LatLng(lat,lon), 18);
-            isCurrentLocation = !isCurrentLocation;
+        int from = 0;
+        int to = 0;
+        if(isLocationSwitcherShowed) {
+            //if visible
+            from = 110;
+            to = 0;
+            isLocationSwitcherShowed = false;
         } else {
-            ((TextView)findViewById(R.id.switchLocationText)).setText(R.string.home_location);
-            UserSettingsPreferences userSettingsPreferences
-                    = new UserSettingsPreferences(getApplicationContext());
-
-            if(userSettingsPreferences.getHomeLocationAddress().isEmpty() == false){
-                lat = userSettingsPreferences.getHomeLocationLat();
-                lon = userSettingsPreferences.getHomeLocationLon();
-
-                isCurrentLocation = !isCurrentLocation;
-                panToLatLng(new LatLng(lat,lon), 18);
-            } else {
-                Toast.makeText(MapsActivity.this, R.string.home_location_not_set,
-                        Toast.LENGTH_SHORT).show();
-                ((TextView)findViewById(R.id.switchLocationText)).setText(R.string.current_location);
-                GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
-                lat = gpsTracker.getLatitude();
-                lon = gpsTracker.getLongitude();
-                panToLatLng(new LatLng(lat,lon), 18);
-            }
+            //if invisible
+            from = 0;
+            to = 110;
+            isLocationSwitcherShowed = true;
         }
 
+        locationSwitcher.animate().translationY(to);
+    }
+
+    public void panToMyLocation() {
+        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
+        double lat = gpsTracker.getLatitude();
+        double lon = gpsTracker.getLongitude();
+
+        switchLocationText.setText(R.string.my_location);
+        panToLatLng(new LatLng(lat, lon));
+    }
+
+    public void panToHomeLocation(){
+        if(userSettingsPreferences.getHomeLocationAddress().isEmpty()){
+            Toast.makeText(MapsActivity.this, R.string.home_location_not_set,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        switchLocationText.setText(R.string.home_location);
+        double lat = userSettingsPreferences.getHomeLocationLat();
+        double lon = userSettingsPreferences.getHomeLocationLon();
+
+        panToLatLng(new LatLng(lat, lon));
+    }
+
+    public void panToLatLng(LatLng latLng) {
+        panToLatLng(latLng, 20);
     }
 
     public void panToLatLng(LatLng latLng, int zoomLevel) {
-        // Show the current location in Google Map
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory
+                .newCameraPosition(getCameraPosition(latLng)));
+    }
 
-        // Zoom in the Google Map
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+    public CameraPosition getCameraPosition(LatLng latLng) {
+        return new CameraPosition.Builder()
+                .target(latLng)
+                .zoom(17)                   // Sets the zoom
+                .build();                   // Creates a CameraPosition from the builder
     }
 }

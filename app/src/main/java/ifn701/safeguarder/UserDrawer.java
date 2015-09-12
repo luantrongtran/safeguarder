@@ -66,7 +66,6 @@ public class UserDrawer {
     }
 
     public void drawHomeLocation() {
-
         UserSettingsPreferences userSettingsPreferences = new UserSettingsPreferences(context);
         if(userSettingsPreferences.getHomeLocationAddress().isEmpty() == true) {
             return;

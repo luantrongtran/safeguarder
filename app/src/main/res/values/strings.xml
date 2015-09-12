@@ -8,8 +8,9 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
-    <string name="current_location">Current location</string>
-    <string name="home_location">Home location</string>
+    <string name="current_location">Current</string>
+    <string name="home_location">Home</string>
+    <string name="my_location">My Location</string>
     <string name="home_location_not_set">Home location has not been set</string>
 
 

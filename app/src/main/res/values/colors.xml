@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="color" name="current_home_switch_bar_border">#FFCCCCCC</item>
+    <item type="color" name="current_home_switch_bar_background">#FFF7F7F7</item>
+</resources>

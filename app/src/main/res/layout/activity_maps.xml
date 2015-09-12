@@ -5,22 +5,31 @@
     android:layout_height="match_parent"
     android:elevation="7dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <include
             android:id="@+id/tool_bar"
             layout="@layout/tool_bar">
         </include>
+
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
             android:layout_height="match_parent" android:id="@+id/map"
             tools:context="ifn701.safeguarder.MapsActivity"
             android:name="com.google.android.gms.maps.SupportMapFragment" />
 
-    </LinearLayout>
+        <include
+            android:id="@+id/locationSwitcherBar"
+            layout="@layout/current_home_switch_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0px"
+            />
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/RecyclerView"
