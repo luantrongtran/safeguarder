@@ -8,6 +8,8 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
+    <string name="title_activity_signup">SignupActivity</string>
+    <string name="title_activity_main">MainActivity</string>
     <string name="current_location">Current</string>
     <string name="home_location">Home</string>
     <string name="my_location">My Location</string>
