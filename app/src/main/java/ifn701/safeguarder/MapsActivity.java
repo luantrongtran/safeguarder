@@ -1,6 +1,5 @@
 package ifn701.safeguarder;
 
-import android.animation.ObjectAnimator;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -22,8 +21,6 @@ import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,35 +29,42 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
+import ifn701.safeguarder.activities.CustomWindowInfoAdapter;
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
 import ifn701.safeguarder.Parcelable.AccidentListParcelable;
 import ifn701.safeguarder.activities.LeftMenuAdapter;
 import ifn701.safeguarder.activities.ReportActivity;
 import ifn701.safeguarder.activities.ZoneSettingActivity;
+import ifn701.safeguarder.backend.myApi.model.AccidentList;
 import ifn701.safeguarder.backgroundservices.LocationAutoTracker;
 import ifn701.safeguarder.backgroundservices.LocationTrackerService;
 import ifn701.safeguarder.backgroundservices.UpdateAccidentInRangeReceiver;
 import ifn701.safeguarder.backgroundservices.UpdateAccidentsInRangeService;
-import ifn701.safeguarder.webservices.GooglePlacesSearch;
+import ifn701.safeguarder.entities.google_places.PlacesList;
+import ifn701.safeguarder.webservices.google_web_services.GooglePlacesSearch;
+import ifn701.safeguarder.webservices.google_web_services.IGooglePlacesSearch;
+import ifn701.safeguarder.webservices.IUpdateAccidentInRange;
+import ifn701.safeguarder.webservices.UpdateAccidentsInRange;
 
 
 public class MapsActivity extends AppCompatActivity
-        implements ConnectionCallbacks, OnConnectionFailedListener {
+        implements ConnectionCallbacks, OnConnectionFailedListener, IUpdateAccidentInRange,
+        IGooglePlacesSearch{
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient googleApiClient;
+    LocationRequest mLocationRequest;
 
     public long updateCurrentLocationInterval = 13*1000;//10s
     private AlarmManager alarmManager;
@@ -70,6 +74,7 @@ public class MapsActivity extends AppCompatActivity
     private PendingIntent updateAccidentListPendingIntent;
 
     public static AccidentManager accidentManager = new AccidentManager();
+    public static HealthServicesManager healthServicesmanager = new HealthServicesManager();
     public static UserDrawer userDrawer;
     boolean isLocationSwitcherShowed = false;
 
@@ -102,7 +107,6 @@ public class MapsActivity extends AppCompatActivity
 
         setUpDummyData();
 
-        scheduleAutoService();
         registerReceiver();
 
         setUpNavigationMenu();
@@ -123,9 +127,12 @@ public class MapsActivity extends AppCompatActivity
     }
 
     public void setUpGoogleApiClient() {
+        createLocationRequest();//set up for location request
+
         googleApiClient = new GoogleApiClient
                 .Builder(this)
                 .addApi(Places.PLACE_DETECTION_API)
+                .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
@@ -141,6 +148,7 @@ public class MapsActivity extends AppCompatActivity
             public boolean onTouch(View v, MotionEvent event) {
                 Log.e(Constants.APPLIATION_ID, "Pan to my location");
                 panToMyLocation();
+                switchLocationBar();
                 return false;
             }
         });
@@ -150,6 +158,7 @@ public class MapsActivity extends AppCompatActivity
             public boolean onTouch(View v, MotionEvent event) {
                 Log.e(Constants.APPLIATION_ID, "Pan to home location");
                 panToHomeLocation();
+                switchLocationBar();
                 return false;
             }
         });
@@ -160,7 +169,7 @@ public class MapsActivity extends AppCompatActivity
      */
     public void registerReceiver() {
         registerAccidentListUpdateReceiver();
-        registerCurrentLocationUpdateReceiver();
+        registerCurrentLocationUpdatedReceiver();
     }
 
     public void registerAccidentListUpdateReceiver() {
@@ -170,7 +179,7 @@ public class MapsActivity extends AppCompatActivity
                 .registerReceiver(onAccidentListUpdated, onAccidentListUpdatedFilter);
     }
 
-    public void registerCurrentLocationUpdateReceiver() {
+    public void registerCurrentLocationUpdatedReceiver() {
         IntentFilter onCurrentLocationUpdatedFilter
                 = new IntentFilter(LocationTrackerService.ACTION);
         LocalBroadcastManager.getInstance(this)
@@ -192,7 +201,7 @@ public class MapsActivity extends AppCompatActivity
     private void setUpNavigationMenu() {
         //Navigation Menu
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
-//        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
 
@@ -260,11 +269,6 @@ public class MapsActivity extends AppCompatActivity
         userDrawer.drawHomeLocation();
     }
 
-    public void scheduleAutoService() {
-        scheduleUpdateCurrentLocationService();
-        scheduleUpdateAccidentList();
-    }
-
     public void cancelServiceOnStop() {
 //        stopUpdateCurrentLocationService();
     }
@@ -274,6 +278,8 @@ public class MapsActivity extends AppCompatActivity
         super.onResume();
         setUpMapIfNeeded();
 
+        updateGooglePlaces(); //Update health services
+        updateAccidentsInRange();//Update accidents within the range
         userDrawer = new UserDrawer(getApplicationContext(), mMap);
     }
 
@@ -338,14 +344,36 @@ public class MapsActivity extends AppCompatActivity
 
 //        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
         // Create a LatLng object for the current location
-        LatLng latLng = new LatLng(latitude,longitude);
+        LatLng latLng = new LatLng(latitude, longitude);
 
         // Show the current location in Google Map
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
         // Zoom in the Google Map
         mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
-//        mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("You are here!").snippet("Consider yourself located"));
+
+        mMap.setInfoWindowAdapter(new CustomWindowInfoAdapter(getApplicationContext()));
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if (isLocationSwitcherShowed) {
+                    switchLocationBar();
+                }
+            }
+        });
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                marker.showInfoWindow();
+                panToLatLng(marker.getPosition(), false);
+                if (isLocationSwitcherShowed) {
+                    switchLocationBar();
+                }
+                return true;
+            }
+        });
     }
 
     public void scheduleUpdateCurrentLocationService(){
@@ -392,7 +420,13 @@ public class MapsActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i(Constants.APPLIATION_ID, "Receive current location updated");
-            userDrawer.updateCurrentLocationInterestedArea();
+
+            userDrawer.updateCurrentLocationInterestedArea();//draw the radius
+
+            updateGooglePlaces(); //Update health services
+
+            updateAccidentsInRange();//Update accidents within the range
+
         }
     };
 
@@ -405,19 +439,11 @@ public class MapsActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    public void switchLocation(View view) {
-        switchLocation_();
+    public void switchLocationBar(View view) {
+        switchLocationBar();
     }
 
-    private void switchLocation_() {
-//        float x = locationSwitcher.getX();
-//        float y = locationSwitcher.getY();
-//        float toolbarHeight = toolbar.getMeasuredHeight() + 20;
-//
-//        Log.e(Constants.APPLIATION_ID, "Switch location");
-//        Log.e(Constants.APPLIATION_ID, x + ", " + y);
-//        Log.e(Constants.APPLIATION_ID, toolbarHeight + "");
-
+    private void switchLocationBar() {
         int from = 0;
         int to = 0;
         if(isLocationSwitcherShowed) {
@@ -441,10 +467,10 @@ public class MapsActivity extends AppCompatActivity
         double lon = gpsTracker.getLongitude();
 
         switchLocationText.setText(R.string.my_location);
-        panToLatLng(new LatLng(lat, lon));
+        panToLatLng(new LatLng(lat, lon), true);
 
-        GooglePlacesSearch placesSearch = new GooglePlacesSearch(getApplicationContext());
-        placesSearch.execute("");
+        GooglePlacesSearch placesSearch = new GooglePlacesSearch(getApplicationContext(), this);
+        placesSearch.execute();
     }
 
     public void panToHomeLocation(){
@@ -457,18 +483,18 @@ public class MapsActivity extends AppCompatActivity
         double lat = userSettingsPreferences.getHomeLocationLat();
         double lon = userSettingsPreferences.getHomeLocationLon();
 
-        panToLatLng(new LatLng(lat, lon));
+        panToLatLng(new LatLng(lat, lon), true);
     }
 
-    public void panToLatLng(LatLng latLng) {
-        panToLatLng(latLng, 20);
+    public void panToLatLng(LatLng latLng, boolean zoom) {
+        if (zoom) {
+            mMap.animateCamera(CameraUpdateFactory
+                    .newCameraPosition(getCameraPosition(latLng)));
+        } else {
+            mMap.animateCamera(CameraUpdateFactory
+                    .newCameraPosition(getCameraPositionWithoutZoom(latLng)));
+        }
     }
-
-    public void panToLatLng(LatLng latLng, int zoomLevel) {
-        mMap.animateCamera(CameraUpdateFactory
-                .newCameraPosition(getCameraPosition(latLng)));
-    }
-
     public CameraPosition getCameraPosition(LatLng latLng) {
         return new CameraPosition.Builder()
                 .target(latLng)
@@ -476,10 +502,18 @@ public class MapsActivity extends AppCompatActivity
                 .build();                   // Creates a CameraPosition from the builder
     }
 
+    public CameraPosition getCameraPositionWithoutZoom(LatLng latLng) {
+        return new CameraPosition.Builder()
+                .target(latLng)
+                .zoom(mMap.getCameraPosition().zoom)
+                .build();
+    }
+
     //Google Api clients callback methods
     @Override
     public void onConnected(Bundle bundle) {
         Log.e(Constants.APPLIATION_ID, "Google API client connected");
+        startLocationUpdates();
     }
 
     @Override
@@ -491,5 +525,54 @@ public class MapsActivity extends AppCompatActivity
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.e(Constants.APPLIATION_ID, "Google API client failed");
     }
+
+//    @Override
+//    public void onLocationChanged(Location location) {
+//        double lat = location.getLatitude();
+//        double lon = location.getLongitude();
+//        Toast.makeText(MapsActivity.this, lat + ", " + lon, Toast.LENGTH_SHORT).show();
+//        Log.e(Constants.APPLIATION_ID, "Location changed" + lat + ", " + lon);
+//    }
+
+    protected void startLocationUpdates() {
+        Intent intent = new Intent(getApplicationContext(), LocationAutoTracker.class);
+        PendingIntent pIntent = PendingIntent.
+                getBroadcast(getApplicationContext(), LocationAutoTracker.id
+                        , intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                googleApiClient, mLocationRequest, pIntent);
+    }
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(2000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
     //End google Api clients callback methods
+
+    public void updateAccidentsInRange() {
+        UpdateAccidentsInRange updateAccidentsInRange
+                = new UpdateAccidentsInRange(getApplicationContext(), this);
+        updateAccidentsInRange.execute();
+    }
+
+    @Override
+    public void onUpdateAccidentsInRangeUpdated(AccidentList accidentList) {
+        accidentManager.setAccidentList(accidentList);
+        accidentManager.updateAccidentMarkers(mMap);
+    }
+
+    public void updateGooglePlaces() {
+        GooglePlacesSearch googlePlacesSearch
+                = new GooglePlacesSearch(getApplicationContext(), this);
+        googlePlacesSearch.execute();
+    }
+
+    @Override
+    public void onReceivedGooglePlacesSearch(PlacesList placesList) {
+        healthServicesmanager.setPlacesListOfCurrentLocation(placesList);
+        healthServicesmanager.updateHealthServicesMarkers(mMap);
+    }
 }

@@ -75,28 +75,28 @@ public class Accident {
         this.description = description;
     }
 
-    public Blob getImage1() {
-        return image1;
-    }
-
-    public void setImage1(Blob image1) {
-        this.image1 = image1;
-    }
-
-    public Blob getImage2() {
-        return image2;
-    }
-
-    public void setImage2(Blob image2) {
-        this.image2 = image2;
-    }
-
-    public Blob getImage3() {
+    public String getImage3() {
         return image3;
     }
 
-    public void setImage3(Blob image3) {
+    public void setImage3(String image3) {
         this.image3 = image3;
+    }
+
+    public String getImage1() {
+        return image1;
+    }
+
+    public void setImage1(String image1) {
+        this.image1 = image1;
+    }
+
+    public String getImage2() {
+        return image2;
+    }
+
+    public void setImage2(String image2) {
+        this.image2 = image2;
     }
 
     private int id;
@@ -108,8 +108,8 @@ public class Accident {
     private double lon;
     private int observation_level;
     private String description;
-    private Blob image1;
-    private Blob image2;
-    private Blob image3;
+    private String image1;
+    private String image2;
+    private String image3;
 
 }

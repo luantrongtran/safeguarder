@@ -2,4 +2,7 @@
 <resources>
     <item type="color" name="current_home_switch_bar_border">#FFCCCCCC</item>
     <item type="color" name="current_home_switch_bar_background">#FFF7F7F7</item>
+
+    <item type="color" name="custom_window_info_border">#FFCCCCCC</item>
+    <item type="color" name="custom_window_info_background">#FFF7F7F7</item>
 </resources>

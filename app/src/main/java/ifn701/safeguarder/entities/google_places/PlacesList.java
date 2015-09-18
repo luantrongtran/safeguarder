@@ -1,4 +1,4 @@
-package ifn701.safeguarder.entities;
+package ifn701.safeguarder.entities.google_places;
 
 import java.util.List;
 
@@ -12,4 +12,6 @@ public class PlacesList {
     @Key
     public List<Place> results;
 
+    @Key
+    public String next_page_token;
 }

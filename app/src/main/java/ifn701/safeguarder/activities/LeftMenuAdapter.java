@@ -13,9 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
-import ifn701.safeguarder.MapsActivity;
 import ifn701.safeguarder.R;
-import ifn701.safeguarder.webservices.ImageDownloader;
+import ifn701.safeguarder.webservices.ImageViewUrlLoader;
 
 public class LeftMenuAdapter extends RecyclerView.Adapter<LeftMenuAdapter.LeftMenuViewHolder> {
     private static final int TYPE_HEADER = 0;
@@ -70,7 +69,7 @@ public class LeftMenuAdapter extends RecyclerView.Adapter<LeftMenuAdapter.LeftMe
             }
         } else {
             UserInfoPreferences userPrefs = new UserInfoPreferences(context);
-            new ImageDownloader(holder.profile).execute(userPrefs.getProfilePicture());
+            new ImageViewUrlLoader(holder.profile).execute(userPrefs.getProfilePicture());
             holder.Name.setText(userPrefs.getFullname());
         }
     }

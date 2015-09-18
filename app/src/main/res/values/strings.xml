@@ -13,8 +13,6 @@
     <string name="my_location">My Location</string>
     <string name="home_location_not_set">Home location has not been set</string>
 
-
-
     <string name="home_setting_search_address_failed">Cannot find the address</string>
 
     <string name="zone_setting_radius">Radius(m)</string>
@@ -58,4 +56,13 @@
         <item>Medium</item>
         <item>Low</item>
     </string-array>
+
+    <string name="time_format">hh:mm aaa</string>
+
+    <string name="window_info_accident_time">Time:</string>
+    <string name="window_info_accident_description">Description:</string>
+    <string name="window_info_observation_level">Level:</string>
+
+    <string name="window_info_google_place_address">Address:</string>
+    <string name="window_info_google_place_phone">Phone:</string>
 </resources>

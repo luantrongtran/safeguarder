@@ -1,37 +1,37 @@
-package ifn701.safeguarder.backgroundservices;
+package ifn701.safeguarder.webservices;
 
-import android.app.IntentService;
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.IOException;
 import java.util.Vector;
 
 import ifn701.safeguarder.BackendApiProvider;
 import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
-import ifn701.safeguarder.Parcelable.AccidentListParcelable;
 import ifn701.safeguarder.backend.myApi.MyApi;
 import ifn701.safeguarder.backend.myApi.model.Accident;
 import ifn701.safeguarder.backend.myApi.model.AccidentList;
 
-public class UpdateAccidentsInRangeService extends IntentService {
-    public static String ACTION = IntentService.class.getCanonicalName();
+public class UpdateAccidentsInRange extends AsyncTask<Void, Void, AccidentList> {
+    private Context context;
+    IUpdateAccidentInRange iUpdateAccidentInRange;
 
-    public UpdateAccidentsInRangeService() {
-        super("UpdateAccidentsInRangeService");
+    public UpdateAccidentsInRange(Context context, IUpdateAccidentInRange interfaceUpdate) {
+        this.context = context;
+        this.iUpdateAccidentInRange = interfaceUpdate;
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected AccidentList doInBackground(Void... params) {
+
         UserSettingsPreferences userSettingsPref
-                = new UserSettingsPreferences(getApplicationContext());
+                = new UserSettingsPreferences(context);
         float radius = userSettingsPref.getRadius();
 
         CurrentLocationPreferences currentLocationPreferences
-                = new CurrentLocationPreferences(getApplicationContext());
+                = new CurrentLocationPreferences(context);
 
         double currentLat = currentLocationPreferences.getLat();
         double currentLon = currentLocationPreferences.getLon();
@@ -47,13 +47,19 @@ public class UpdateAccidentsInRangeService extends IntentService {
             Log.i(Constants.APPLIATION_ID, "update accident list service: "
                     + accidentList.getAccidentList().size() + " events");
 
-            Intent in = new Intent(ACTION);
-            AccidentListParcelable accidentListParcelable
-                    = new AccidentListParcelable(accidentList);
-            in.putExtra(Constants.broadCastService_UpdateAccidentsList, accidentListParcelable);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(in);
-        } catch (IOException e) {
+            return accidentList;
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(AccidentList accidentList) {
+        if(accidentList == null) {
+            return;
+        }
+        iUpdateAccidentInRange.onUpdateAccidentsInRangeUpdated(accidentList);
     }
 }
