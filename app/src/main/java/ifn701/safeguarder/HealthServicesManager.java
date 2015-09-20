@@ -10,7 +10,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import ifn701.safeguarder.activities.CustomWindowInfoAdapter;
 import ifn701.safeguarder.entities.google_places.Place;
@@ -43,16 +45,21 @@ public class HealthServicesManager {
             return;
         }
 
-        if(healthServicesMarkersOfCurrentLocation == null) {
-            healthServicesMarkersOfCurrentLocation = new ArrayList<>();
-        } else {
-            for (Marker marker : healthServicesMarkersOfCurrentLocation) {
-                marker.remove();
-            }
-            healthServicesMarkersOfCurrentLocation.clear();
-        }
-
+        ArrayList<Marker> tempMarkers = new ArrayList<>();
         for(Place place : placesListOfCurrentLocation.results) {
+            boolean b = false;
+            for (Marker marker : healthServicesMarkersOfCurrentLocation) {
+                if(marker.getSnippet().equals(place.place_id)) {
+                    tempMarkers.add(marker);
+                    b = true;
+                    healthServicesMarkersOfCurrentLocation.remove(marker);
+                    break;
+                }
+            }
+            if(b){
+                continue;
+            }
+
             LatLng latLng = new LatLng(place.geometry.location.lat, place.geometry.location.lng);
 
             MarkerOptions markerOptions = CustomWindowInfoAdapter
@@ -68,7 +75,13 @@ public class HealthServicesManager {
             markerOptions.snippet(place.place_id);
             Marker marker = gMap.addMarker(markerOptions);
 
-            healthServicesMarkersOfCurrentLocation.add(marker);
+            tempMarkers.add(marker);
         }
+
+        for (Marker marker : healthServicesMarkersOfCurrentLocation) {
+            marker.remove();
+        }
+
+        healthServicesMarkersOfCurrentLocation = tempMarkers;
     }
 }
