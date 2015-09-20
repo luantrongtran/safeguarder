@@ -20,7 +20,7 @@ public class LocationAutoTracker extends BroadcastReceiver {
         CurrentLocationPreferences cur = new CurrentLocationPreferences(context);
         cur.setLat(gpsTracker.getLatitude());
         cur.setLon(gpsTracker.getLongitude());
-        Log.e(Constants.APPLIATION_ID, "Auto tracker receiver");
+        Log.e(Constants.APPLICATION_ID, "Auto tracker receiver");
 
         Intent in = new Intent(context, LocationTrackerService.class);
         context.startService(in);

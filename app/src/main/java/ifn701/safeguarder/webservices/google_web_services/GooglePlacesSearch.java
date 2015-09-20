@@ -57,7 +57,7 @@ public class GooglePlacesSearch extends AsyncTask<Void, Void, PlacesList> {
 
             list = request.execute().parseAs(PlacesList.class);
             System.out.println("STATUS = " + list.status);
-            Log.i(Constants.APPLIATION_ID, request.getUrl().toString());
+            Log.i(Constants.APPLICATION_ID, request.getUrl().toString());
             for (Place place : list.results) {
                 System.out.println(place);
             }

@@ -44,7 +44,7 @@ public class UpdateAccidentsInRange extends AsyncTask<Void, Void, AccidentList> 
                 accidentList.setAccidentList(new Vector<Accident>());
             }
 
-            Log.i(Constants.APPLIATION_ID, "update accident list service: "
+            Log.i(Constants.APPLICATION_ID, "update accident list service: "
                     + accidentList.getAccidentList().size() + " events");
 
             return accidentList;

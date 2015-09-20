@@ -4,9 +4,9 @@ package ifn701.safeguarder;
  * Created by lua on 16/08/2015.
  */
 public class Constants {
-    public static String webServiceUrl = "http://192.168.0.106:8080/_ah/api/";
+    public static String webServiceUrl = "http://172.19.8.252:8080/_ah/api/";
 
-    public static String APPLIATION_ID = "safeguarder";
+    public static String APPLICATION_ID = "safeguarder";
 
     public static int sharedPreferences_integer_default_value = -1;
     public static float sharedPreferences_float_default_value = -1f;

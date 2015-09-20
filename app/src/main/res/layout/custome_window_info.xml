@@ -17,13 +17,13 @@
         android:paddingBottom="5dp"
         />
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/window_info_content_before_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/window_info_text_before_image"
-        android:textColor="#000000"
-        android:text=""
-        />
+        android:orientation="vertical">
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/window_info_image"

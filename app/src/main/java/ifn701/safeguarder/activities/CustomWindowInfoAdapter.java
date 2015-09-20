@@ -4,11 +4,16 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.R;
 import ifn701.safeguarder.backend.myApi.model.Accident;
 import ifn701.safeguarder.entities.google_places.Place;
@@ -36,7 +41,7 @@ import java.util.concurrent.TimeoutException;
 public class CustomWindowInfoAdapter implements InfoWindowAdapter {
 
     TextView titleView;
-    TextView textBeforeImage;
+    LinearLayout contentBeforeImage;
     ImageView imageView;
     TextView textAfterImage;
 
@@ -51,6 +56,8 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
     public static final int GOOGLE_PLACE_DETAIL_TIME_OUT = 5000;
 
     private JacksonFactory jacksonFactory = new JacksonFactory();
+
+    LinearLayout.LayoutParams informationLayoutParams;
 
     View view;
     Context context;
@@ -95,9 +102,11 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
         view = layoutInflater.inflate(R.layout.custome_window_info, null);
 
         titleView = (TextView)view.findViewById(R.id.window_info_title);
-        textBeforeImage = (TextView)view.findViewById(R.id.window_info_text_before_image);
+        contentBeforeImage = (LinearLayout)view.findViewById(R.id.window_info_content_before_image);
         imageView = (ImageView)view.findViewById(R.id.window_info_image);
         textAfterImage = (TextView)view.findViewById(R.id.window_info_text_after_image);
+
+        informationLayoutParams = (LinearLayout.LayoutParams) titleView.getLayoutParams();
     }
 
     /**
@@ -118,7 +127,7 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
 
     /**
      * The marker's snippet should be google place id
-     * @param marker
+     * @param marker the marker snippet contains the place_id of the clicked place
      */
     public void getInfoWindowForGooglePlaceMarker(Marker marker) {
         reset();
@@ -150,25 +159,24 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
         String title = place.name;
         titleView.setText(title);
 
-        String beforeImage = "";
-        beforeImage += "<b>" + context.getResources()
+        String address = "<b>" + context.getResources()
                 .getString(R.string.window_info_google_place_address)
                 + "</b> " + place.formatted_address;
+        addInformationBeforeImage(address);
 
-        beforeImage += "<br>";
-        beforeImage += "<b>"
+        String phone = "<b>"
                 + context.getResources().getString(R.string.window_info_google_place_phone)
                 + "</b> " + place.formatted_phone_number;
-
-        textBeforeImage.setText(Html.fromHtml(beforeImage));
+        addInformationBeforeImage(phone);
     }
 
     /**
      * If a marker's type is ACCIDENT_TYPE
-     * @param marker
+     * @param marker the marker snippet contain a json string of Accident object
      */
     public void getInfoWindowForAccidentMarker(Marker marker) {
         reset();
+
         String snippet = marker.getSnippet();
 
         Accident accident = new Accident();
@@ -183,14 +191,15 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
         titleView.setText(title);
 
         String beforeImage = "";
-        beforeImage += String.format("<b>"
+        String time = String.format("<b>"
                 + context.getResources().getString(R.string.window_info_accident_time) + "</b> "
                 + simpleDateFormat.format(new Timestamp(accident.getTime())));
-        beforeImage += "<br><b>"
+        addInformationBeforeImage(time);
+
+        String description = "<b>"
                 + context.getResources().getString(R.string.window_info_accident_description)
                 + "</b> " + accident.getDescription();
-
-        textBeforeImage.setText(Html.fromHtml(beforeImage));
+        addInformationBeforeImage(description);
 
         String image1 = accident.getImage1();
         Bitmap bitmap = null;
@@ -217,8 +226,21 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
 
     public void reset() {
         titleView.setText("Failed to load information");
-        textBeforeImage.setText("");
+        contentBeforeImage.removeAllViews();
         imageView.setImageResource(R.drawable.default_image);
         textAfterImage.setText("");
+    }
+
+    /**
+     * Add a new information such as an address, phone number of a place or time of an accident
+     * @param content can be html string
+     */
+    protected void addInformationBeforeImage(String content){
+        TextView textView = new TextView(view.getContext());
+        textView.setLayoutParams(informationLayoutParams);
+        textView.setTextColor(context.getResources()
+                .getColor(R.color.custom_window_info_text_color));
+        textView.setText(Html.fromHtml(content));
+        ((LinearLayout)view.findViewById(R.id.window_info_content_before_image)).addView(textView);
     }
 }

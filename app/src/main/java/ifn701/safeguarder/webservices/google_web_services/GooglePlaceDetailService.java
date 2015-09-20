@@ -17,7 +17,6 @@ import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.R;
 import ifn701.safeguarder.entities.google_places.Place;
 import ifn701.safeguarder.entities.google_places.PlaceDetail;
-import ifn701.safeguarder.entities.google_places.PlacesList;
 
 /**
  * Created by lua on 17/09/2015.
@@ -49,7 +48,7 @@ public class GooglePlaceDetailService extends AsyncTask<String, Void, Place> {
             String placeId = params[0];
             request.getUrl().put("placeid", placeId);
 
-            Log.i(Constants.APPLIATION_ID, request.getUrl().toString());
+            Log.i(Constants.APPLICATION_ID, request.getUrl().toString());
             PlaceDetail placeDetail  = request.execute().parseAs(PlaceDetail.class);
             return placeDetail.result;
         } catch (IOException e) {

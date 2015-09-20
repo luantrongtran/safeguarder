@@ -44,7 +44,7 @@ public class UpdateAccidentsInRangeService extends IntentService {
                 accidentList.setAccidentList(new Vector<Accident>());
             }
 
-            Log.i(Constants.APPLIATION_ID, "update accident list service: "
+            Log.i(Constants.APPLICATION_ID, "update accident list service: "
                     + accidentList.getAccidentList().size() + " events");
 
             Intent in = new Intent(ACTION);

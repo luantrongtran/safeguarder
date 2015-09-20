@@ -1,3 +1,6 @@
+/**
+ * References http://android-developers.blogspot.com.au/2011/06/deep-dive-into-location.html
+ */
 package ifn701.safeguarder;
 
 import android.app.AlarmManager;
@@ -146,7 +149,7 @@ public class MapsActivity extends AppCompatActivity
         findViewById(R.id.currentLocationButton).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.e(Constants.APPLIATION_ID, "Pan to my location");
+                Log.e(Constants.APPLICATION_ID, "Pan to my location");
                 panToMyLocation();
                 switchLocationBar();
                 return false;
@@ -156,7 +159,7 @@ public class MapsActivity extends AppCompatActivity
         findViewById(R.id.homeLocationButton).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.e(Constants.APPLIATION_ID, "Pan to home location");
+                Log.e(Constants.APPLICATION_ID, "Pan to home location");
                 panToHomeLocation();
                 switchLocationBar();
                 return false;
@@ -419,7 +422,7 @@ public class MapsActivity extends AppCompatActivity
     private BroadcastReceiver onCurrentLocationUpdated = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(Constants.APPLIATION_ID, "Receive current location updated");
+            Log.i(Constants.APPLICATION_ID, "Receive current location updated");
 
             userDrawer.updateCurrentLocationInterestedArea();//draw the radius
 
@@ -512,27 +515,19 @@ public class MapsActivity extends AppCompatActivity
     //Google Api clients callback methods
     @Override
     public void onConnected(Bundle bundle) {
-        Log.e(Constants.APPLIATION_ID, "Google API client connected");
+        Log.e(Constants.APPLICATION_ID, "Google API client connected");
         startLocationUpdates();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.e(Constants.APPLIATION_ID, "Google API client suspended");
+        Log.e(Constants.APPLICATION_ID, "Google API client suspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e(Constants.APPLIATION_ID, "Google API client failed");
+        Log.e(Constants.APPLICATION_ID, "Google API client failed");
     }
-
-//    @Override
-//    public void onLocationChanged(Location location) {
-//        double lat = location.getLatitude();
-//        double lon = location.getLongitude();
-//        Toast.makeText(MapsActivity.this, lat + ", " + lon, Toast.LENGTH_SHORT).show();
-//        Log.e(Constants.APPLIATION_ID, "Location changed" + lat + ", " + lon);
-//    }
 
     protected void startLocationUpdates() {
         Intent intent = new Intent(getApplicationContext(), LocationAutoTracker.class);

@@ -4,9 +4,6 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Marker;
-
 import ifn701.safeguarder.ImageDownloader;
 import ifn701.safeguarder.Constants;
 
@@ -30,7 +27,7 @@ public class MarkerIconUrlLoader extends AsyncTask<String, Void, Bitmap> {
 
     protected void onPostExecute(Bitmap result) {
         if(result == null){
-            Log.e(Constants.APPLIATION_ID, "Couldn't download the image from the url: " + imageUrl);
+            Log.e(Constants.APPLICATION_ID, "Couldn't download the image from the url: " + imageUrl);
             return;
         }
 //        marker.setIcon(BitmapDescriptorFactory.fromBitmap(result));

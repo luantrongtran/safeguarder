@@ -31,7 +31,7 @@ public class ImageViewUrlLoader extends AsyncTask<String, Void, Bitmap> {
 
     protected void onPostExecute(Bitmap result) {
         if(result == null){
-            Log.e(Constants.APPLIATION_ID, "Couldn't download the image from the url: " + imageUrl);
+            Log.e(Constants.APPLICATION_ID, "Couldn't download the image from the url: " + imageUrl);
             return;
         }
         bmImage.setImageBitmap(result);

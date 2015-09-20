@@ -17,16 +17,6 @@ public class LocationTrackerService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-//        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
-//        CurrentLocationPreferences curLocPrefs = new CurrentLocationPreferences(getApplication());
-//
-//        double lat = gpsTracker.getLatitude();
-//        double lon = gpsTracker.getLongitude();
-//        curLocPrefs.setLat(lat);
-//        curLocPrefs.setLon(lon);
-
-//        Log.e(Constants.APPLIATION_ID, "update location service: " + lat + ", " + lon);
-
         Intent in = new Intent(ACTION);
         LocalBroadcastManager.getInstance(this).sendBroadcast(in);
     }

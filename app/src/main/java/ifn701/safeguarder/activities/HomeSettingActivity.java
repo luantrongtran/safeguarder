@@ -60,7 +60,7 @@ public class HomeSettingActivity extends FragmentActivity {
                 Toast.makeText(HomeSettingActivity.this, R.string.home_setting_search_address_failed,
                         Toast.LENGTH_SHORT).show();
 
-                Log.e(Constants.APPLIATION_ID, "No location found. addList.size() is 0");
+                Log.e(Constants.APPLICATION_ID, "No location found. addList.size() is 0");
                 selectedAddress = null;
             } else {
                 selectedAddress = addList.get(0);

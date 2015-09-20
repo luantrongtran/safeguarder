@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
@@ -14,8 +13,6 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
-
-import org.apache.http.HttpEntity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -58,7 +55,7 @@ public class GoogleImageService extends AsyncTask<String, Void, Bitmap> {
             request.getUrl().put("photoreference", photoRef);
             request.getUrl().put("maxwidth", "400");
 
-            Log.i(Constants.APPLIATION_ID, request.getUrl().toString());
+            Log.i(Constants.APPLICATION_ID, request.getUrl().toString());
             HttpResponse response = request.execute();
 
             if (response != null) {
