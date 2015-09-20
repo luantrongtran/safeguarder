@@ -31,6 +31,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="0px"
             />
+
+        <include android:id="@+id/mapFooter"
+            layout="@layout/map_footer">
+
+        </include>
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

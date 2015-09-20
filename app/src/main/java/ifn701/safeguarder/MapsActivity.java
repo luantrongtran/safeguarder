@@ -9,7 +9,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -43,6 +45,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import ifn701.safeguarder.activities.CustomWindowInfoAdapter;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
+import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
 import ifn701.safeguarder.Parcelable.AccidentListParcelable;
@@ -120,6 +127,7 @@ public class MapsActivity extends AppCompatActivity
         super.onStart();
 
         googleApiClient.connect();
+        updateMapFooter();
     }
 
     @Override
@@ -569,5 +577,29 @@ public class MapsActivity extends AppCompatActivity
     public void onReceivedGooglePlacesSearch(PlacesList placesList) {
         healthServicesmanager.setPlacesListOfCurrentLocation(placesList);
         healthServicesmanager.updateHealthServicesMarkers(mMap);
+	}
+	
+    public void updateMapFooter() {
+        TextView showMyLocation = (TextView)findViewById(R.id.mylocation);
+        TextView showMyRadius = (TextView) findViewById(R.id.myradius);
+        TextView showRadiusEvents = (TextView) findViewById(R.id.myradiusevents);
+
+        UserSettingsPreferences getradius = new UserSettingsPreferences(getApplicationContext());
+        CurrentLocationPreferences currLocation = new CurrentLocationPreferences(getApplicationContext());
+
+        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+
+        try {
+            List<Address> addresses = geocoder.getFromLocation(currLocation.getLat(),
+                    currLocation.getLon(), 1);
+            if(addresses != null & addresses.size() > 0) {
+                Address address = addresses.get(0);
+                showMyLocation.setText(address.getLocality());
+                showMyRadius.setText("(" + (getradius.getRadius()/1000) + " km)");
+                //showRadiusEvents.setText( () + " events");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

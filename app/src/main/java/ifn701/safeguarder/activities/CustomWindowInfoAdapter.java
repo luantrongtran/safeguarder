@@ -241,6 +241,6 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
         textView.setTextColor(context.getResources()
                 .getColor(R.color.custom_window_info_text_color));
         textView.setText(Html.fromHtml(content));
-        ((LinearLayout)view.findViewById(R.id.window_info_content_before_image)).addView(textView);
+        contentBeforeImage.addView(textView);
     }
 }
