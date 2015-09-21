@@ -75,7 +75,8 @@ public class UserDao extends DAOBase {
 //        return null;
 //    }
 
-    public void signUp(User user) {
+     public void signUp(User user)
+     {
         Connection con = getConnection();
         String sql = "INSERT INTO user (fullName,email,password,activated) VALUES(?)";
 
@@ -86,11 +87,11 @@ public class UserDao extends DAOBase {
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPassword());
             ps.setBoolean(4, false);
-
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     private User parseFromResultSet(ResultSet rs) throws SQLException {
@@ -103,4 +104,6 @@ public class UserDao extends DAOBase {
 
         return user;
     }
+
+
 }
