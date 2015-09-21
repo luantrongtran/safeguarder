@@ -465,7 +465,7 @@ public class MapsActivity extends AppCompatActivity
         } else {
             //if invisible
             from = 0;
-            to = 110;
+            to = 160;
             isLocationSwitcherShowed = true;
         }
 
