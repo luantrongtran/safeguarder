@@ -65,4 +65,6 @@
 
     <string name="window_info_google_place_address">Address:</string>
     <string name="window_info_google_place_phone">Phone:</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_signup">SignupActivity</string>
 </resources>

@@ -2,6 +2,7 @@ package ifn701.safeguarder.CustomSharedPreferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.EditText;
 
 import ifn701.safeguarder.Constants;
 
@@ -49,8 +50,18 @@ public class UserInfoPreferences {
                 Constants.sharedPreferences_string_default_value);
     }
 
-    public void setEmail (String email) {
+    public void setEmail (EditText email) {
         sharedPreferences.edit()
-                .putString(Constants.sharedPreferences_user_info_email, email).apply();
+                .putString(Constants.sharedPreferences_user_info_email, String.valueOf(email)).apply();
+    }
+
+    public String getPassword(){
+        return sharedPreferences.getString(Constants.getSharedPreferences_user_info_password,
+                Constants.sharedPreferences_string_default_value);
+    }
+
+    public void setPassword (EditText password) {
+        sharedPreferences.edit()
+                .putString(Constants.getSharedPreferences_user_info_password, String.valueOf(password)).apply();
     }
 }
