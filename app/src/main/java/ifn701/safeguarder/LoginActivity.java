@@ -1,6 +1,8 @@
 package ifn701.safeguarder;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,6 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -109,10 +114,41 @@ public class LoginActivity extends AppCompatActivity implements ILoginService{
         }
     }
 
+//    private Boolean exit = false;
 //    @Override
 //    public void onBackPressed() {
-//        // disable going back to the MainActivity
-//        moveTaskToBack(true);
+//        if (exit) {
+//            finish(); // finish activity
+//        } else {
+//            Toast.makeText(this, "Press Back again to Exit.",
+//                    Toast.LENGTH_SHORT).show();
+//            exit = true;
+//            new Handler()
+//// {
+////                @Override
+////                public void close() {
+////
+////                }
+////
+////                @Override
+////                public void flush() {
+////
+////                }
+////
+////                @Override
+////                public void publish(LogRecord record) {
+////
+////                }
+////            }
+// .postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    exit = false;
+//                }
+//            }, 3 * 1000);
+//
+//        }
+//
 //    }
 
 //    public void onLoginSuccess() {
@@ -127,6 +163,19 @@ public class LoginActivity extends AppCompatActivity implements ILoginService{
 //        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
 //
 //        _loginButton.setEnabled(true);
+//    }
+
+//    @Override
+//    public void onBackPressed() {
+//        new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle("Exit")
+//                .setMessage("Are you sure you want to exit?")
+//                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        finish();
+//                        System.exit(0);
+//                    }
+//                }).setNegativeButton("No", null).show();
 //    }
 
     public boolean validate() {
@@ -162,12 +211,17 @@ public class LoginActivity extends AppCompatActivity implements ILoginService{
             Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//            finish();
         }
         else
         {
-//            Intent signup = new Intent(this, SignupActivity.class);
-//            startActivity(signup);
             Toast.makeText(LoginActivity.this, "Account does not exist, Please Sign Up", Toast.LENGTH_SHORT).show();
+            Intent signup = new Intent(this, SignupActivity.class);
+            startActivity(signup);
         }
     }
 }
