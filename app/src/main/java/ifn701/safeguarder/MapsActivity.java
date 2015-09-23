@@ -276,6 +276,7 @@ public class MapsActivity extends AppCompatActivity
         startActivityForResult(intent, 1);
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         userDrawer.updateCurrentLocationInterestedArea();
@@ -616,4 +617,6 @@ public class MapsActivity extends AppCompatActivity
                     }
                 }).setNegativeButton("No", null).show();
     }
+
+
 }

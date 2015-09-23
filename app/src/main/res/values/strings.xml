@@ -22,13 +22,14 @@
     <string name="zone_setting_update_home_location_success">Update home location successfully</string>
 
     <!-- Left menu titles -->
-    <string name="left_menu_notification">notification</string>
-    <string name="left_menu_observation">observations</string>
+    <string name="left_menu_notification">Notification</string>
+    <string name="left_menu_observation">Observations</string>
     <string name="left_menu_zone_setting">Zones Setting</string>
     <string name="left_menu_event_fiilter">Events Filter</string>
     <string name="left_menu_help">Help</string>
     <string name="title_activity_home_setting">Map</string>
     <string name="title_activity_zone_setting">ZoneSettingActivity</string>
+    <string name="left_menu_logout">Logout</string>
 
     <string name="title_activity_detailed_report">DetailedReport</string>
 
