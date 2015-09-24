@@ -468,7 +468,7 @@ public class MapsActivity extends AppCompatActivity
         } else {
             //if invisible
             from = 0;
-            to = 160;
+            to = 110;
             isLocationSwitcherShowed = true;
         }
 
@@ -617,6 +617,15 @@ public class MapsActivity extends AppCompatActivity
                     }
                 }).setNegativeButton("No", null).show();
     }
-
-
 }
+
+/*
+found user, backend maager.
+add some data
+
+website or window form.
+1st: maanger add data
+thousands
+
+2nd: can review all the data, the point of interest on  website
+ */
