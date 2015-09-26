@@ -16,10 +16,12 @@
     <string name="home_setting_search_address_failed">Cannot find the address</string>
 
     <string name="zone_setting_radius">Radius(m)</string>
-    <string name="zone_setting_update_radius">Update radius</string>
+    <string name="zone_setting_update_setting">Update changes</string>
+    <string name="zone_setting_invalid_radius">The radius should be positive number larger than 0</string>
     <string name="zone_setting_update_radius_success">Update radius successfully</string>
     <string name="zone_setting_update_home_location">Update home location</string>
     <string name="zone_setting_update_home_location_success">Update home location successfully</string>
+    <string name="zone_setting_update_changes_successfully">Update new settings successfully</string>
 
     <!-- Left menu titles -->
     <string name="left_menu_notification">Notification</string>

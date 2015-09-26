@@ -56,8 +56,7 @@ public class ZoneSettingActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == RESULT_OK){
-            userSettingsPreferences
-                    = new UserSettingsPreferences(getApplicationContext());
+
             addressEditor.setText(data.getStringExtra(Constants.search_location_address));
 
             homeLat = data.getDoubleExtra(Constants.search_location_lat,
@@ -65,28 +64,39 @@ public class ZoneSettingActivity extends AppCompatActivity {
             homeLon = data.getDoubleExtra(Constants.search_location_lon,
                     Constants.sharedPreferences_double_default_value);
 
+            userSettingsPreferences
+                    = new UserSettingsPreferences(getApplicationContext());
             userSettingsPreferences.setHomeLocationAddress(addressEditor.getText().toString());
             userSettingsPreferences.setHomeLocationLat(homeLat);
             userSettingsPreferences.setHomeLocationLon(homeLon);
 
-            Toast.makeText(ZoneSettingActivity.this,
-                    R.string.zone_setting_update_home_location_success
-                    , Toast.LENGTH_SHORT).show();
+//            Toast.makeText(ZoneSettingActivity.this,
+//                    R.string.zone_setting_update_home_location_success
+//                    , Toast.LENGTH_SHORT).show();
 
         }
     }
 
-    public void updateRadius(View view) {
+    public void updateSettings(View view) {
         if(radiusEditor.getText().toString().trim().isEmpty()){
             radiusEditor.setText(Constants.sharedPreferences_default_radius+"");
             return;
         }
-        userSettingsPreferences
-                = new UserSettingsPreferences(getApplicationContext());
-        float radius = Float.valueOf(radiusEditor.getText().toString());
-        userSettingsPreferences.setRadius(radius);
 
-        Toast.makeText(ZoneSettingActivity.this, R.string.zone_setting_update_radius_success,
+        float radius = Float.valueOf(radiusEditor.getText().toString());
+
+        //Validate radius value
+        if(radius  <= 0) {
+            Toast.makeText(ZoneSettingActivity.this, R.string.zone_setting_invalid_radius,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        userSettingsPreferences.setRadius(radius);//update new radius into SharedPreferences
+
+
+
+        Toast.makeText(ZoneSettingActivity.this, R.string.zone_setting_update_changes_successfully,
                 Toast.LENGTH_SHORT).show();
     }
 

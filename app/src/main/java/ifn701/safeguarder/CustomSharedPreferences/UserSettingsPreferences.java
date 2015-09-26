@@ -59,4 +59,6 @@ public class UserSettingsPreferences {
         return sharedPreferences.getString(Constants.sharedPreferences_user_settings_home_address,
                 Constants.sharedPreferences_string_default_value);
     }
+
+    
 }
