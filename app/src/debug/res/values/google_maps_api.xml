@@ -19,4 +19,12 @@ https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend
     <string name="google_places_key" translatable="false" templateMergeStrategy="preserve">
         AIzaSyAf7Ji12V1KBbu0GEKJzwvBtcJ9QL2GTfc
     </string>
+
+    <string name="google_gcm_key" translatable="false" templateMergeStrategy="preserve">
+        AIzaSyAoQnICp2qr6u_5IBwnl9iIvyjewo6BqZ0
+    </string>
+
+    <string name="gcm_sender_id" translatable="false" templateMergeStrategy="preserve">
+        139332154190
+    </string>
 </resources>
