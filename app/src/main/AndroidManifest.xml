@@ -67,6 +67,14 @@
                 <category android:name="com.example.gcm" />
             </intent-filter>
         </receiver>
+
+        <service android:name=".webservices.google_cloud_service.MyInstanceIDListenerService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+
+        <service android:name=".webservices.google_cloud_service.RegistrationIntentService"/>
         <!-- End Google cloud message-->
 
         <receiver android:name=".backgroundservices.UpdateAccidentInRangeReceiver" />

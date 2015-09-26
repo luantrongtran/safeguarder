@@ -17,9 +17,9 @@ public class UserSettingsPreferences {
     }
 
     public void setRadius(float radius) {
-        sharedPreferences.edit().clear()
+        sharedPreferences.edit()
                 .putFloat(Constants.sharedPreferences_user_settings_radius, radius)
-                .commit();
+                .apply();
     }
 
     public float getRadius() {

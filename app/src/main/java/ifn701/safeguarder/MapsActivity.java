@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -62,6 +63,7 @@ import ifn701.safeguarder.backgroundservices.LocationTrackerService;
 import ifn701.safeguarder.backgroundservices.UpdateAccidentInRangeReceiver;
 import ifn701.safeguarder.backgroundservices.UpdateAccidentsInRangeService;
 import ifn701.safeguarder.entities.google_places.PlacesList;
+import ifn701.safeguarder.webservices.google_cloud_service.RegistrationIntentService;
 import ifn701.safeguarder.webservices.google_web_services.GooglePlacesSearch;
 import ifn701.safeguarder.webservices.google_web_services.IGooglePlacesSearch;
 import ifn701.safeguarder.webservices.IUpdateAccidentInRange;
@@ -120,6 +122,8 @@ public class MapsActivity extends AppCompatActivity
         registerReceiver();
 
         setUpNavigationMenu();
+
+        setUpGoogleCloudMessage();
     }
 
     @Override
@@ -135,6 +139,13 @@ public class MapsActivity extends AppCompatActivity
         cancelServiceOnStop();
         googleApiClient.disconnect();
         super.onStop();
+    }
+
+    public void setUpGoogleCloudMessage() {
+        if(checkPlayServices()) {
+            Intent intent = new Intent(this, RegistrationIntentService.class) ;
+            startService(intent);
+        }
     }
 
     public void setUpGoogleApiClient() {
@@ -203,10 +214,6 @@ public class MapsActivity extends AppCompatActivity
         userInfoPrefs.setUserId(1);
         userInfoPrefs.setProfilePicture("https://s-media-cache-ak0.pinimg.com/236x/66/eb/cb/66ebcb0b01921e17422650a3fb778954.jpg");
         userInfoPrefs.setFullname("Peter Pan");
-
-        UserSettingsPreferences userSettingsPreferences
-                = new UserSettingsPreferences(getApplicationContext());
-        userSettingsPreferences.setRadius(200);
     }
 
     private void setUpNavigationMenu() {
@@ -601,5 +608,22 @@ public class MapsActivity extends AppCompatActivity
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode,
+                        Constants.PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(Constants.APPLICATION_ID, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 }
