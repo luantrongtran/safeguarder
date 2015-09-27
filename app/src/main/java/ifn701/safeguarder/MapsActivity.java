@@ -572,7 +572,7 @@ public class MapsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onUpdateAccidentsInRangeUpdated(AccidentList accidentList) {
+    public void onAccidentsInRangeUpdated(AccidentList accidentList) {
         accidentManager.setAccidentList(accidentList);
         accidentManager.updateAccidentMarkers(mMap);
     }

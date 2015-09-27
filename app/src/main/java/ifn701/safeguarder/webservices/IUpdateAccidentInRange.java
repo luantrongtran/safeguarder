@@ -6,5 +6,5 @@ import ifn701.safeguarder.backend.myApi.model.AccidentList;
  * Created by lua on 13/09/2015.
  */
 public interface IUpdateAccidentInRange {
-    public void onUpdateAccidentsInRangeUpdated(AccidentList accidentList);
+    public void onAccidentsInRangeUpdated(AccidentList accidentList);
 }

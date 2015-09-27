@@ -119,9 +119,10 @@ public class UserDrawer {
         double lat = userSettingsPreferences.getHomeLocationLat();
         double lon = userSettingsPreferences.getHomeLocationLon();
 
+        LatLng home = new LatLng(lat, lon);
         homeLocationInterestedArea.setRadius(radius);
-        homeLocationInterestedArea.setCenter(new LatLng(lat, lon));
+        homeLocationInterestedArea.setCenter(home);
 
-//        homeLocationInterestedArea = gMap.addCircle(cir)
+        homeLocationMarker.setPosition(home);
     }
 }

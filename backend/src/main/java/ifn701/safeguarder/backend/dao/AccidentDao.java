@@ -11,6 +11,7 @@ import java.util.Vector;
 
 import ifn701.safeguarder.backend.entities.Accident;
 import ifn701.safeguarder.backend.entities.Location;
+import ifn701.safeguarder.backend.entities.UserSetting;
 
 public class AccidentDao extends DAOBase {
 	
@@ -31,12 +32,13 @@ public class AccidentDao extends DAOBase {
 
     /**
      * Get all accidents in the area which has centroid is location variable
-     * and radius which is radius variable.
+     * and radius which is radius variable. Additionally, if the home location has been setup,
+     * then the accidents around home location will be added into the returned list.
      * @param lat the latitude of the centroid of the area
      * @param lon the longtitude of the centroid of the area
      * @param radius the radius from the centroid indicated by lat and lon
      */
-    public Vector<Accident> getAccidentsInSelectedArea(double lat, double lon, float radius) {
+    public Vector<Accident> getAccidentsWithinRangeByUserId(int userId, double lat, double lon, float radius) {
         Connection connection  = getConnection();
         Vector<Accident> accidentVector = new Vector<Accident>();
         String sql = "SELECT * FROM " + tableName + " " +
@@ -55,6 +57,23 @@ public class AccidentDao extends DAOBase {
                 accidentVector.add(accident);
             }
 
+            //Adding accidents near home location
+            UserSettingDao userSettingDao = new UserSettingDao();
+            UserSetting userSetting = userSettingDao.getUserSettingsByUserId(userId);
+            if(userSetting != null) {
+                double homeLat = userSetting.getHomeLocationLat();
+                double homeLon = userSetting.getHomeLocationLon();
+
+                ps = connection.prepareStatement(sql);
+                ps.setDouble(1, homeLat);
+                ps.setDouble(2, homeLon);
+                ps.setFloat(3, radius);
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    Accident accident = parseFromResultSet(rs);
+                    accidentVector.add(accident);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

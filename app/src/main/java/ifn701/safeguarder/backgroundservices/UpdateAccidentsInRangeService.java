@@ -11,6 +11,7 @@ import java.util.Vector;
 import ifn701.safeguarder.BackendApiProvider;
 import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
+import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
 import ifn701.safeguarder.Parcelable.AccidentListParcelable;
 import ifn701.safeguarder.backend.myApi.MyApi;
@@ -26,6 +27,7 @@ public class UpdateAccidentsInRangeService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        UserInfoPreferences userInfoPreferences = new UserInfoPreferences(this);
         UserSettingsPreferences userSettingsPref
                 = new UserSettingsPreferences(getApplicationContext());
         float radius = userSettingsPref.getRadius();
@@ -38,7 +40,7 @@ public class UpdateAccidentsInRangeService extends IntentService {
         MyApi myApi = BackendApiProvider.getPatientApi();
         try {
             AccidentList accidentList
-                    = myApi.getAccidentInRange(currentLat, currentLon, radius).execute();
+                    = myApi.getAccidentInRange(userInfoPreferences.getUserId(), currentLat, currentLon, radius).execute();
             if(accidentList == null || accidentList.getAccidentList() == null){
                 accidentList = new AccidentList();
                 accidentList.setAccidentList(new Vector<Accident>());

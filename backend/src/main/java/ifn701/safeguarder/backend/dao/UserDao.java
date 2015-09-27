@@ -17,21 +17,6 @@ public class UserDao extends DAOBase {
     public static String colPassword = "password";
     public static String colActivated = "activated";
 
-
-
-//    /**
-//     * Get all accidents in the area which has centroid is location variable
-//     * and radius which is radius variable.
-//     * @param lat the latitude of the centroid of the area
-//     * @param lon the longtitude of the centroid of the area
-//     * @param radius the radius from the centroid indicated by lat and lon
-//     */
-//    public Vector<Accident> getAccidentsInSelectedArea(double lat, double lon, float radius) {
-//        Connection connection  = getConnection();
-//        Vector<Accident> accidentVector = new Vector<Accident>();
-//        String sql = "SELECT * FROM " + tableName + " " +
-//                "WHERE get_distance_between_2_points_in_m(" + colLat + "," + colLon + ", ?, ?) < ?";
-
     public User loginUser(String email, String password) {
         Connection connection = getConnection();
 //        Vector<User> userVector = new Vector<User>();

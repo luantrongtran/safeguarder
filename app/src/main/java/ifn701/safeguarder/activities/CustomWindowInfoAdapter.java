@@ -139,6 +139,8 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
         if (marker.getSnippet() != null) {
             addInformationBeforeImage(marker.getSnippet());
         }
+
+        imageView.setVisibility(View.GONE);
     }
 
     /**

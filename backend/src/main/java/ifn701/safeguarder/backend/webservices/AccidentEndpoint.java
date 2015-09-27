@@ -4,7 +4,6 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 
-import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -13,7 +12,6 @@ import javax.inject.Named;
 import ifn701.safeguarder.backend.dao.AccidentDao;
 import ifn701.safeguarder.backend.entities.Accident;
 import ifn701.safeguarder.backend.entities.AccidentList;
-import ifn701.safeguarder.backend.entities.Location;
 
 /**
  * An endpoint class we are exposing
@@ -34,13 +32,15 @@ public class AccidentEndpoint {
      * @param lat    the latitude of the centroid
      * @param lon    the longtitude of the centroid
      * @param radius the radius of the centroid indicated by lat and lon
-     * @return all the accidents within the radius of the centroid indicated by lat and long
+     * @return all the accidents within the radius of the centroid indicated by lat and long.
+     * Additionally, if the home location has been setup, this method also returns accidents around
+     * home location.
      */
     @ApiMethod(name = "getAccidentInRange")
-    public AccidentList getAccidents(@Named("lat") double lat, @Named("lon") double lon, @Named("radius") float radius) {
+    public AccidentList getAccidents(@Named("userId") int userId, @Named("lat") double lat, @Named("lon") double lon, @Named("radius") float radius) {
         AccidentDao accidentDao = new AccidentDao();
 
-        Vector<Accident> accidentVector = accidentDao.getAccidentsInSelectedArea(lat, lon, radius);
+        Vector<Accident> accidentVector = accidentDao.getAccidentsWithinRangeByUserId(userId, lat, lon, radius);
         AccidentList accidentList = new AccidentList();
         accidentList.setAccidentList(accidentVector);
         return accidentList;

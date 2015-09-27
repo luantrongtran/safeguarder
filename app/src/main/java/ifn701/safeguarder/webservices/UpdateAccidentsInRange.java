@@ -9,6 +9,7 @@ import java.util.Vector;
 import ifn701.safeguarder.BackendApiProvider;
 import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
+import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
 import ifn701.safeguarder.backend.myApi.MyApi;
 import ifn701.safeguarder.backend.myApi.model.Accident;
@@ -25,6 +26,7 @@ public class UpdateAccidentsInRange extends AsyncTask<Void, Void, AccidentList> 
 
     @Override
     protected AccidentList doInBackground(Void... params) {
+        UserInfoPreferences userInfoPreferences = new UserInfoPreferences(context);
 
         UserSettingsPreferences userSettingsPref
                 = new UserSettingsPreferences(context);
@@ -38,7 +40,7 @@ public class UpdateAccidentsInRange extends AsyncTask<Void, Void, AccidentList> 
         MyApi myApi = BackendApiProvider.getPatientApi();
         try {
             AccidentList accidentList
-                    = myApi.getAccidentInRange(currentLat, currentLon, radius).execute();
+                    = myApi.getAccidentInRange(userInfoPreferences.getUserId(), currentLat, currentLon, radius).execute();
             if(accidentList == null || accidentList.getAccidentList() == null){
                 accidentList = new AccidentList();
                 accidentList.setAccidentList(new Vector<Accident>());
@@ -60,6 +62,6 @@ public class UpdateAccidentsInRange extends AsyncTask<Void, Void, AccidentList> 
         if(accidentList == null) {
             return;
         }
-        iUpdateAccidentInRange.onUpdateAccidentsInRangeUpdated(accidentList);
+        iUpdateAccidentInRange.onAccidentsInRangeUpdated(accidentList);
     }
 }
