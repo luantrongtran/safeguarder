@@ -119,7 +119,7 @@ public class MapsActivity extends AppCompatActivity
         setUpGoogleApiClient();
         setUpComponents();
 
-        setUpDummyData();
+//        setUpDummyData();
 
         registerReceiver();
 

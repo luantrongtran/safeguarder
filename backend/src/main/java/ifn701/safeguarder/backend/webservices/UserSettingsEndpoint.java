@@ -5,6 +5,7 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 
 import ifn701.safeguarder.backend.dao.UserSettingDao;
+import ifn701.safeguarder.backend.entities.ResultCode;
 import ifn701.safeguarder.backend.entities.UserSetting;
 
 /**
@@ -22,8 +23,11 @@ import ifn701.safeguarder.backend.entities.UserSetting;
 )
 public class UserSettingsEndpoint {
     @ApiMethod(name = "updateUserSettings")
-    public void updateUserSettings(UserSetting userSettings) {
+    public ResultCode updateUserSettings(UserSetting userSettings) {
         UserSettingDao userSettingDao = new UserSettingDao();
-        userSettingDao.updateUserSettings(userSettings);
+        boolean b = userSettingDao.updateUserSettings(userSettings);
+        ResultCode resultCode = new ResultCode();
+        resultCode.setResult(b);
+        return resultCode;
     }
 }

@@ -16,7 +16,7 @@ public class UserSettingDao extends DAOBase {
     public static String colUserId = "user_id";
     public static String colHomeLocationLat = "home_location_lat";
     public static String colHomeLocationLon = "home_location_lon";
-    public static String colHomeLocationAddress = "home_address";
+    public static String colHomeLocationAddress = "home_location_address";
     public static String colRadius = "radius";
 
     public UserSetting getUserSettingsByUserId(int userId) {
@@ -50,11 +50,12 @@ public class UserSettingDao extends DAOBase {
         return null;
     }
 
-    public void insertNewUserSetting(UserSetting userSetting) {
+    public boolean insertNewUserSetting(UserSetting userSetting) {
         String sql = "INSERT INTO " + tableName + " (" + colHomeLocationAddress + ", "
                 + colHomeLocationLat + ", " + colHomeLocationLon + ", " + colRadius
                 + ", " + colUserId + ") VALUES(?,?,?,?,?)";
 
+        int result = 0;
         try {
             PreparedStatement ps = getConnection().prepareStatement(sql);
             ps.setString(1, userSetting.getHomeAddress());
@@ -62,25 +63,31 @@ public class UserSettingDao extends DAOBase {
             ps.setDouble(3, userSetting.getHomeLocationLon());
             ps.setFloat(4, userSetting.getRadius());
             ps.setInt(5, userSetting.getUserId());
+
+            result = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return (result > 0);
     }
 
-    public void deleteUserSettingByUserId(int userId) {
+    public boolean deleteUserSettingByUserId(int userId) {
         String sql = "DELETE FROM " + tableName + " WHERE " + colUserId + " = ?";
+        int result = 0;
         try {
             PreparedStatement ps = getConnection().prepareStatement(sql);
             ps.setInt(1, userId);
 
-            ps.executeUpdate();
+            result = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return result>0;
     }
 
-    public void updateUserSettings(UserSetting userSetting) {
+    public boolean updateUserSettings(UserSetting userSetting) {
         deleteUserSettingByUserId(userSetting.getUserId());
-        insertNewUserSetting(userSetting);
+        return insertNewUserSetting(userSetting);
     }
 }

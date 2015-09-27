@@ -50,9 +50,9 @@ public class UserInfoPreferences {
                 Constants.sharedPreferences_string_default_value);
     }
 
-    public void setEmail (EditText email) {
+    public void setEmail (String email) {
         sharedPreferences.edit()
-                .putString(Constants.sharedPreferences_user_info_email, String.valueOf(email)).apply();
+                .putString(Constants.sharedPreferences_user_info_email, email).apply();
     }
 
     public String getPassword(){
@@ -60,8 +60,8 @@ public class UserInfoPreferences {
                 Constants.sharedPreferences_string_default_value);
     }
 
-    public void setPassword (EditText password) {
+    public void setPassword (String password) {
         sharedPreferences.edit()
-                .putString(Constants.getSharedPreferences_user_info_password, String.valueOf(password)).apply();
+                .putString(Constants.getSharedPreferences_user_info_password, password).apply();
     }
 }

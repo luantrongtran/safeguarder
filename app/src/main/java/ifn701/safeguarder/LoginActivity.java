@@ -206,8 +206,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginService{
     public void processUserLogin(User user) {
         if(user != null){
             UserInfoPreferences userInfoPreferences = new UserInfoPreferences(getApplicationContext());
-            userInfoPreferences.setEmail(_emailText);
-            userInfoPreferences.setPassword(_passwordText);
+            userInfoPreferences.setEmail(user.getEmail());
+            userInfoPreferences.setPassword(user.getPassword());
+            userInfoPreferences.setFullname(user.getFullName());
+            userInfoPreferences.setUserId(user.getId());
+
             Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
