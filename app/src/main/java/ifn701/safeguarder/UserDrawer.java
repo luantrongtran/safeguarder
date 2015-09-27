@@ -1,6 +1,7 @@
 package ifn701.safeguarder;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Circle;
@@ -16,9 +17,13 @@ import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
  * Created by lua on 7/09/2015.
  */
 public class UserDrawer {
-    private static Circle currentLocationInterestedArea;
-    private static Circle homeLocationInterestedArea;
-    private static Marker homeLocationMarker;
+    private Circle currentLocationInterestedArea;
+    private CircleOptions circleOptionsCurrentLocation;
+
+    private Circle homeLocationInterestedArea;
+    private CircleOptions circleOptionsHomeLocation;
+
+    private Marker homeLocationMarker;
 
 
     private int currentLocationInterestedAreaFillColor = 0x330000FF;
@@ -27,35 +32,54 @@ public class UserDrawer {
     private Context context;
     private GoogleMap gMap;
 
+    CurrentLocationPreferences currentLocationPreferences;
+    UserSettingsPreferences userSettingsPreferences;
+
     public UserDrawer (Context context, GoogleMap gMap) {
         this.context = context;
         this.gMap = gMap;
+
+        circleOptionsCurrentLocation = new CircleOptions()
+                .fillColor(currentLocationInterestedAreaFillColor)
+                .strokeColor(currentLocationInterestedAreaStrokeColor);
+        circleOptionsHomeLocation = new CircleOptions()
+                .fillColor(currentLocationInterestedAreaFillColor)
+                .strokeColor(currentLocationInterestedAreaStrokeColor);
+
         if(currentLocationInterestedArea == null) {
             drawCurrentLocationInterestedArea();
         }
+        if(homeLocationInterestedArea == null) {
+            drawHomeLocation();
+        }
+
+        currentLocationPreferences = new CurrentLocationPreferences(context);
+        userSettingsPreferences = new UserSettingsPreferences(context);
     }
 
     public void drawCurrentLocationInterestedArea() {
-        CurrentLocationPreferences currentLocationPreferences
+        currentLocationPreferences
                 = new CurrentLocationPreferences(context);
         UserSettingsPreferences userSettingsPreferences = new UserSettingsPreferences(context);
 
         LatLng position = new LatLng(currentLocationPreferences.getLat(),
                 currentLocationPreferences.getLon());
         float radius = userSettingsPreferences.getRadius();
-        CircleOptions circleOptions = new CircleOptions()
+        circleOptionsCurrentLocation = circleOptionsCurrentLocation
                 .center(position)
-                .radius(radius)
-                .fillColor(currentLocationInterestedAreaFillColor)
-                .strokeColor(currentLocationInterestedAreaStrokeColor);
+                .radius(radius);
 
-        currentLocationInterestedArea = gMap.addCircle(circleOptions);
+        currentLocationInterestedArea = gMap.addCircle(circleOptionsCurrentLocation);
     }
 
     public void updateCurrentLocationInterestedArea(){
-        CurrentLocationPreferences currentLocationPreferences
+        if(currentLocationInterestedArea == null) {
+            drawCurrentLocationInterestedArea();
+            return;
+        }
+        currentLocationPreferences
                 = new CurrentLocationPreferences(context);
-        UserSettingsPreferences userSettingsPreferences = new UserSettingsPreferences(context);
+        userSettingsPreferences = new UserSettingsPreferences(context);
 
         LatLng position = new LatLng(currentLocationPreferences.getLat(),
                 currentLocationPreferences.getLon());
@@ -66,30 +90,38 @@ public class UserDrawer {
     }
 
     public void drawHomeLocation() {
-        UserSettingsPreferences userSettingsPreferences = new UserSettingsPreferences(context);
-        if(userSettingsPreferences.getHomeLocationAddress().isEmpty() == true) {
+        userSettingsPreferences = new UserSettingsPreferences(context);
+        if(userSettingsPreferences.getHomeLocationAddress().isEmpty()) {
+            Log.i(Constants.APPLICATION_ID, "Home location is not set up in SharedPreferences");
             return;
         }
 
         LatLng position = new LatLng(userSettingsPreferences.getHomeLocationLat(),
-                userSettingsPreferences.getHomeLocationLat());
+                userSettingsPreferences.getHomeLocationLon());
         float radius = userSettingsPreferences.getRadius();
-        CircleOptions circleOptions = new CircleOptions()
+        circleOptionsHomeLocation = circleOptionsHomeLocation
                 .center(position)
-                .radius(radius)
-                .fillColor(currentLocationInterestedAreaFillColor)
-                .strokeColor(currentLocationInterestedAreaStrokeColor);
+                .radius(radius);
 
         MarkerOptions markerOptions = new MarkerOptions().position(position);
 
-        if(homeLocationInterestedArea != null) {
-            homeLocationInterestedArea.remove();
-        }
-        homeLocationInterestedArea = gMap.addCircle(circleOptions);
+        homeLocationInterestedArea = gMap.addCircle(circleOptionsHomeLocation);
 
-        if(homeLocationMarker != null) {
-            homeLocationMarker.remove();
-        }
+        String snippet = context.getString(R.string.window_info_home_location_address) +
+                userSettingsPreferences.getHomeLocationAddress();
+        markerOptions.snippet(snippet)
+                .title(context.getString(R.string.window_info_home_location_title));
         homeLocationMarker = gMap.addMarker(markerOptions);
+    }
+
+    public void updateHomeLocation() {
+        float radius = userSettingsPreferences.getRadius();
+        double lat = userSettingsPreferences.getHomeLocationLat();
+        double lon = userSettingsPreferences.getHomeLocationLon();
+
+        homeLocationInterestedArea.setRadius(radius);
+        homeLocationInterestedArea.setCenter(new LatLng(lat, lon));
+
+//        homeLocationInterestedArea = gMap.addCircle(cir)
     }
 }

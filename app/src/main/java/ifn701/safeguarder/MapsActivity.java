@@ -287,7 +287,7 @@ public class MapsActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         userDrawer.updateCurrentLocationInterestedArea();
-        userDrawer.drawHomeLocation();
+        userDrawer.updateHomeLocation();
     }
 
     public void cancelServiceOnStop() {

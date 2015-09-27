@@ -8,6 +8,16 @@ public class User {
     private String password;
     private boolean activated;
 
+    private UserSetting userSetting;
+
+    public UserSetting getUserSetting() {
+        return userSetting;
+    }
+
+    public void setUserSetting(UserSetting userSetting) {
+        this.userSetting = userSetting;
+    }
+
     //ID
     public int getId() {
         return id;

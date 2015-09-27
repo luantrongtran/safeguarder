@@ -20,6 +20,7 @@ import java.util.logging.LogRecord;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
+import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
 import ifn701.safeguarder.backend.myApi.model.User;
 import ifn701.safeguarder.webservices.ILoginService;
 import ifn701.safeguarder.webservices.LoginService;
@@ -210,6 +211,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginService{
             userInfoPreferences.setPassword(user.getPassword());
             userInfoPreferences.setFullname(user.getFullName());
             userInfoPreferences.setUserId(user.getId());
+
+            //Set up user settings into SharedPreferences
+            UserSettingsPreferences userSettingsPreferences
+                    = new UserSettingsPreferences(getApplicationContext());
+            userSettingsPreferences.setUserSettings(user.getUserSetting());
 
             Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MapsActivity.class);

@@ -15,7 +15,9 @@ import javax.inject.Named;
 
 
 import ifn701.safeguarder.backend.dao.UserDao;
+import ifn701.safeguarder.backend.dao.UserSettingDao;
 import ifn701.safeguarder.backend.entities.User;
+import ifn701.safeguarder.backend.entities.UserSetting;
 //import ifn701.safeguarder.backend.entities.UserList;
 
 /**
@@ -41,7 +43,18 @@ public class Login {
     @ApiMethod(name = "login")
     public User login( @Named("email") String email, @Named("password") String password) {
         UserDao userDao = new UserDao();
-        return userDao.loginUser(email,password);
+        User user = userDao.loginUser(email,password);
+
+        UserSettingDao userSettingDao = new UserSettingDao();
+        UserSetting userSetting = userSettingDao.getUserSettingsByUserId(user.getId());
+
+        if(userSetting == null) {
+            return null;
+        }
+
+        user.setUserSetting(userSetting);
+
+        return user;
 
 //        Vector<User> userVector = userDao.getUserInfo(fullName,email,password,activated);
 //        UserList userList = new UserList();

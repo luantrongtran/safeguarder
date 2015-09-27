@@ -103,13 +103,7 @@ public class ZoneSettingActivity extends AppCompatActivity implements IUpdateUse
     }
 
     private void updateUserSettingIntoSharedPreferences() {
-        //update new radius into SharedPreferences
-        userSettingsPreferences.setRadius(userSetting.getRadius());
-
-        //set Home location and address into SharedPreferences.
-        userSettingsPreferences.setHomeLocationLat(userSetting.getHomeLocationLat());
-        userSettingsPreferences.setHomeLocationLon(userSetting.getHomeLocationLon());
-        userSettingsPreferences.setHomeLocationAddress(userSetting.getHomeAddress());
+        userSettingsPreferences.setUserSettings(userSetting);
     }
 
     @Override

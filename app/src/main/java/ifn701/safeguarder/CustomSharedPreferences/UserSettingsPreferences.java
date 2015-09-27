@@ -5,15 +5,18 @@ import android.content.SharedPreferences;
 
 import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.SharedPreferencesUtilities;
+import ifn701.safeguarder.backend.myApi.model.UserSetting;
 
 /**
  * Created by lua on 3/09/2015.
  */
 public class UserSettingsPreferences {
     SharedPreferences sharedPreferences;
+    private Context context;
     public UserSettingsPreferences(Context applicationContext) {
         sharedPreferences = applicationContext
                 .getSharedPreferences(Constants.sharedPreferences_user_settings, Context.MODE_PRIVATE);
+        this.context = applicationContext;
     }
 
     public void setRadius(float radius) {
@@ -60,5 +63,32 @@ public class UserSettingsPreferences {
                 Constants.sharedPreferences_string_default_value);
     }
 
-    
+    /**
+     * put all the attributes of userSettings into SharedPreferences
+     * @param userSettings
+     */
+    public void setUserSettings(UserSetting userSettings) {
+        setHomeLocationAddress(userSettings.getHomeAddress());
+        setHomeLocationLat(userSettings.getHomeLocationLat());
+        setHomeLocationLon(userSettings.getHomeLocationLon());
+        setRadius(userSettings.getRadius());
+    }
+
+    /**
+     * get All the user settings from SharedPreferences and put them into an UserSetting object
+     * @return an UserSetting object containing all data
+     */
+    public UserSetting getUserSettings() {
+        UserSetting userSetting = new UserSetting();
+
+        userSetting.setRadius(getRadius());
+        userSetting.setHomeAddress(getHomeLocationAddress());
+        userSetting.setHomeLocationLat(getHomeLocationLat());
+        userSetting.setHomeLocationLon(getHomeLocationLon());
+
+        UserInfoPreferences userInfoPreferences = new UserInfoPreferences(context);
+        userSetting.setUserId(userInfoPreferences.getUserId());
+
+        return userSetting;
+    }
 }

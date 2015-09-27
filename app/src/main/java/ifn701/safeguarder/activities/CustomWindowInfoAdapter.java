@@ -87,10 +87,15 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
     @Override
     public View getInfoWindow(Marker marker) {
         String title = marker.getTitle();
-        if(title.equals(ACCIDENT_TYPE)){
+
+        if(title == null) {
+            getInfoWindowForDefaultMarker(marker);
+        } else if(title.equals(ACCIDENT_TYPE)){
             getInfoWindowForAccidentMarker(marker);
         } else if (title.equals(GOOGLE_PLACE_TYPE)) {
             getInfoWindowForGooglePlaceMarker(marker);
+        } else {
+            getInfoWindowForDefaultMarker(marker);
         }
 
         return view;
@@ -122,6 +127,17 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
         } catch (IOException e) {
             e.printStackTrace();
             return;
+        }
+    }
+
+    public void getInfoWindowForDefaultMarker(Marker marker) {
+        reset();
+
+        if (marker.getTitle() != null) {
+            titleView.setText(marker.getTitle());
+        }
+        if (marker.getSnippet() != null) {
+            addInformationBeforeImage(marker.getSnippet());
         }
     }
 
