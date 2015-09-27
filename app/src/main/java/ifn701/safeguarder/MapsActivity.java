@@ -465,11 +465,12 @@ public class MapsActivity extends AppCompatActivity
     }
 
     private void switchLocationBar() {
+        int toolbarHeight = toolbar.getMeasuredHeight();
         int from = 0;
         int to = 0;
         if(isLocationSwitcherShowed) {
             //if visible
-            from = 110;
+            from = toolbarHeight;//110;
             to = 0;
             isLocationSwitcherShowed = false;
         } else {

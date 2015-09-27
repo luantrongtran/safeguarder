@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -17,14 +19,14 @@ import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
  * Created by lua on 7/09/2015.
  */
 public class UserDrawer {
-    private Circle currentLocationInterestedArea;
+    private static Circle currentLocationInterestedArea;
     private CircleOptions circleOptionsCurrentLocation;
 
-    private Circle homeLocationInterestedArea;
+    private static Circle homeLocationInterestedArea;
     private CircleOptions circleOptionsHomeLocation;
 
-    private Marker homeLocationMarker;
-
+    private static Marker homeLocationMarker;
+    private MarkerOptions homeMarkerOption;
 
     private int currentLocationInterestedAreaFillColor = 0x330000FF;
     private int currentLocationInterestedAreaStrokeColor = 0x800000CC;
@@ -45,6 +47,7 @@ public class UserDrawer {
         circleOptionsHomeLocation = new CircleOptions()
                 .fillColor(currentLocationInterestedAreaFillColor)
                 .strokeColor(currentLocationInterestedAreaStrokeColor);
+        homeMarkerOption = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.home_icon));
 
         if(currentLocationInterestedArea == null) {
             drawCurrentLocationInterestedArea();
@@ -103,15 +106,15 @@ public class UserDrawer {
                 .center(position)
                 .radius(radius);
 
-        MarkerOptions markerOptions = new MarkerOptions().position(position);
+        homeMarkerOption = homeMarkerOption.position(position);
 
         homeLocationInterestedArea = gMap.addCircle(circleOptionsHomeLocation);
 
         String snippet = context.getString(R.string.window_info_home_location_address) +
                 userSettingsPreferences.getHomeLocationAddress();
-        markerOptions.snippet(snippet)
+        homeMarkerOption.snippet(snippet)
                 .title(context.getString(R.string.window_info_home_location_title));
-        homeLocationMarker = gMap.addMarker(markerOptions);
+        homeLocationMarker = gMap.addMarker(homeMarkerOption);
     }
 
     public void updateHomeLocation() {
