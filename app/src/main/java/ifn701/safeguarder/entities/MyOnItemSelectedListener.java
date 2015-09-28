@@ -15,7 +15,7 @@ public class MyOnItemSelectedListener implements OnItemSelectedListener {
      */
     @Override
     public void onItemSelected(AdapterView parent, View view, int pos, long id) {
-        Toast.makeText(parent.getContext(), "Selected Level: " + parent.getItemAtPosition(pos).toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(parent.getContext(), "Selected Level: " + parent.getItemAtPosition(pos).toString(), Toast.LENGTH_SHORT).show();
     }
 
     public void onNothingSelected(AdapterView parent) {

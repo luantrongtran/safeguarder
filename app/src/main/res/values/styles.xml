@@ -5,9 +5,16 @@
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <!--
         <item name="colorPrimary">#000000</item>
         <item name="colorPrimaryDark">@android:color/darker_gray</item>
         <item name="colorAccent">#FF4081</item>
+        -->
+
+        <item name="colorPrimary">@color/accent_material_light</item>
+        <item name="colorPrimaryDark">@color/accent_material_dark</item>
+        <item name="colorAccent">#000000</item>
+
     </style>
 
     <style name="AppThemeActionBar" parent="Theme.AppCompat.Light">

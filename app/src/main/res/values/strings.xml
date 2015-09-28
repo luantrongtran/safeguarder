@@ -53,9 +53,26 @@
     <string name="select">Observation Level</string>
 
     <string-array name="observationlevel_array">
-        <item>Highest</item>
-        <item>High</item>
-        <item>Medium</item>
+        <item>Select Observation Level</item>
         <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+        <item>Highest</item>
     </string-array>
+
+    <string name="select_accType">Accident Type</string>
+
+    <string-array name="accidentType_array">
+        <item>Select Accident Type</item>
+        <item>Aviation Accident</item>
+        <item>Criminal</item>
+        <item>Earthquake</item>
+        <item>Ferry Accident</item>
+        <item>Industry Accident</item>
+        <item>Traffic Accident</item>
+        <item>Weather Accident</item>
+    </string-array>
+
+    <string name="title_activity_observation_detailed">ObservationDetailed</string>
+    <string name="title_activity_observation_list">ObservationList</string>
 </resources>

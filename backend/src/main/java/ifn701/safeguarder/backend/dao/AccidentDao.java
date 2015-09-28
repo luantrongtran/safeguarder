@@ -1,13 +1,20 @@
 package ifn701.safeguarder.backend.dao;
 
+import com.google.api.server.spi.types.SimpleDate;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+
+import javax.xml.transform.Result;
 
 import ifn701.safeguarder.backend.entities.Accident;
 import ifn701.safeguarder.backend.entities.Location;
@@ -66,19 +73,55 @@ public class AccidentDao extends DAOBase {
 
         String sql = "SELECT * FROM accident WHERE id = ?";
         PreparedStatement ps = null;
+
         try {
             ps = con.prepareStatement(sql);
             ps.setInt(1, id);
 
-            ps.executeUpdate();
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Accident accident = parseFromResultSet(rs);
+
+                UserDao userDao = new UserDao();
+                accident.setUser(userDao.findById(accident.getUserId()));
+
+                return accident;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+
         return null;
     }
 
+    public Vector<Accident> findAccidentsByUserId(int id) {
+        Connection con = getConnection();
+
+        String sql = "SELECT * FROM accident WHERE user_id = ?";
+        PreparedStatement ps = null;
+
+        Vector<Accident> accidentList = new Vector<Accident>();
+
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Accident accident = parseFromResultSet(rs);
+                accidentList.add(accident);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return accidentList;
+    }
+
     public void insertANewAccident(Accident accident) {
+
+        System.out.println("WITHIN INSERTANEWACCIDENT METHOD");
 
         Connection con = getConnection();
         String sql = "INSERT INTO accident (user_Id, name, type, time, lat, lon, observation_level, " +
@@ -113,7 +156,11 @@ public class AccidentDao extends DAOBase {
         accident.setUserId(rs.getInt(colUserId));
         accident.setName(rs.getString(colName));
         accident.setType(rs.getString(colType));
-        accident.setTime(rs.getLong(colTime));
+
+        Timestamp timestamp = rs.getTimestamp(colTime);
+        accident.setTime(timestamp.getTime());
+
+
         accident.setLat(rs.getDouble(colLat));
         accident.setLon(rs.getDouble(colLon));
         accident.setObservation_level(rs.getInt(colObservationLevel));

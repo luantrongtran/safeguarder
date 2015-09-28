@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -40,6 +41,7 @@ import java.util.Locale;
 import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
+import ifn701.safeguarder.Observation.ObservationList;
 import ifn701.safeguarder.Parcelable.AccidentListParcelable;
 import ifn701.safeguarder.activities.LeftMenuAdapter;
 import ifn701.safeguarder.activities.ReportActivity;
@@ -51,6 +53,8 @@ import ifn701.safeguarder.backgroundservices.UpdateAccidentsInRangeService;
 
 
 public class MapsActivity extends AppCompatActivity {
+
+    public static int requestCodeObsDetailed = 2;
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
@@ -203,6 +207,9 @@ public class MapsActivity extends AppCompatActivity {
                     int index = clickedIndex - 1;
                     if (index == LeftMenuAdapter.ZONE_SETTING) {
                         goToSettings();
+                    }
+                    else if (index == LeftMenuAdapter.OBSERVATION_LIST) {
+                        goToObsListActivity();
                     }
 
                     return true;
@@ -471,5 +478,10 @@ public class MapsActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void goToObsListActivity() {
+        Intent intent = new Intent(this, ObservationList.class);
+        startActivityForResult(intent, requestCodeObsDetailed);
     }
 }

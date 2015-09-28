@@ -99,6 +99,14 @@ public class Accident {
         this.image3 = image3;
     }
 
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     private int id;
     private int userId;
     private String name;
@@ -112,4 +120,5 @@ public class Accident {
     private Blob image2;
     private Blob image3;
 
+    User user;
 }
