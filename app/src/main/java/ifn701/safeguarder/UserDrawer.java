@@ -12,6 +12,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
 
@@ -28,11 +31,13 @@ public class UserDrawer {
     private static Marker homeLocationMarker;
     private MarkerOptions homeMarkerOption;
 
-    private int currentLocationInterestedAreaFillColor = 0x330000FF;
-    private int currentLocationInterestedAreaStrokeColor = 0x800000CC;
+    private static int currentLocationInterestedAreaFillColor = 0x330000FF;
+    private static int currentLocationInterestedAreaStrokeColor = 0x800000CC;
 
     private Context context;
     private GoogleMap gMap;
+
+
 
     CurrentLocationPreferences currentLocationPreferences;
     UserSettingsPreferences userSettingsPreferences;

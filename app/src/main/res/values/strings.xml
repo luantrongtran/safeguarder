@@ -71,5 +71,18 @@
     <string name="title_activity_signup">SignupActivity</string>
 
     <string name="window_info_home_location_title">Home</string>
-    <string name="window_info_home_location_address">Address:</string>
+    <string name="window_info_home_location_address">Address: </string>
+
+    <string name="select_accType">Accident Type</string>
+
+    <string-array name="accidentType_array">
+        <item>Select Accident Type</item>
+        <item>Aviation Accident</item>
+        <item>Criminal</item>
+        <item>Earthquake</item>
+        <item>Ferry Accident</item>
+        <item>Industry Accident</item>
+        <item>Traffic Accident</item>
+        <item>Weather Accident</item>
+    </string-array>
 </resources>

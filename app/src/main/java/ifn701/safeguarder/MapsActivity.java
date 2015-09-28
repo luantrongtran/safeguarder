@@ -87,7 +87,7 @@ public class MapsActivity extends AppCompatActivity
     public long updateAccidentListInterval = 10*1000;//10s
     private PendingIntent updateAccidentListPendingIntent;
 
-    public static AccidentManager accidentManager = new AccidentManager();
+    public static AccidentManager accidentManager;
     public static HealthServicesManager healthServicesmanager = new HealthServicesManager();
     public static UserDrawer userDrawer;
     boolean isLocationSwitcherShowed = false;
@@ -126,6 +126,8 @@ public class MapsActivity extends AppCompatActivity
         setUpNavigationMenu();
 
         setUpGoogleCloudMessage();
+
+        accidentManager = new AccidentManager(getApplicationContext());
     }
 
     @Override
