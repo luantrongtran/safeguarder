@@ -26,10 +26,16 @@ public class AccidentManager {
     Context context;
 
     private Map<String, BitmapDescriptor> accidentTypeMarkers;
-    //accidentTypeMarkerIds should be corresponding to the accidentType_array in string.xml
-    private static int[] accidentTypeMarkerIds = {R.drawable.aviation_marker, R.drawable.crime_marker,
+    //accidentTypeMarkerIds should be corresponding to the accidentTypeNames
+    public static int[] accidentTypeMarkerIds = {R.drawable.aviation_marker, R.drawable.crime_marker,
             R.drawable.earthquake_marker, R.drawable.ferry_marker, R.drawable.industry_accident_marker,
             R.drawable.traffic_accident_marker, R.drawable.weather_marker};
+    public static int[] accidentTypeNames = {R.string.aviation_accident, R.string.criminal,
+            R.string.earthquake, R.string.ferry_accident, R.string.industry_accident,
+            R.string.traffic_accident, R.string.weather_accident};
+    //Id used for each accident type within SharedPreferences
+    public static String[] sharedPreferencesIds = {"aviation", "criminal", "earthquake", "ferry",
+                                                        "industry", "traffic", "weather"};
 
     public AccidentManager(Context context) {
         accidentList = new AccidentList();
@@ -42,13 +48,10 @@ public class AccidentManager {
     private void initialiseAccidentTypeMarkers() {
         accidentTypeMarkers = new HashMap<>();
 
-        String[] accidentTypes = context.getResources().getStringArray(R.array.accidentType_array);
-        BitmapDescriptor[] accidentMarkers = new BitmapDescriptor[accidentTypes.length];
-
-        for(int i = 1; i < accidentTypes.length; i++) {
-            String accidentTypeName = accidentTypes[i];
+        for(int i = 0; i < accidentTypeNames.length; i++) {
+            String accidentTypeName = context.getString(accidentTypeNames[i]);
             BitmapDescriptor typeIcon
-                    = BitmapDescriptorFactory.fromResource(accidentTypeMarkerIds[i-1]);
+                    = BitmapDescriptorFactory.fromResource(accidentTypeMarkerIds[i]);
             accidentTypeMarkers.put(accidentTypeName.toLowerCase(), typeIcon);
         }
     }

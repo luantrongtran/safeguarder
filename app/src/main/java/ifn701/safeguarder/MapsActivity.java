@@ -17,6 +17,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -56,6 +57,7 @@ import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
 import ifn701.safeguarder.Parcelable.AccidentListParcelable;
+import ifn701.safeguarder.activities.EventFilterActivity;
 import ifn701.safeguarder.activities.LeftMenuAdapter;
 import ifn701.safeguarder.activities.ReportActivity;
 import ifn701.safeguarder.activities.ZoneSettingActivity;
@@ -128,6 +130,8 @@ public class MapsActivity extends AppCompatActivity
         setUpGoogleCloudMessage();
 
         accidentManager = new AccidentManager(getApplicationContext());
+
+        setDefaultSharedPreferences();
     }
 
     @Override
@@ -150,6 +154,11 @@ public class MapsActivity extends AppCompatActivity
             Intent intent = new Intent(this, RegistrationIntentService.class) ;
             startService(intent);
         }
+    }
+
+    public void setDefaultSharedPreferences() {
+        //Set default values for Event Filter settings
+//        PreferenceManager.setDefaultValues(this, R.xml.event_filter_default_settings, false);
     }
 
     public void setUpGoogleApiClient() {
@@ -258,6 +267,8 @@ public class MapsActivity extends AppCompatActivity
                     int index = clickedIndex - 1;
                     if (index == LeftMenuAdapter.ZONE_SETTING) {
                         goToSettings();
+                    } else if (index == LeftMenuAdapter.EVENT_FILTER_SETTING) {
+                        goToEventFilterSetting();
                     }
 
                     return true;
@@ -283,6 +294,11 @@ public class MapsActivity extends AppCompatActivity
     public void goToSettings() {
         Intent intent = new Intent(this, ZoneSettingActivity.class);
         startActivityForResult(intent, 1);
+    }
+
+    public void goToEventFilterSetting() {
+        Intent intent = new Intent(this, EventFilterActivity.class);
+        startActivityForResult(intent, LeftMenuAdapter.EVENT_FILTER_SETTING);
     }
 
 

@@ -4,6 +4,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import ifn701.safeguarder.R;
 
@@ -13,6 +18,23 @@ public class EventFilterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_filter);
+
+        final ListView listView = (ListView) findViewById(R.id.listviewAccidentTypes);
+        listView.setAdapter(new AccidentTypeListViewAdapter(getApplicationContext()));
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+        CheckBox checkAll = (CheckBox)findViewById(R.id.cbCheckAllAccidentTypes);
+        checkAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                ListAdapter listAdapter = listView.getAdapter();
+                for(int i = 0; i < listAdapter.getCount(); i++) {
+                    View view = listView.getChildAt(i);
+                    CheckBox cb = (CheckBox)view.findViewById(R.id.cbAccidentFilter);
+                    cb.setChecked(isChecked);
+                }
+            }
+        });
     }
 
     @Override
