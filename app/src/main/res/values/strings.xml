@@ -13,24 +13,24 @@
     <string name="my_location">My Location</string>
     <string name="home_location_not_set">Home location has not been set</string>
 
-
-
     <string name="home_setting_search_address_failed">Cannot find the address</string>
 
     <string name="zone_setting_radius">Radius(m)</string>
-    <string name="zone_setting_update_radius">Update radius</string>
-    <string name="zone_setting_update_radius_success">Update radius successfully</string>
+    <string name="zone_setting_update_setting">Update changes</string>
+    <string name="zone_setting_invalid_radius">The radius should be positive number larger than 0</string>
     <string name="zone_setting_update_home_location">Update home location</string>
-    <string name="zone_setting_update_home_location_success">Update home location successfully</string>
+    <string name="zone_setting_update_changes_successfully">Update new settings successfully</string>
+    <string name="zone_setting_update_changes_failed">Cannot update settings</string>
 
     <!-- Left menu titles -->
-    <string name="left_menu_notification">notification</string>
-    <string name="left_menu_observation">observations</string>
+    <string name="left_menu_notification">Notification</string>
+    <string name="left_menu_observation">Observations</string>
     <string name="left_menu_zone_setting">Zones Setting</string>
     <string name="left_menu_event_fiilter">Events Filter</string>
     <string name="left_menu_help">Help</string>
     <string name="title_activity_home_setting">Map</string>
     <string name="title_activity_zone_setting">ZoneSettingActivity</string>
+    <string name="left_menu_logout">Logout</string>
 
     <string name="title_activity_detailed_report">DetailedReport</string>
 
@@ -60,6 +60,22 @@
         <item>Highest</item>
     </string-array>
 
+    <string name="title_activity_observation_detailed">ObservationDetailed</string>
+    <string name="title_activity_observation_list">ObservationList</string>
+    <string name="time_format">hh:mm aaa</string>
+
+    <string name="window_info_accident_time">Time:</string>
+    <string name="window_info_accident_description">Description:</string>
+    <string name="window_info_observation_level">Level:</string>
+
+    <string name="window_info_google_place_address">Address:</string>
+    <string name="window_info_google_place_phone">Phone:</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_signup">SignupActivity</string>
+
+    <string name="window_info_home_location_title">Home</string>
+    <string name="window_info_home_location_address">Address: </string>
+
     <string name="select_accType">Accident Type</string>
 
     <string-array name="accidentType_array">
@@ -73,6 +89,5 @@
         <item>Weather Accident</item>
     </string-array>
 
-    <string name="title_activity_observation_detailed">ObservationDetailed</string>
-    <string name="title_activity_observation_list">ObservationList</string>
+    <string name="observation_list_activity_empty_accident_list">You have not posted any accident</string>
 </resources>

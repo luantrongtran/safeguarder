@@ -6,7 +6,9 @@
         <init-param>
             <param-name>services</param-name>
             <param-value>ifn701.safeguarder.backend.MyEndpoint,
-                ifn701.safeguarder.backend.webservices.AccidentEndpoint</param-value>
+                ifn701.safeguarder.backend.webservices.AccidentEndpoint,
+                ifn701.safeguarder.backend.webservices.Login,
+                ifn701.safeguarder.backend.webservices.UserSettingsEndpoint</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

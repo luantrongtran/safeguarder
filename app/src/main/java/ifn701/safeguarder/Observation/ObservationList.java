@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
@@ -30,6 +32,8 @@ public class ObservationList extends Activity implements IGetAccidentByUserIdSer
         GetAccidentListByUserIdService getAccidentByUserIdService = new GetAccidentListByUserIdService(this);
         UserInfoPreferences getMyUserId = new UserInfoPreferences(getApplicationContext());
         getAccidentByUserIdService.execute(getMyUserId.getUserId());
+
+        msg = (TextView) findViewById(R.id.msg);
     }
 
 
@@ -72,13 +76,24 @@ public class ObservationList extends Activity implements IGetAccidentByUserIdSer
                 startActivityForResult(intent, 1);
             }
         });
+
     }
+
+    private TextView msg;
 
     @Override
     public void getAccidentListByUserIdData(AccidentList accidentList) {
-        if (accidentList == null)
-            return;
+        if (accidentList == null || accidentList.getAccidentList() == null) {
+            Toast.makeText(ObservationList.this,
+                    R.string.observation_list_activity_empty_accident_list,
+                    Toast.LENGTH_SHORT).show();
 
+            msg.setVisibility(View.VISIBLE);
+            return;
+        }
+        else {
+            msg.setVisibility(View.GONE);
+        }
         showAccidentByUserIdList(accidentList);
     }
 }

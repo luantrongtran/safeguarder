@@ -1,12 +1,8 @@
 package ifn701.safeguarder;
 
-/*
- * Created by lua on 16/08/2015.
- */
 public class Constants {
     public static String webServiceUrl = "http://172.19.29.169:8080/_ah/api/";
-
-    public static String APPLIATION_ID = "safeguarder";
+    public static String APPLICATION_ID = "safeguarder";
 
     public static int sharedPreferences_integer_default_value = -1;
     public static float sharedPreferences_float_default_value = -1f;
@@ -25,6 +21,7 @@ public class Constants {
     public static String sharedPreferences_user_info_profile_picture = "profile_picture";
     public static String sharedPreferences_user_info_email = "user_email";
     public static String getSharedPreferences_user__info_fullname = "fullname";
+    public static String getSharedPreferences_user_info_password ="password";
 
     public static String sharedPreferences_user_settings = "user_setting";
     public static String sharedPreferences_user_settings_radius = "radius";
@@ -33,9 +30,15 @@ public class Constants {
     public static String sharedPreferences_user_settings_home_lat = "home_lat";
     public static String sharedPreferences_user_settings_home_lon = "home_lon";
 
+    public static String sharedPreferences_GCM = "google_cloud_message";
+    public static String sharedPreferences_GCM_is_token_sent_to_server
+            = "google_cloud_message_is_token_sent_to_server";
+
     public static String broadCastService_UpdateAccidentsList = "updated_accidents_list";
 
     public static String search_location_address = "search_location_address";
     public static String search_location_lat = "search_location_lat";
     public static String search_location_lon = "search_location_lon";
+
+    public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 }

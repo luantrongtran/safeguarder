@@ -1,11 +1,30 @@
 package ifn701.safeguarder.backend.entities;
 
 public class User {
+
+    private int id;
+    private String fullName;
+    private String email;
+    private String password;
+    private boolean activated;
+
+    private UserSetting userSetting;
+
+    public UserSetting getUserSetting() {
+        return userSetting;
+    }
+
+    public void setUserSetting(UserSetting userSetting) {
+        this.userSetting = userSetting;
+    }
+
+    //ID
     public int getId() {
         return id;
     }
     public void setId(int id) { this.id = id; }
 
+    //FullName
     public String getFullName() {
         return fullName;
     }
@@ -22,9 +41,4 @@ public class User {
     public boolean getActivated() {return activated; }
     public void setActivated(Boolean activated) { this.activated = activated; }
 
-    private int id;
-    private String fullName;
-    private String email;
-    private String password;
-    private boolean activated;
 }

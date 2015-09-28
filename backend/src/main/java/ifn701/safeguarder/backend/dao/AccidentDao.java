@@ -18,6 +18,7 @@ import javax.xml.transform.Result;
 
 import ifn701.safeguarder.backend.entities.Accident;
 import ifn701.safeguarder.backend.entities.Location;
+import ifn701.safeguarder.backend.entities.UserSetting;
 
 public class AccidentDao extends DAOBase {
 	
@@ -38,12 +39,13 @@ public class AccidentDao extends DAOBase {
 
     /**
      * Get all accidents in the area which has centroid is location variable
-     * and radius which is radius variable.
+     * and radius which is radius variable. Additionally, if the home location has been setup,
+     * then the accidents around home location will be added into the returned list.
      * @param lat the latitude of the centroid of the area
      * @param lon the longtitude of the centroid of the area
      * @param radius the radius from the centroid indicated by lat and lon
      */
-    public Vector<Accident> getAccidentsInSelectedArea(double lat, double lon, float radius) {
+    public Vector<Accident> getAccidentsWithinRangeByUserId(int userId, double lat, double lon, float radius) {
         Connection connection  = getConnection();
         Vector<Accident> accidentVector = new Vector<Accident>();
         String sql = "SELECT * FROM " + tableName + " " +
@@ -62,6 +64,23 @@ public class AccidentDao extends DAOBase {
                 accidentVector.add(accident);
             }
 
+            //Adding accidents near home location
+            UserSettingDao userSettingDao = new UserSettingDao();
+            UserSetting userSetting = userSettingDao.getUserSettingsByUserId(userId);
+            if(userSetting != null) {
+                double homeLat = userSetting.getHomeLocationLat();
+                double homeLon = userSetting.getHomeLocationLon();
+
+                ps = connection.prepareStatement(sql);
+                ps.setDouble(1, homeLat);
+                ps.setDouble(2, homeLon);
+                ps.setFloat(3, radius);
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    Accident accident = parseFromResultSet(rs);
+                    accidentVector.add(accident);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -140,9 +159,9 @@ public class AccidentDao extends DAOBase {
             ps.setDouble(6, accident.getLon());
             ps.setInt(7, accident.getObservation_level());
             ps.setString(8, accident.getDescription());
-            ps.setBlob(9, accident.getImage1());
-            ps.setBlob(10, accident.getImage2());
-            ps.setBlob(11, accident.getImage3());
+            ps.setString(9, accident.getImage1());
+            ps.setString(10, accident.getImage2());
+            ps.setString(11, accident.getImage3());
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -165,9 +184,9 @@ public class AccidentDao extends DAOBase {
         accident.setLon(rs.getDouble(colLon));
         accident.setObservation_level(rs.getInt(colObservationLevel));
         accident.setDescription(rs.getString(colDescription));
-        accident.setImage1(rs.getBlob(colImage1));
-        accident.setImage2(rs.getBlob(colImage2));
-        accident.setImage3(rs.getBlob(colImage3));
+        accident.setImage1(rs.getString(colImage1));
+        accident.setImage2(rs.getString(colImage2));
+        accident.setImage3(rs.getString(colImage3));
 
         return accident;
     }

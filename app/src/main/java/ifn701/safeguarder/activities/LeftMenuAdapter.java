@@ -13,9 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
-import ifn701.safeguarder.MapsActivity;
 import ifn701.safeguarder.R;
-import ifn701.safeguarder.webservices.ImageDownloader;
+import ifn701.safeguarder.webservices.ImageViewUrlLoader;
 
 public class LeftMenuAdapter extends RecyclerView.Adapter<LeftMenuAdapter.LeftMenuViewHolder> {
     private static final int TYPE_HEADER = 0;
@@ -29,11 +28,11 @@ public class LeftMenuAdapter extends RecyclerView.Adapter<LeftMenuAdapter.LeftMe
     Drawable patientIcon;
 
     private int[] icons = {R.drawable.ic_sms_failed_black_24dp, R.drawable.ic_visibility_black_24dp,
-    R.drawable.ic_action, R.drawable.ic_check_circle_black_24dp, R.drawable.ic_help_black_24dp};
+    R.drawable.ic_action, R.drawable.ic_check_circle_black_24dp, R.drawable.ic_help_black_24dp,R.drawable.ic_logout_black_24dp};
     private int[] titles = {R.string.left_menu_notification, R.string.left_menu_observation,
-    R.string.left_menu_zone_setting, R.string.left_menu_event_fiilter, R.string.left_menu_help};
+    R.string.left_menu_zone_setting, R.string.left_menu_event_fiilter, R.string.left_menu_help,R.string.left_menu_logout};
 
-    private boolean[] splitterPositions = {false, true, false, true, false};
+    private boolean[] splitterPositions = {false, true, false, true, false, true};
 
     public LeftMenuAdapter(Context context) {
         this.context = context;
@@ -66,12 +65,12 @@ public class LeftMenuAdapter extends RecyclerView.Adapter<LeftMenuAdapter.LeftMe
         if (holder.Holderid == 1) {
             holder.textView.setText(titles[position - 1]);
             holder.imageView.setImageResource(icons[position - 1]);
-            if(splitterPositions[position -1] == false) {
+            if(!splitterPositions[position - 1]) {
                 holder.spliterView.setVisibility(View.GONE);
             }
         } else {
             UserInfoPreferences userPrefs = new UserInfoPreferences(context);
-            new ImageDownloader(holder.profile).execute(userPrefs.getProfilePicture());
+            new ImageViewUrlLoader(holder.profile).execute(userPrefs.getProfilePicture());
             holder.Name.setText(userPrefs.getFullname());
         }
     }

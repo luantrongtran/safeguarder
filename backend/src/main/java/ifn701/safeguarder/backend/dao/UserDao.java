@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Vector;
 
 import ifn701.safeguarder.backend.entities.Accident;
 import ifn701.safeguarder.backend.entities.User;
@@ -18,7 +19,7 @@ public class UserDao extends DAOBase {
     public static String colPassword = "password";
     public static String colActivated = "activated";
 
-    public User findById(int id) {
+public User findById(int id) {
         Connection con = getConnection();
         String sql = "SELECT * FROM user WHERE id = ?";
         PreparedStatement ps = null;
@@ -40,19 +41,52 @@ public class UserDao extends DAOBase {
         return null;
     }
 
-    public void insertANewUser(User user) {
+    public User loginUser(String email, String password) {
+        Connection connection = getConnection();
+//        Vector<User> userVector = new Vector<User>();
+//        String sql = "SELECT * FROM " + tableName + " " +
+//                "WHERE get_user_info(" + colFullName + "," + colEmail + "," + colPassword + "," + colActivated
+//        ")";
+
+        String sql = "SELECT * FROM "+ tableName + " " + "WHERE " + colEmail + " =? AND "+colPassword+" =?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            //ps.setString(1, fullName);
+            ps.setString(1, email);
+            ps.setString(2, password);
+            //ps.setBoolean(4, activated);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                User user = parseFromResultSet(rs);
+                return user;
+//                userVector.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+     public void signUp(User user)
+     {
         Connection con = getConnection();
-        String sql = "INSERT INTO user (fullname) VALUES(?)";
+        String sql = "INSERT INTO user (fullName,email,password,activated) VALUES(?)";
 
         PreparedStatement ps = null;
         try {
             ps = con.prepareStatement(sql);
             ps.setString(1, user.getFullName());
-
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
+            ps.setBoolean(4, false);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     public User parseFromResultSet(ResultSet rs) throws SQLException {

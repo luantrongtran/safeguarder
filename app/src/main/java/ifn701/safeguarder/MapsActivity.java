@@ -1,9 +1,14 @@
+/**
+ * References http://android-developers.blogspot.com.au/2011/06/deep-dive-into-location.html
+ */
 package ifn701.safeguarder;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Address;
@@ -28,12 +33,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
+import ifn701.safeguarder.activities.CustomWindowInfoAdapter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -46,17 +61,28 @@ import ifn701.safeguarder.Parcelable.AccidentListParcelable;
 import ifn701.safeguarder.activities.LeftMenuAdapter;
 import ifn701.safeguarder.activities.ReportActivity;
 import ifn701.safeguarder.activities.ZoneSettingActivity;
+import ifn701.safeguarder.backend.myApi.model.AccidentList;
 import ifn701.safeguarder.backgroundservices.LocationAutoTracker;
 import ifn701.safeguarder.backgroundservices.LocationTrackerService;
 import ifn701.safeguarder.backgroundservices.UpdateAccidentInRangeReceiver;
 import ifn701.safeguarder.backgroundservices.UpdateAccidentsInRangeService;
+import ifn701.safeguarder.entities.google_places.PlacesList;
+import ifn701.safeguarder.webservices.google_cloud_service.RegistrationIntentService;
+import ifn701.safeguarder.webservices.google_web_services.GooglePlacesSearch;
+import ifn701.safeguarder.webservices.google_web_services.IGooglePlacesSearch;
+import ifn701.safeguarder.webservices.IUpdateAccidentInRange;
+import ifn701.safeguarder.webservices.UpdateAccidentsInRange;
 
 
-public class MapsActivity extends AppCompatActivity {
+public class MapsActivity extends AppCompatActivity
+        implements ConnectionCallbacks, OnConnectionFailedListener, IUpdateAccidentInRange,
+        IGooglePlacesSearch{
 
     public static int requestCodeObsDetailed = 2;
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private GoogleApiClient googleApiClient;
+    LocationRequest mLocationRequest;
 
     public long updateCurrentLocationInterval = 13*1000;//10s
     private AlarmManager alarmManager;
@@ -65,7 +91,8 @@ public class MapsActivity extends AppCompatActivity {
     public long updateAccidentListInterval = 10*1000;//10s
     private PendingIntent updateAccidentListPendingIntent;
 
-    public static AccidentManager accidentManager = new AccidentManager();
+    public static AccidentManager accidentManager;
+    public static HealthServicesManager healthServicesmanager = new HealthServicesManager();
     public static UserDrawer userDrawer;
     boolean isLocationSwitcherShowed = false;
 
@@ -93,22 +120,52 @@ public class MapsActivity extends AppCompatActivity {
                 .findFragmentById(R.id.map);
         // mapFragment.getMapAsync(this);
 
+        setUpGoogleApiClient();
         setUpComponents();
 
-        setUpDummyData();
+//        setUpDummyData();
 
-        scheduleAutoService();
         registerReceiver();
 
         setUpNavigationMenu();
 
+        setUpGoogleCloudMessage();
+
+        accidentManager = new AccidentManager(getApplicationContext());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        googleApiClient.connect();
         updateMapFooter();
     }
 
     @Override
     protected void onStop() {
         cancelServiceOnStop();
+        googleApiClient.disconnect();
         super.onStop();
+    }
+
+    public void setUpGoogleCloudMessage() {
+        if(checkPlayServices()) {
+            Intent intent = new Intent(this, RegistrationIntentService.class) ;
+            startService(intent);
+        }
+    }
+
+    public void setUpGoogleApiClient() {
+        createLocationRequest();//set up for location request
+
+        googleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
     }
 
     protected void setUpComponents() {
@@ -119,8 +176,9 @@ public class MapsActivity extends AppCompatActivity {
         findViewById(R.id.currentLocationButton).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.e(Constants.APPLIATION_ID, "Pan to my location");
+                Log.e(Constants.APPLICATION_ID, "Pan to my location");
                 panToMyLocation();
+                switchLocationBar();
                 return false;
             }
         });
@@ -128,8 +186,9 @@ public class MapsActivity extends AppCompatActivity {
         findViewById(R.id.homeLocationButton).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.e(Constants.APPLIATION_ID, "Pan to home location");
+                Log.e(Constants.APPLICATION_ID, "Pan to home location");
                 panToHomeLocation();
+                switchLocationBar();
                 return false;
             }
         });
@@ -140,7 +199,7 @@ public class MapsActivity extends AppCompatActivity {
      */
     public void registerReceiver() {
         registerAccidentListUpdateReceiver();
-        registerCurrentLocationUpdateReceiver();
+        registerCurrentLocationUpdatedReceiver();
     }
 
     public void registerAccidentListUpdateReceiver() {
@@ -150,7 +209,7 @@ public class MapsActivity extends AppCompatActivity {
                 .registerReceiver(onAccidentListUpdated, onAccidentListUpdatedFilter);
     }
 
-    public void registerCurrentLocationUpdateReceiver() {
+    public void registerCurrentLocationUpdatedReceiver() {
         IntentFilter onCurrentLocationUpdatedFilter
                 = new IntentFilter(LocationTrackerService.ACTION);
         LocalBroadcastManager.getInstance(this)
@@ -163,16 +222,12 @@ public class MapsActivity extends AppCompatActivity {
         userInfoPrefs.setUserId(1);
         userInfoPrefs.setProfilePicture("https://s-media-cache-ak0.pinimg.com/236x/66/eb/cb/66ebcb0b01921e17422650a3fb778954.jpg");
         userInfoPrefs.setFullname("Peter Pan");
-
-        UserSettingsPreferences userSettingsPreferences
-                = new UserSettingsPreferences(getApplicationContext());
-        userSettingsPreferences.setRadius(200);
     }
 
     private void setUpNavigationMenu() {
         //Navigation Menu
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
-//        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
 
@@ -237,15 +292,11 @@ public class MapsActivity extends AppCompatActivity {
         startActivityForResult(intent, 1);
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         userDrawer.updateCurrentLocationInterestedArea();
-        userDrawer.drawHomeLocation();
-    }
-
-    public void scheduleAutoService() {
-        scheduleUpdateCurrentLocationService();
-        scheduleUpdateAccidentList();
+        userDrawer.updateHomeLocation();
     }
 
     public void cancelServiceOnStop() {
@@ -257,6 +308,8 @@ public class MapsActivity extends AppCompatActivity {
         super.onResume();
         setUpMapIfNeeded();
 
+        updateGooglePlaces(); //Update health services
+        updateAccidentsInRange();//Update accidents within the range
         userDrawer = new UserDrawer(getApplicationContext(), mMap);
     }
 
@@ -321,14 +374,36 @@ public class MapsActivity extends AppCompatActivity {
 
 //        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
         // Create a LatLng object for the current location
-        LatLng latLng = new LatLng(latitude,longitude);
+        LatLng latLng = new LatLng(latitude, longitude);
 
         // Show the current location in Google Map
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
         // Zoom in the Google Map
         mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
-//        mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("You are here!").snippet("Consider yourself located"));
+
+        mMap.setInfoWindowAdapter(new CustomWindowInfoAdapter(getApplicationContext()));
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if (isLocationSwitcherShowed) {
+                    switchLocationBar();
+                }
+            }
+        });
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                marker.showInfoWindow();
+                panToLatLng(marker.getPosition(), false);
+                if (isLocationSwitcherShowed) {
+                    switchLocationBar();
+                }
+                return true;
+            }
+        });
     }
 
     public void scheduleUpdateCurrentLocationService(){
@@ -374,8 +449,14 @@ public class MapsActivity extends AppCompatActivity {
     private BroadcastReceiver onCurrentLocationUpdated = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(Constants.APPLIATION_ID, "Receive current location updated");
-            userDrawer.updateCurrentLocationInterestedArea();
+            Log.i(Constants.APPLICATION_ID, "Receive current location updated");
+
+            userDrawer.updateCurrentLocationInterestedArea();//draw the radius
+
+            updateGooglePlaces(); //Update health services
+
+            updateAccidentsInRange();//Update accidents within the range
+
         }
     };
 
@@ -388,24 +469,17 @@ public class MapsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void switchLocation(View view) {
-        switchLocation_();
+    public void switchLocationBar(View view) {
+        switchLocationBar();
     }
 
-    private void switchLocation_() {
-//        float x = locationSwitcher.getX();
-//        float y = locationSwitcher.getY();
-//        float toolbarHeight = toolbar.getMeasuredHeight() + 20;
-//
-//        Log.e(Constants.APPLIATION_ID, "Switch location");
-//        Log.e(Constants.APPLIATION_ID, x + ", " + y);
-//        Log.e(Constants.APPLIATION_ID, toolbarHeight + "");
-
+    private void switchLocationBar() {
+        int toolbarHeight = toolbar.getMeasuredHeight();
         int from = 0;
         int to = 0;
         if(isLocationSwitcherShowed) {
             //if visible
-            from = 110;
+            from = toolbarHeight;//110;
             to = 0;
             isLocationSwitcherShowed = false;
         } else {
@@ -424,7 +498,10 @@ public class MapsActivity extends AppCompatActivity {
         double lon = gpsTracker.getLongitude();
 
         switchLocationText.setText(R.string.my_location);
-        panToLatLng(new LatLng(lat, lon));
+        panToLatLng(new LatLng(lat, lon), true);
+
+        GooglePlacesSearch placesSearch = new GooglePlacesSearch(getApplicationContext(), this);
+        placesSearch.execute();
     }
 
     public void panToHomeLocation(){
@@ -437,18 +514,18 @@ public class MapsActivity extends AppCompatActivity {
         double lat = userSettingsPreferences.getHomeLocationLat();
         double lon = userSettingsPreferences.getHomeLocationLon();
 
-        panToLatLng(new LatLng(lat, lon));
+        panToLatLng(new LatLng(lat, lon), true);
     }
 
-    public void panToLatLng(LatLng latLng) {
-        panToLatLng(latLng, 20);
+    public void panToLatLng(LatLng latLng, boolean zoom) {
+        if (zoom) {
+            mMap.animateCamera(CameraUpdateFactory
+                    .newCameraPosition(getCameraPosition(latLng)));
+        } else {
+            mMap.animateCamera(CameraUpdateFactory
+                    .newCameraPosition(getCameraPositionWithoutZoom(latLng)));
+        }
     }
-
-    public void panToLatLng(LatLng latLng, int zoomLevel) {
-        mMap.animateCamera(CameraUpdateFactory
-                .newCameraPosition(getCameraPosition(latLng)));
-    }
-
     public CameraPosition getCameraPosition(LatLng latLng) {
         return new CameraPosition.Builder()
                 .target(latLng)
@@ -456,6 +533,72 @@ public class MapsActivity extends AppCompatActivity {
                 .build();                   // Creates a CameraPosition from the builder
     }
 
+    public CameraPosition getCameraPositionWithoutZoom(LatLng latLng) {
+        return new CameraPosition.Builder()
+                .target(latLng)
+                .zoom(mMap.getCameraPosition().zoom)
+                .build();
+    }
+
+    //Google Api clients callback methods
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.e(Constants.APPLICATION_ID, "Google API client connected");
+        startLocationUpdates();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.e(Constants.APPLICATION_ID, "Google API client suspended");
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.e(Constants.APPLICATION_ID, "Google API client failed");
+    }
+
+    protected void startLocationUpdates() {
+        Intent intent = new Intent(getApplicationContext(), LocationAutoTracker.class);
+        PendingIntent pIntent = PendingIntent.
+                getBroadcast(getApplicationContext(), LocationAutoTracker.id
+                        , intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                googleApiClient, mLocationRequest, pIntent);
+    }
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(2000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+    //End google Api clients callback methods
+
+    public void updateAccidentsInRange() {
+        UpdateAccidentsInRange updateAccidentsInRange
+                = new UpdateAccidentsInRange(getApplicationContext(), this);
+        updateAccidentsInRange.execute();
+    }
+
+    @Override
+    public void onAccidentsInRangeUpdated(AccidentList accidentList) {
+        accidentManager.setAccidentList(accidentList);
+        accidentManager.updateAccidentMarkers(mMap);
+    }
+
+    public void updateGooglePlaces() {
+        GooglePlacesSearch googlePlacesSearch
+                = new GooglePlacesSearch(getApplicationContext(), this);
+        googlePlacesSearch.execute();
+    }
+
+    @Override
+    public void onReceivedGooglePlacesSearch(PlacesList placesList) {
+        healthServicesmanager.setPlacesListOfCurrentLocation(placesList);
+        healthServicesmanager.updateHealthServicesMarkers(mMap);
+	}
+	
     public void updateMapFooter() {
         TextView showMyLocation = (TextView)findViewById(R.id.mylocation);
         TextView showMyRadius = (TextView) findViewById(R.id.myradius);
@@ -483,5 +626,47 @@ public class MapsActivity extends AppCompatActivity {
     private void goToObsListActivity() {
         Intent intent = new Intent(this, ObservationList.class);
         startActivityForResult(intent, requestCodeObsDetailed);
+}
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle("Exit")
+                .setMessage("Are you sure you want to exit?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        System.exit(0);
+                    }
+                }).setNegativeButton("No", null).show();
+    }
+
+
+/*
+found user, backend maager.
+add some data
+
+website or window form.
+1st: maanger add data
+thousands
+
+2nd: can review all the data, the point of interest on  website
+ */
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode,
+                        Constants.PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(Constants.APPLICATION_ID, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 }

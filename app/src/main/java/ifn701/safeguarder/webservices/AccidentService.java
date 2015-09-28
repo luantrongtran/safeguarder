@@ -14,9 +14,6 @@ import ifn701.safeguarder.MainActivity;
 import ifn701.safeguarder.backend.myApi.MyApi;
 import ifn701.safeguarder.backend.myApi.model.Accident;
 
-/**
- * Created by JKc on 8/21/2015.
- */
 public class AccidentService extends AsyncTask<Accident, Void, Accident>{
 
     private IAccidentService accidentService = null;

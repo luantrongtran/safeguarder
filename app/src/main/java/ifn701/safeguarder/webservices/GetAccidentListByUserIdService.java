@@ -22,7 +22,7 @@ public class GetAccidentListByUserIdService extends AsyncTask<Integer, Void, Acc
     protected AccidentList doInBackground(Integer... params) {
         int userid = params[0].intValue();
 
-        Log.i(Constants.APPLIATION_ID, "PASSED USERID " + userid);
+        Log.i(Constants.APPLICATION_ID, "PASSED USERID " + userid);
 
         MyApi apiGettingAccidentListByUserId = BackendApiProvider.getPatientApi();
 
@@ -30,7 +30,7 @@ public class GetAccidentListByUserIdService extends AsyncTask<Integer, Void, Acc
         try {
             accidentList =  apiGettingAccidentListByUserId.getAccidentListByUserId(userid).execute();
 
-            Log.i(Constants.APPLIATION_ID, accidentList.getAccidentList().size() + "");
+            Log.i(Constants.APPLICATION_ID, accidentList.getAccidentList().size() + "");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
