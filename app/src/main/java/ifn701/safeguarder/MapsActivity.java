@@ -306,6 +306,8 @@ public class MapsActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         userDrawer.updateCurrentLocationInterestedArea();
         userDrawer.updateHomeLocation();
+
+        updateAccidentsInRange();//Update accidents within the range after settings had changed
     }
 
     public void cancelServiceOnStop() {
@@ -413,6 +415,8 @@ public class MapsActivity extends AppCompatActivity
                 return true;
             }
         });
+
+        updateAccidentsInRange();//Update accidents within the range after loading map
     }
 
     public void scheduleUpdateCurrentLocationService(){
