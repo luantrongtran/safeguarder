@@ -1,6 +1,7 @@
 package ifn701.safeguarder;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -14,22 +15,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import ifn701.safeguarder.CustomSharedPreferences.EventFilterSharedPreferences;
 import ifn701.safeguarder.activities.CustomWindowInfoAdapter;
+import ifn701.safeguarder.activities.EventFilterActivity;
 import ifn701.safeguarder.backend.myApi.model.Accident;
 import ifn701.safeguarder.backend.myApi.model.AccidentList;
-import ifn701.safeguarder.entities.window_information.WindowInfoGooglePlaces;
 
 public class AccidentManager {
     AccidentList accidentList;
 
     Vector<Marker> accidentMarkers;
     Context context;
+    EventFilterSharedPreferences eventFilterSharedPreferences;
 
     private Map<String, BitmapDescriptor> accidentTypeMarkers;
-    //accidentTypeMarkerIds should be corresponding to the accidentType_array in string.xml
-    private static int[] accidentTypeMarkerIds = {R.drawable.aviation_marker, R.drawable.crime_marker,
+    //accidentTypeMarkerIds should be corresponding to the accidentTypeNames
+    public static int[] accidentTypeMarkerIds = {R.drawable.aviation_marker, R.drawable.crime_marker,
             R.drawable.earthquake_marker, R.drawable.ferry_marker, R.drawable.industry_accident_marker,
             R.drawable.traffic_accident_marker, R.drawable.weather_marker};
+    public static int[] accidentTypeNames = {R.string.aviation_accident, R.string.criminal,
+            R.string.earthquake, R.string.ferry_accident, R.string.industry_accident,
+            R.string.traffic_accident, R.string.weather_accident};
+
+    //Id used for each accident type within SharedPreferences
+    public static String[] sharedPreferencesIds = {"aviation", "criminal", "earthquake", "ferry",
+            "industry", "traffic", "weather"};
 
     public AccidentManager(Context context) {
         accidentList = new AccidentList();
@@ -37,18 +47,17 @@ public class AccidentManager {
 
         this.context = context;
         initialiseAccidentTypeMarkers();
+
+        eventFilterSharedPreferences = new EventFilterSharedPreferences(context);
     }
 
     private void initialiseAccidentTypeMarkers() {
         accidentTypeMarkers = new HashMap<>();
 
-        String[] accidentTypes = context.getResources().getStringArray(R.array.accidentType_array);
-        BitmapDescriptor[] accidentMarkers = new BitmapDescriptor[accidentTypes.length];
-
-        for(int i = 1; i < accidentTypes.length; i++) {
-            String accidentTypeName = accidentTypes[i];
+        for (int i = 0; i < accidentTypeNames.length; i++) {
+            String accidentTypeName = context.getString(accidentTypeNames[i]);
             BitmapDescriptor typeIcon
-                    = BitmapDescriptorFactory.fromResource(accidentTypeMarkerIds[i-1]);
+                    = BitmapDescriptorFactory.fromResource(accidentTypeMarkerIds[i]);
             accidentTypeMarkers.put(accidentTypeName.toLowerCase(), typeIcon);
         }
     }
@@ -62,14 +71,15 @@ public class AccidentManager {
     }
 
     public void updateAccidentMarkers(GoogleMap gMap) {
-        if(accidentList == null || accidentList.getAccidentList() == null){
+        Log.i(Constants.APPLICATION_ID, "Update accident markers");
+        if (accidentList == null || accidentList.getAccidentList() == null) {
             return;
         }
 
         int accidentId = 0;
-        for(int i = 0; i < accidentMarkers.size(); i++){
+        for (int i = 0; i < accidentMarkers.size(); i++) {
             Marker marker = accidentMarkers.get(i);
-            if(marker.isInfoWindowShown()) {
+            if (marker.isInfoWindowShown()) {
                 accidentId = accidentList.getAccidentList().get(i).getId();
             }
             marker.remove();
@@ -79,23 +89,48 @@ public class AccidentManager {
         MarkerOptions markerOptions = CustomWindowInfoAdapter
                 .createMarkerOptions(CustomWindowInfoAdapter.ACCIDENT_TYPE);
         List<Accident> accidents = accidentList.getAccidentList();
-        for(int i = 0; i < accidents.size(); i++) {
+
+        Map<String, Boolean> eventFilter = eventFilterSharedPreferences.getSettings();
+        long current = System.currentTimeMillis();
+        long timeFilter = eventFilterSharedPreferences.getTimeSetting();
+        for (int i = 0; i < accidents.size(); i++) {
             Accident accident = accidents.get(i);
+
+            if (accident.getType() == null || accident.getType().isEmpty()) {
+                //Accident type should not be null or empty.
+                continue;
+            }
+
+            //Check filter settings
+
+            Log.i(Constants.APPLICATION_ID, accident.getType());
+            if(!eventFilter.get(accident.getType())) {
+                //filter accidents by type
+                continue;
+            }
+
+            if(timeFilter != EventFilterActivity.DISPLAY_ALL) {
+                //filter by time
+                long interval = current - accident.getTime();
+                Log.i(Constants.APPLICATION_ID, current+"-" + accident.getTime() +">"+timeFilter);
+                if(interval > timeFilter) {
+                    continue;
+                }
+            }
+
             LatLng position = new LatLng(accident.getLat(), accident.getLon());
 
             markerOptions = markerOptions.snippet(accident.toString());
 
-            if(accident.getType() != null && !accident.getType().isEmpty()) {
-                BitmapDescriptor typeIcon = accidentTypeMarkers.get(accident.getType().toLowerCase());
-                if(typeIcon != null) {
-                    markerOptions = markerOptions.icon(typeIcon);
-                }
+            BitmapDescriptor typeIcon = accidentTypeMarkers.get(accident.getType().toLowerCase());
+            if (typeIcon != null) {
+                markerOptions = markerOptions.icon(typeIcon);
             }
 
             Marker marker = gMap.addMarker(markerOptions.position(position));
             accidentMarkers.add(marker);
 
-            if(accident.getId() == accidentId){
+            if (accident.getId() == accidentId) {
                 marker.showInfoWindow();
             }
         }

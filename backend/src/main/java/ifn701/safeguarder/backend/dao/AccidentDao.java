@@ -132,7 +132,7 @@ public class AccidentDao extends DAOBase {
         accident.setUserId(rs.getInt(colUserId));
         accident.setName(rs.getString(colName));
         accident.setType(rs.getString(colType));
-        accident.setTime(rs.getLong(colTime));
+        accident.setTime(rs.getTimestamp(colTime).getTime());
         accident.setLat(rs.getDouble(colLat));
         accident.setLon(rs.getDouble(colLon));
         accident.setObservation_level(rs.getInt(colObservationLevel));

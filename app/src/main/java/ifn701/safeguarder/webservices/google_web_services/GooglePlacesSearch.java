@@ -92,6 +92,9 @@ public class GooglePlacesSearch extends AsyncTask<Void, Void, PlacesList> {
 
     @Override
     protected void onPostExecute(PlacesList placesList) {
+        if(placesList == null) {
+            return;
+        }
         interfaceGooglePlacesSearch.onReceivedGooglePlacesSearch(placesList);
     }
 }

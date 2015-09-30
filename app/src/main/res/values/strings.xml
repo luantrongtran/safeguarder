@@ -75,14 +75,44 @@
 
     <string name="select_accType">Accident Type</string>
 
+    <string name="aviation_accident">Aviation Accident</string>
+    <string name="criminal">Criminal</string>
+    <string name="earthquake">Earthquake</string>
+    <string name="ferry_accident">Ferry Accident</string>
+    <string name="industry_accident">Industry Accident</string>
+    <string name="traffic_accident">Traffic Accident</string>
+    <string name="weather_accident">Weather Accident</string>
+
     <string-array name="accidentType_array">
         <item>Select Accident Type</item>
-        <item>Aviation Accident</item>
-        <item>Criminal</item>
-        <item>Earthquake</item>
-        <item>Ferry Accident</item>
-        <item>Industry Accident</item>
-        <item>Traffic Accident</item>
-        <item>Weather Accident</item>
+        <item>@string/aviation_accident</item>
+        <item>@string/criminal</item>
+        <item>@string/earthquake</item>
+        <item>@string/ferry_accident</item>
+        <item>@string/industry_accident</item>
+        <item>@string/traffic_accident</item>
+        <item>@string/weather_accident</item>
     </string-array>
+
+    <string name="title_activity_event_filter">Filter events displayed</string>
+    <string name="event_filter_activity_filter_by_time_label">Show accidents happened within</string>
+    <string-array name="event_filter_by_time_array">
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>5 hours</item>
+        <item>7 hours</item>
+        <item>24 hours</item>
+    </string-array>
+
+    <string name="event_filter_by_accident_type_label">Filter by accident types</string>
+
+    <string name="many_days_ago">Many days ago</string>
+    <string name="yesterday">yesterday</string>
+    <string name="days_ago">days ago</string>
+    <string name="hour_ago">hour ago</string>
+    <string name="hours_ago">hours ago</string>
+    <string name="minute_ago">min ago</string>
+    <string name="minutes_ago">mins ago</string>
+    <string name="just_now">just now</string>
+
 </resources>
