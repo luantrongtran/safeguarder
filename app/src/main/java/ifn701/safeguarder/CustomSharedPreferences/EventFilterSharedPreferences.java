@@ -2,6 +2,7 @@ package ifn701.safeguarder.CustomSharedPreferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +16,10 @@ import ifn701.safeguarder.activities.EventFilterActivity;
  * This class contains the settings of event filter.
  */
 public class EventFilterSharedPreferences {
+
     SharedPreferences sharedPreferences;
     Context context;
+
     public EventFilterSharedPreferences(Context context) {
         this.context = context;
         sharedPreferences
@@ -53,5 +56,25 @@ public class EventFilterSharedPreferences {
         }
 
         return map;
+    }
+
+    /**
+     * Setting up the feature of filtering accident by time. Ex: display only accidents happened
+     * less than 1 hour ago
+     * @param value is the number of hours
+     */
+    public void setTimeSetting(int value){
+        sharedPreferences.edit().putInt(Constants.getSharedPreferences_event_filter_settings_by_time,
+                value).apply();
+    }
+
+    /**
+     *
+     * @return the value in hour. For example if the method returns 5, it means 5 hours. If
+     * the method returns -1, it means display all accidents.
+     */
+    public int getTimeSetting() {
+        return sharedPreferences
+                .getInt(Constants.getSharedPreferences_event_filter_settings_by_time, -1);
     }
 }

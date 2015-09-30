@@ -1,7 +1,7 @@
 package ifn701.safeguarder;
 
 public class Constants {
-    public static String webServiceUrl = "http://192.168.0.100:8080/_ah/api/";
+    public static String webServiceUrl = "http://192.168.0.104:8080/_ah/api/";
 
     public static String APPLICATION_ID = "safeguarder";
 
@@ -36,6 +36,8 @@ public class Constants {
             = "google_cloud_message_is_token_sent_to_server";
 
     public static String sharedPreferences_event_filter_settings = "event_filter_settings";
+    public static String getSharedPreferences_event_filter_settings_by_time = "event_filter_settings"
+           + "_by_time";
 
     public static String broadCastService_UpdateAccidentsList = "updated_accidents_list";
 

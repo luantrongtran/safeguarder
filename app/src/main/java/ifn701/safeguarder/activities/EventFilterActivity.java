@@ -5,14 +5,25 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 
+import ifn701.safeguarder.CustomSharedPreferences.EventFilterSharedPreferences;
 import ifn701.safeguarder.R;
+import ifn701.safeguarder.entities.MyOnItemSelectedListener;
 
 public class EventFilterActivity extends AppCompatActivity {
+    EventFilterSharedPreferences eventFilterSharedPreferences;
+
+    public static final int DISPLAY_ALL = -1;
+    public static int[] timeFrames = {1, 3, 5, 7, 24};//in hours
+
+    CheckBox checkBoxEnablingFilterByTime;
+    Spinner timeSelectionSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +44,64 @@ public class EventFilterActivity extends AppCompatActivity {
                     CheckBox cb = (CheckBox)view.findViewById(R.id.cbAccidentFilter);
                     cb.setChecked(isChecked);
                 }
+            }
+        });
+
+        checkBoxEnablingFilterByTime = (CheckBox)findViewById(R.id.cbFilterByTime);
+        timeSelectionSpinner = (Spinner) findViewById(R.id.spinnerFilterByTime);
+        eventFilterSharedPreferences = new EventFilterSharedPreferences(getApplicationContext());
+        preLoadSettingsIfExisted();
+        setUpEventListenerForTimeSelectionSpinner();
+    }
+
+    /**
+     * Loading settings from SharedPreferences.
+     */
+    private void preLoadSettingsIfExisted() {
+        int numOfHours = eventFilterSharedPreferences.getTimeSetting();
+        if(numOfHours == -1) {
+            //if the time setting is displaying all accidents
+            checkBoxEnablingFilterByTime.setChecked(false);
+            timeSelectionSpinner.setEnabled(false);//disable the spinner selecting hour.
+        } else {
+            checkBoxEnablingFilterByTime.setChecked(true);
+            timeSelectionSpinner.setEnabled(true);//enable the spinner selecting hour.
+
+            int selectedIndex = 0;
+            for(int i = 0; i < timeFrames.length; i++) {
+                if(numOfHours == timeFrames[i]) {
+                    selectedIndex = i;
+                    break;
+                }
+            }
+            timeSelectionSpinner.setSelection(selectedIndex);
+        }
+    }
+
+    private void setUpEventListenerForTimeSelectionSpinner() {
+        checkBoxEnablingFilterByTime.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                timeSelectionSpinner.setEnabled(isChecked);
+
+                if(isChecked) {
+                    int selectedIndex = timeSelectionSpinner.getSelectedItemPosition();
+                    eventFilterSharedPreferences.setTimeSetting(timeFrames[selectedIndex]);
+                } else {
+                    eventFilterSharedPreferences.setTimeSetting(DISPLAY_ALL);
+                }
+            }
+        });
+
+        timeSelectionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                eventFilterSharedPreferences.setTimeSetting(timeFrames[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }
