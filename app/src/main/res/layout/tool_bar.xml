@@ -16,7 +16,7 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:src="@drawable/circle_user"
-            android:layout_gravity="left"
+            android:layout_gravity="left|center"
             android:onClick="toggleLeftMenu"
             />
 
@@ -49,6 +49,7 @@
             android:src="@drawable/ic_add_circle_outline_black_24dp"
             android:paddingRight="10dp"
             android:onClick="createNewReport"
+            android:layout_gravity="center"
             />
     </LinearLayout>
 </android.support.v7.widget.Toolbar>

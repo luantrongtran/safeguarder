@@ -30,6 +30,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -96,7 +97,6 @@ public class MapsActivity extends AppCompatActivity
     public static AccidentManager accidentManager;
     public static HealthServicesManager healthServicesmanager = new HealthServicesManager();
     public static UserDrawer userDrawer;
-    boolean isLocationSwitcherShowed = false;
 
     UserSettingsPreferences userSettingsPreferences;
 
@@ -110,6 +110,9 @@ public class MapsActivity extends AppCompatActivity
     DrawerLayout leftMenuDrawer;
 
     LinearLayout locationSwitcher;
+    boolean isLocationSwitcherShowed = false;
+    int locationSwitcherMarginTop = 0;
+    int locationSwitcherBalance = 1;
 
 //    ActionBarDrawerToggle mDrawerToggle;
     //end navigation menu
@@ -136,6 +139,8 @@ public class MapsActivity extends AppCompatActivity
         accidentManager = new AccidentManager(getApplicationContext());
 
         setDefaultSharedPreferences();
+
+        setUpPositionForLocationSwitcher();
     }
 
     @Override
@@ -489,27 +494,63 @@ public class MapsActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+    /**
+     * Setup position for location switcher, because the UI may change according to screen size.
+     */
+    private void setUpPositionForLocationSwitcher() {
+        int marginTopValue = 0;
+        int toolbarHeight = toolbar.getLayoutParams().height;
+        int locationSwitcherHeight = locationSwitcher.getLayoutParams().height;
+
+        int temp = locationSwitcherHeight - toolbarHeight;
+        if (temp > locationSwitcherBalance) {
+            temp -= locationSwitcherBalance;
+            marginTopValue -= temp;
+        } else if (temp < locationSwitcherBalance) {
+            temp = locationSwitcherBalance - temp;
+            marginTopValue += temp;
+        }
+
+        ((RelativeLayout.LayoutParams)locationSwitcher.getLayoutParams()).setMargins(0,marginTopValue,0,0);
+        locationSwitcherMarginTop = marginTopValue;
+    }
+
     public void switchLocationBar(View view) {
         switchLocationBar();
     }
 
     private void switchLocationBar() {
         int toolbarHeight = toolbar.getMeasuredHeight();
+
         int from = 0;
         int to = 0;
         if(isLocationSwitcherShowed) {
-            //if visible
-            from = toolbarHeight;//110;
-            to = 0;
+            //if visible, then hides it
+            to = locationSwitcherMarginTop;
             isLocationSwitcherShowed = false;
         } else {
-            //if invisible
-            from = 0;
-            to = 110;
+            //if invisible, then shows it
+            to = toolbarHeight - locationSwitcherBalance;
             isLocationSwitcherShowed = true;
         }
-
+        Log.i(Constants.APPLICATION_ID, to+"");
         locationSwitcher.animate().translationY(to);
+//        int toolbarHeight = toolbar.getMeasuredHeight();
+//        int from = 0;
+//        int to = 0;
+//        if(isLocationSwitcherShowed) {
+//            //if visible
+//            from = toolbarHeight;//110;
+//            to = 0;
+//            isLocationSwitcherShowed = false;
+//        } else {
+//            //if invisible
+//            from = 0;
+//            to = 48;
+//            isLocationSwitcherShowed = true;
+//        }
+//
+//        locationSwitcher.animate().translationY(to);
     }
 
     public void panToMyLocation() {

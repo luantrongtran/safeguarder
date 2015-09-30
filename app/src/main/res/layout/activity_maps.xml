@@ -29,12 +29,11 @@
             layout="@layout/current_home_switch_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0px"
+            android:layout_marginTop="0dp"
             />
 
         <include android:id="@+id/mapFooter"
             layout="@layout/map_footer">
-
         </include>
     </RelativeLayout>
 
