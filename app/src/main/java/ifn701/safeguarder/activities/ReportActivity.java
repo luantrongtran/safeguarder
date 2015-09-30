@@ -1,74 +1,68 @@
 package ifn701.safeguarder.activities;
 
-import android.media.effect.Effect;
-import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import ifn701.safeguarder.Constants;
+import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.GPSTracker;
 import ifn701.safeguarder.R;
 import ifn701.safeguarder.backend.myApi.model.Accident;
-import ifn701.safeguarder.entities.PagerAdapter;
+import ifn701.safeguarder.entities.MyOnItemSelectedListener;
 import ifn701.safeguarder.webservices.AccidentService;
 import ifn701.safeguarder.webservices.IAccidentService;
 
-public class ReportActivity extends AppCompatActivity implements IAccidentService {
+public class ReportActivity extends AppCompatActivity implements IAccidentService{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Detailed"));
-        tabLayout.addTab(tabLayout.newTab().setText("Quick"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        long l = System.currentTimeMillis();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        Date date = new Date(l);
+        String str = sdf.format(date);
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter
-                (getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
+        EditText currentTime = (EditText) findViewById(R.id.text_time);
+        currentTime.setText(str);
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+        Spinner spinner_obslvl = (Spinner) findViewById(R.id.spinner_obslvl);
+        Spinner spinner_accType = (Spinner) findViewById(R.id.spinner_accType);
 
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+        spinner_obslvl.setOnItemSelectedListener(new MyOnItemSelectedListener());
+        spinner_accType.setOnItemSelectedListener(new MyOnItemSelectedListener());
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_report, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -76,39 +70,41 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
         return super.onOptionsItemSelected(item);
     }
 
-    private EditText inputName = null;
-    private EditText inputType = null;
-    private EditText inputTime = null;
-    private EditText inputDesc = null;
+    private EditText inputName;
+    private EditText inputTime;
+    private EditText inputDesc;
 
-    private Spinner spinner = null;
-    private int inputObslvl = 0;
+    private Spinner spinnerType;
+    private Spinner spinnerObslvl;
 
-    public void submitDetailedReport(View view) {
-        inputName = (EditText)findViewById(R.id.text_name);
-        inputType = (EditText)findViewById(R.id.text_type);
+    public void submitReport(View view) {
+        UserInfoPreferences userInfo = new UserInfoPreferences(getApplicationContext());
+
+        inputName = (EditText) findViewById(R.id.text_name);
         inputTime = (EditText) findViewById(R.id.text_time);
         inputDesc = (EditText) findViewById(R.id.text_desc);
 
-        spinner = (Spinner) findViewById(R.id.spinner_obslvl);
+        spinnerType = (Spinner) findViewById(R.id.spinner_accType);
+        spinnerObslvl = (Spinner) findViewById(R.id.spinner_obslvl);
 
-        sendData();
-    }
+        Accident acc = new Accident();
 
-    public void submitQuickReport(View view) {
-        inputName = (EditText)findViewById(R.id.q_text_name);
-        inputType = null;
-        inputTime = (EditText) findViewById(R.id.q_text_time);
-        inputDesc = (EditText) findViewById(R.id.q_text_desc);
+        String validate = null;
+        validate = validateForm();
 
-        spinner = (Spinner) findViewById(R.id.q_spinner_obslvl);
+        if(!validate.isEmpty()) {
+            Toast.makeText(ReportActivity.this, validate, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        sendData();
-    }
+        acc.setUserId(userInfo.getUserId());
+        acc.setType(spinnerType.getSelectedItem().toString());
+        acc.setName(inputName.getText().toString());
+        acc.setDescription(inputDesc.getText().toString());
 
-    private void sendData() {
         String str = inputTime.getText().toString();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
         long currentTime = 0;
 
         try {
@@ -117,34 +113,26 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
             e.printStackTrace();
         }
 
-        String convertSpinner = spinner.getSelectedItem().toString();
-
-        if(convertSpinner.equals("Highest")) {
-            inputObslvl = 4;
-        }
-        if(convertSpinner.equals("High")) {
-            inputObslvl = 3;
-        }
-        if(convertSpinner.equals("Medium")) {
-            inputObslvl = 2;
-        }
-        if(convertSpinner.equals("Low")) {
-            inputObslvl = 1;
-        }
-
-        Accident acc = new Accident();
-        acc.setUserId(1);
-        acc.setName(inputName.getText().toString());
-        acc.setDescription(inputDesc.getText().toString());
-        acc.setType(inputType.getText().toString());
         acc.setTime(currentTime);
-        acc.setObservationLevel(inputObslvl);
 
         GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
         double lat = gpsTracker.getLatitude();
         double lon = gpsTracker.getLongitude();
         acc.setLat(lat);
         acc.setLon(lon);
+
+        if(spinnerObslvl.getSelectedItem().toString().equals("Highest")) {
+            acc.setObservationLevel(4);
+        }
+        if(spinnerObslvl.getSelectedItem().toString().equals("High")) {
+            acc.setObservationLevel(3);
+        }
+        if(spinnerObslvl.getSelectedItem().toString().equals("Medium")) {
+            acc.setObservationLevel(2);
+        }
+        if(spinnerObslvl.getSelectedItem().toString().equals("Low")) {
+            acc.setObservationLevel(1);
+        }
 
         AccidentService as = new AccidentService(this);
         as.execute(acc);
@@ -153,5 +141,23 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
     @Override
     public void processReport() {
         Toast.makeText(this, "SendReportTest", Toast.LENGTH_SHORT).show();
+    }
+
+    private String validateForm() {
+
+        //Log.i(Constants.APPLIATION_ID, spinnerObslvl.getSelectedItemPosition() + "");
+
+        String str = "";
+
+        if(inputName.getText().toString().isEmpty()) {
+            str += "Enter accident name\n";
+        }
+        if(spinnerObslvl.getSelectedItemPosition() == 0) {
+            str += "Select observation level\n";
+        }
+        if(spinnerType.getSelectedItemPosition() == 0) {
+            str += "Select accident type";
+        }
+        return str;
     }
 }

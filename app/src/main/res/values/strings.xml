@@ -53,12 +53,15 @@
     <string name="select">Observation Level</string>
 
     <string-array name="observationlevel_array">
-        <item>Highest</item>
-        <item>High</item>
-        <item>Medium</item>
+        <item>Select Observation Level</item>
         <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+        <item>Highest</item>
     </string-array>
 
+    <string name="title_activity_observation_detailed">ObservationDetailed</string>
+    <string name="title_activity_observation_list">ObservationList</string>
     <string name="time_format">hh:mm aaa</string>
 
     <string name="window_info_accident_time">Time:</string>
@@ -115,4 +118,5 @@
     <string name="minutes_ago">mins ago</string>
     <string name="just_now">just now</string>
 
+    <string name="observation_list_activity_empty_accident_list">You have not posted any accident</string>
 </resources>

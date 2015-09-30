@@ -53,11 +53,23 @@ public class AccidentEndpoint {
      * @return The <code>Accident</code> associated with <code>id</code>.
      */
     @ApiMethod(name = "getAccident")
-    public Accident getAccident(@Named("id") Long id) {
+    public Accident getAccident(@Named("id") int id) {
         // TODO: Implement this function
-        logger.info("Calling getAccident method");
-        return null;
+        Accident accident = accidentdao.findById(id);
+
+        return accident;
     }
+
+    @ApiMethod(name = "getAccidentListByUserId")
+    public AccidentList getAccidentListByUserId(@Named("userId") int userId) {
+        System.out.println("UserID:" + userId);
+        Vector<Accident> accidents = accidentdao.findAccidentsByUserId(userId);
+        AccidentList accidentList = new AccidentList();
+        accidentList.setAccidentList(accidents);
+
+        return accidentList;
+    }
+
 
     /**
      * This inserts a new <code>Accident</code> object.
@@ -65,11 +77,14 @@ public class AccidentEndpoint {
      * @param accident The object to be added.
      * @return The object to be added.
      */
+
+
+    private AccidentDao accidentdao = new AccidentDao();
+
     @ApiMethod(name = "insertAccident")
     public Accident insertAccident(Accident accident) {
         // TODO: Implement this function
         //logger.info("Calling insertAccident method");
-        AccidentDao accidentdao = new AccidentDao();
         accidentdao.insertANewAccident(accident);
 
         return accident;

@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -56,6 +57,7 @@ import java.util.Locale;
 import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
+import ifn701.safeguarder.Observation.ObservationList;
 import ifn701.safeguarder.Parcelable.AccidentListParcelable;
 import ifn701.safeguarder.activities.EventFilterActivity;
 import ifn701.safeguarder.activities.LeftMenuAdapter;
@@ -77,6 +79,8 @@ import ifn701.safeguarder.webservices.UpdateAccidentsInRange;
 public class MapsActivity extends AppCompatActivity
         implements ConnectionCallbacks, OnConnectionFailedListener, IUpdateAccidentInRange,
         IGooglePlacesSearch{
+
+    public static int requestCodeObsDetailed = 2;
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient googleApiClient;
@@ -269,6 +273,9 @@ public class MapsActivity extends AppCompatActivity
                         goToSettings();
                     } else if (index == LeftMenuAdapter.EVENT_FILTER_SETTING) {
                         goToEventFilterSetting();
+                    }
+                    else if (index == LeftMenuAdapter.OBSERVATION_LIST) {
+                        goToObsListActivity();
                     }
 
                     return true;
@@ -635,6 +642,12 @@ public class MapsActivity extends AppCompatActivity
             e.printStackTrace();
         }
     }
+
+    private void goToObsListActivity() {
+        Intent intent = new Intent(this, ObservationList.class);
+        startActivityForResult(intent, requestCodeObsDetailed);
+}
+
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle("Exit")

@@ -4,18 +4,42 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Vector;
 
+import ifn701.safeguarder.backend.entities.Accident;
 import ifn701.safeguarder.backend.entities.User;
 
 public class UserDao extends DAOBase {
 
     public static String tableName = "user";
     public static String colId = "id";
-    public static String colFullName = "fullName";
+    public static String colFullName = "fullname";
     public static String colEmail = "email";
     public static String colPassword = "password";
     public static String colActivated = "activated";
+
+public User findById(int id) {
+        Connection con = getConnection();
+        String sql = "SELECT * FROM user WHERE id = ?";
+        PreparedStatement ps = null;
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                User user = parseFromResultSet(rs);
+
+
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 
     public User loginUser(String email, String password) {
         Connection connection = getConnection();
@@ -25,6 +49,7 @@ public class UserDao extends DAOBase {
 //        ")";
 
         String sql = "SELECT * FROM "+ tableName + " " + "WHERE " + colEmail + " =? AND "+colPassword+" =?";
+
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             //ps.setString(1, fullName);
@@ -33,6 +58,7 @@ public class UserDao extends DAOBase {
             //ps.setBoolean(4, activated);
 
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
                 User user = parseFromResultSet(rs);
                 return user;
@@ -43,22 +69,6 @@ public class UserDao extends DAOBase {
         }
         return null;
     }
-
-//    public User findById(int id) {
-//        Connection con = getConnection();
-//        String sql = "SELECT * FROM patient WHERE id = ?";
-//        PreparedStatement ps = null;
-//        try {
-//            ps = con.prepareStatement(sql);
-//            ps.setInt(1, id);
-//
-//            ps.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return null;
-//    }
 
      public void signUp(User user)
      {
@@ -79,7 +89,7 @@ public class UserDao extends DAOBase {
 
     }
 
-    private User parseFromResultSet(ResultSet rs) throws SQLException {
+    public User parseFromResultSet(ResultSet rs) throws SQLException {
         User user = new User();
         user.setId(rs.getInt(colId));
         user.setFullName(rs.getString(colFullName));
@@ -89,6 +99,4 @@ public class UserDao extends DAOBase {
 
         return user;
     }
-
-
 }
