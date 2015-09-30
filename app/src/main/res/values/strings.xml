@@ -106,4 +106,13 @@
 
     <string name="event_filter_by_accident_type_label">Filter by accident types</string>
 
+    <string name="many_days_ago">Many days ago</string>
+    <string name="yesterday">yesterday</string>
+    <string name="days_ago">days ago</string>
+    <string name="hour_ago">hour ago</string>
+    <string name="hours_ago">hours ago</string>
+    <string name="minute_ago">min ago</string>
+    <string name="minutes_ago">mins ago</string>
+    <string name="just_now">just now</string>
+
 </resources>

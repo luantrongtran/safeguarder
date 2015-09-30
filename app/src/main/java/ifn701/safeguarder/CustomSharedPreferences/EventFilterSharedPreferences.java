@@ -61,20 +61,20 @@ public class EventFilterSharedPreferences {
     /**
      * Setting up the feature of filtering accident by time. Ex: display only accidents happened
      * less than 1 hour ago
-     * @param value is the number of hours
+     * @param value is the number of millisecond
      */
-    public void setTimeSetting(int value){
-        sharedPreferences.edit().putInt(Constants.getSharedPreferences_event_filter_settings_by_time,
-                value).apply();
+    public void setTimeSetting(long value){
+        sharedPreferences.edit().putLong(Constants
+                        .getSharedPreferences_event_filter_settings_by_time, value).apply();
     }
 
     /**
      *
-     * @return the value in hour. For example if the method returns 5, it means 5 hours. If
-     * the method returns -1, it means display all accidents.
+     * @return the value in millisecond. For example if the method returns 3.600.0000,
+     * it means 1 hours. If the method returns -1, it means display all accidents.
      */
-    public int getTimeSetting() {
+    public long getTimeSetting() {
         return sharedPreferences
-                .getInt(Constants.getSharedPreferences_event_filter_settings_by_time, -1);
+                .getLong(Constants.getSharedPreferences_event_filter_settings_by_time, -1l);
     }
 }

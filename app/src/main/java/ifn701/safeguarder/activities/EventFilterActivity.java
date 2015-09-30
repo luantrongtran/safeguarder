@@ -20,7 +20,8 @@ public class EventFilterActivity extends AppCompatActivity {
     EventFilterSharedPreferences eventFilterSharedPreferences;
 
     public static final int DISPLAY_ALL = -1;
-    public static int[] timeFrames = {1, 3, 5, 7, 24};//in hours
+    public static long[] timeFrames = {1*60*60*1000, 3*60*60*1000,
+            5*60*60*1000, 7*60*60*1000, 24*60*60*1000};//millisecond
 
     CheckBox checkBoxEnablingFilterByTime;
     Spinner timeSelectionSpinner;
@@ -58,7 +59,7 @@ public class EventFilterActivity extends AppCompatActivity {
      * Loading settings from SharedPreferences.
      */
     private void preLoadSettingsIfExisted() {
-        int numOfHours = eventFilterSharedPreferences.getTimeSetting();
+        long numOfHours = eventFilterSharedPreferences.getTimeSetting();
         if(numOfHours == -1) {
             //if the time setting is displaying all accidents
             checkBoxEnablingFilterByTime.setChecked(false);

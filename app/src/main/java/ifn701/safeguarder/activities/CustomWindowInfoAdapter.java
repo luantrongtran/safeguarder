@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.R;
+import ifn701.safeguarder.Utilities;
 import ifn701.safeguarder.backend.myApi.model.Accident;
 import ifn701.safeguarder.entities.google_places.Place;
 import ifn701.safeguarder.webservices.ImageViewUrlLoader;
@@ -58,6 +59,7 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
     private JacksonFactory jacksonFactory = new JacksonFactory();
 
     LinearLayout.LayoutParams informationLayoutParams;
+    Utilities utilities;
 
     View view;
     Context context;
@@ -68,6 +70,7 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
         processDialog.setMessage("loading");
         simpleDateFormat = new SimpleDateFormat(context.getResources()
                 .getString(R.string.time_format));
+        utilities = new Utilities(context);
         setUpLayout();
     }
 
@@ -211,7 +214,9 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
         String beforeImage = "";
         String time = String.format("<b>"
                 + context.getResources().getString(R.string.window_info_accident_time) + "</b> "
-                + simpleDateFormat.format(new Timestamp(accident.getTime())));
+                + utilities.formatMillisecondToInterval(System.currentTimeMillis()
+                                    - accident.getTime()));
+//                + simpleDateFormat.format(new Timestamp(accident.getTime())));
         addInformationBeforeImage(time);
 
         String description = "<b>"

@@ -17,6 +17,7 @@ import java.util.Vector;
 
 import ifn701.safeguarder.CustomSharedPreferences.EventFilterSharedPreferences;
 import ifn701.safeguarder.activities.CustomWindowInfoAdapter;
+import ifn701.safeguarder.activities.EventFilterActivity;
 import ifn701.safeguarder.backend.myApi.model.Accident;
 import ifn701.safeguarder.backend.myApi.model.AccidentList;
 
@@ -90,6 +91,8 @@ public class AccidentManager {
         List<Accident> accidents = accidentList.getAccidentList();
 
         Map<String, Boolean> eventFilter = eventFilterSharedPreferences.getSettings();
+        long current = System.currentTimeMillis();
+        long timeFilter = eventFilterSharedPreferences.getTimeSetting();
         for (int i = 0; i < accidents.size(); i++) {
             Accident accident = accidents.get(i);
 
@@ -102,7 +105,17 @@ public class AccidentManager {
 
             Log.i(Constants.APPLICATION_ID, accident.getType());
             if(!eventFilter.get(accident.getType())) {
+                //filter accidents by type
                 continue;
+            }
+
+            if(timeFilter != EventFilterActivity.DISPLAY_ALL) {
+                //filter by time
+                long interval = current - accident.getTime();
+                Log.i(Constants.APPLICATION_ID, current+"-" + accident.getTime() +">"+timeFilter);
+                if(interval > timeFilter) {
+                    continue;
+                }
             }
 
             LatLng position = new LatLng(accident.getLat(), accident.getLon());
