@@ -29,10 +29,17 @@ public class RegistrationIntentService extends IntentService {
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             Log.i(TAG, "GCM token: " + token);
 
+            registerToken(token);
             gcmSharedPreferences.setIsTokenSentToServer(true);
         } catch (IOException e) {
             e.printStackTrace();
             gcmSharedPreferences.setIsTokenSentToServer(false);
         }
+    }
+
+    private void registerToken(String token) {
+        RegisterTokenToSafeguarderBackend registerTokenToSafeguarderBackend
+                = new RegisterTokenToSafeguarderBackend(this);
+        registerTokenToSafeguarderBackend.execute(token);
     }
 }
