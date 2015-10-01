@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import ifn701.safeguarder.backend.entities.Accident;
@@ -20,7 +22,7 @@ public class UserDao extends DAOBase {
     public static String colActivated = "activated";
     public static String colToken = "token";
 
-public User findById(int id) {
+    public User findById(int id) {
         Connection con = getConnection();
         String sql = "SELECT * FROM user WHERE id = ?";
         PreparedStatement ps = null;

@@ -77,7 +77,7 @@ public class Login {
         return null;
     }
 
-    @ApiMethod(name="saveToken")
+    @ApiMethod(name="saveToken", path = "savetoken")
     public ResultCode saveToken(@Named("userId")int userId, @Named("token") String token){
         UserDao userDao = new UserDao();
         boolean b = userDao.saveToken(userId, token);

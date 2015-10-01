@@ -1,5 +1,7 @@
 package ifn701.safeguarder.backend.entities;
 
+import org.json.JSONObject;
+
 import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -121,4 +123,17 @@ public class Accident {
     private String image3;
 
     User user;
+
+    public JSONObject toJSon() {
+        JSONObject jObj = new JSONObject();
+
+        jObj.put("id", id);
+        jObj.put("userId", userId);
+        jObj.put("name", name);
+        jObj.put("observation_level", observation_level);
+        jObj.put("lat", lat);
+        jObj.put("lon", lon);
+
+        return jObj;
+    }
 }

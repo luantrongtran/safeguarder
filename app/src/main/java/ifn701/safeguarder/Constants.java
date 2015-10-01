@@ -46,4 +46,6 @@ public class Constants {
     public static String search_location_lon = "search_location_lon";
 
     public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
+    public static String intent_extra_token = "google_cloud_token";
 }

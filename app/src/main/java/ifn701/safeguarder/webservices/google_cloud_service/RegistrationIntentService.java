@@ -9,9 +9,13 @@ import com.google.android.gms.iid.InstanceID;
 
 import java.io.IOException;
 
+import ifn701.safeguarder.BackendApiProvider;
 import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.CustomSharedPreferences.GCMSharedPreferences;
+import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.R;
+import ifn701.safeguarder.backend.myApi.MyApi;
+import ifn701.safeguarder.backend.myApi.model.ResultCode;
 
 public class RegistrationIntentService extends IntentService {
 
@@ -38,8 +42,26 @@ public class RegistrationIntentService extends IntentService {
     }
 
     private void registerToken(String token) {
-        RegisterTokenToSafeguarderBackend registerTokenToSafeguarderBackend
-                = new RegisterTokenToSafeguarderBackend(this);
-        registerTokenToSafeguarderBackend.execute(token);
+        MyApi myApi = BackendApiProvider.getPatientApi();
+
+        UserInfoPreferences userInfoPreferences = new UserInfoPreferences(this);
+        if(token == null || userInfoPreferences.getUserId()
+                == Constants.sharedPreferences_integer_default_value) {
+            Log.e(Constants.APPLICATION_ID, "Cannot save token to the Safeguarder backend: the token is null");
+            return;
+        }
+
+
+        ResultCode rs = null;
+        try {
+            rs = myApi.saveToken(token, userInfoPreferences.getUserId()).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println(e);
+        }
+
+        if(rs == null || rs.getResult() == false) {
+            Log.e(Constants.APPLICATION_ID, "Cannot save token to the Safeguarder backend");
+        }
     }
 }

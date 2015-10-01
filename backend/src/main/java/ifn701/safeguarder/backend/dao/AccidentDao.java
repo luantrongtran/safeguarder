@@ -138,7 +138,7 @@ public class AccidentDao extends DAOBase {
         return accidentList;
     }
 
-    public void insertANewAccident(Accident accident) {
+    public int insertANewAccident(Accident accident) {
 
         System.out.println("WITHIN INSERTANEWACCIDENT METHOD");
 
@@ -146,6 +146,7 @@ public class AccidentDao extends DAOBase {
         String sql = "INSERT INTO accident (user_Id, name, type, time, lat, lon, observation_level, " +
                 "description, image1, image2, image3) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+        int lastInsertedId = -1;
         PreparedStatement ps = null;
         try {
             ps = con.prepareStatement(sql);
@@ -164,9 +165,17 @@ public class AccidentDao extends DAOBase {
             ps.setString(11, accident.getImage3());
 
             ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if(rs.next())
+            {
+                lastInsertedId = rs.getInt(1);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return lastInsertedId;
     }
 
     public Accident parseFromResultSet(ResultSet rs) throws SQLException {
