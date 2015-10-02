@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
@@ -24,6 +25,8 @@ public class RegistrationIntentService extends IntentService {
         super(TAG);
     }
 
+    public static final String[] TOPICS = {"newaccident"};
+
     @Override
     protected void onHandleIntent(Intent intent) {
         GCMSharedPreferences gcmSharedPreferences = new GCMSharedPreferences(this);
@@ -34,6 +37,7 @@ public class RegistrationIntentService extends IntentService {
             Log.i(TAG, "GCM token: " + token);
 
             registerToken(token);
+            subscribeTopics(token);
             gcmSharedPreferences.setIsTokenSentToServer(true);
         } catch (IOException e) {
             e.printStackTrace();
@@ -62,6 +66,13 @@ public class RegistrationIntentService extends IntentService {
 
         if(rs == null || rs.getResult() == false) {
             Log.e(Constants.APPLICATION_ID, "Cannot save token to the Safeguarder backend");
+        }
+    }
+
+    private void subscribeTopics(String token) throws IOException {
+        GcmPubSub pubSub = GcmPubSub.getInstance(this);
+        for (String topic : TOPICS) {
+            pubSub.subscribe(token, "/topics/" + topic, null);
         }
     }
 }

@@ -78,6 +78,14 @@
             </intent-filter>
         </service>
         <service android:name=".webservices.google_cloud_service.RegistrationIntentService" />
+
+        <service
+            android:name=".webservices.google_cloud_service.SafeGuarderGCMListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
         <!-- End Google cloud message -->
 
         <receiver android:name=".backgroundservices.UpdateAccidentInRangeReceiver" />

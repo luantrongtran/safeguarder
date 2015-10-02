@@ -1,6 +1,7 @@
 package ifn701.safeguarder.backend.dao;
 
 import com.google.api.server.spi.types.SimpleDate;
+import com.google.cloud.sql.jdbc.Statement;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -149,7 +150,7 @@ public class AccidentDao extends DAOBase {
         int lastInsertedId = -1;
         PreparedStatement ps = null;
         try {
-            ps = con.prepareStatement(sql);
+            ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, accident.getUserId());
             ps.setString(2, accident.getName());
             ps.setString(3, accident.getType());

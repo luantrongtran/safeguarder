@@ -2,6 +2,7 @@ package ifn701.safeguarder.backend.entities;
 
 import com.google.appengine.repackaged.org.codehaus.jackson.map.util.JSONPObject;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class GCMSender {
 
         JSONObject jGcmData = new JSONObject();
 
-        jGcmData.put("to", "/topics/new-accident");
+        jGcmData.put("to", "/topics/newaccident");
         JSONObject jData = accident.toJSon();
         jGcmData.put("data", jData);
         try {
@@ -38,6 +39,13 @@ public class GCMSender {
             // Send GCM message content.
             OutputStream outputStream = conn.getOutputStream();
             outputStream.write(jGcmData.toString().getBytes());
+
+            // Read GCM response.
+            InputStream inputStream = conn.getInputStream();
+            String resp = IOUtils.toString(inputStream);
+            System.out.println(resp);
+            System.out.println("Check your device/emulator for notification or logcat for " +
+                    "confirmation of the receipt of the GCM message.");
         } catch( Exception ex) {
 
         }

@@ -1,7 +1,7 @@
 package ifn701.safeguarder;
 
 public class Constants {
-    public static String webServiceUrl = "http://192.168.0.104:8080/_ah/api/";
+    public static String webServiceUrl = "http://172.19.13.145:8080/_ah/api/";
 
     public static String APPLICATION_ID = "safeguarder";
 
@@ -46,6 +46,4 @@ public class Constants {
     public static String search_location_lon = "search_location_lon";
 
     public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-
-    public static String intent_extra_token = "google_cloud_token";
 }

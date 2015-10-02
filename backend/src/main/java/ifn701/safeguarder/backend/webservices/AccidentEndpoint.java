@@ -89,8 +89,7 @@ public class AccidentEndpoint {
         int accidentId = accidentdao.insertANewAccident(accident);
         accident = accidentdao.findById(accidentId);
         if(accident != null) {
-            GCMSender gcmSender = new GCMSender();
-            gcmSender.broadcastANewAccident(accident);
+            GCMSender.broadcastANewAccident(accident);
         }
         return accident;
     }

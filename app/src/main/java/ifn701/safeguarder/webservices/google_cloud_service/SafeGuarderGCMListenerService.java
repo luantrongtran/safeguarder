@@ -12,7 +12,7 @@ public class SafeGuarderGCMListenerService extends GcmListenerService {
     public static String TAG = "SafeGuarderGCMListenerService";
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString("message");
+        String message = data.getString("name");
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
     }
