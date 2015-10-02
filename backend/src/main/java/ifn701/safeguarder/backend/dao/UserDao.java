@@ -70,10 +70,10 @@ public User findById(int id) {
         return null;
     }
 
-     public void signUp(User user)
+     public User signUp(User user)
      {
         Connection con = getConnection();
-        String sql = "INSERT INTO user (fullName,email,password,activated) VALUES(?)";
+        String sql = "INSERT INTO user (fullName,email,password,activated) VALUES(?,?,?,?)";
 
         PreparedStatement ps = null;
         try {
@@ -87,7 +87,8 @@ public User findById(int id) {
             e.printStackTrace();
         }
 
-    }
+         return user;
+     }
 
     public User parseFromResultSet(ResultSet rs) throws SQLException {
         User user = new User();

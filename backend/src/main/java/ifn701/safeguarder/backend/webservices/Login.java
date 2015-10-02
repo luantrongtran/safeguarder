@@ -69,11 +69,11 @@ public class Login {
         return null;
     }
 
-    @ApiMethod(name = "insertUser")
-    public User insertUser(User user){
-        UserDao userdao = new UserDao();
-        userdao.signUp(user);
-        return null;
-    }
+//    @ApiMethod(name = "insertUser")
+//    public User insertUser(User user){
+//        UserDao userdao = new UserDao();
+//        userdao.signUp(user);
+//        return null;
+//    }
 
 }

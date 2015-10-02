@@ -13,8 +13,13 @@ import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
+import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
+import ifn701.safeguarder.backend.myApi.model.User;
+import ifn701.safeguarder.webservices.ISignupService;
+import ifn701.safeguarder.webservices.SignupService;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity implements ISignupService  {
     private static final String TAG = "SignupActivity";
 
     @InjectView(R.id.input_name) EditText _nameText;
@@ -32,7 +37,16 @@ public class SignupActivity extends AppCompatActivity {
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signup();
+                EditText nameEdit = (EditText)findViewById(R.id.input_name);
+                EditText registeremailEdit = (EditText)findViewById(R.id.input_email);
+                EditText passEdit = (EditText)findViewById(R.id.input_password);
+                String email = registeremailEdit.getText().toString();
+                String password = passEdit.getText().toString();
+                String name = nameEdit.getText().toString();
+                SignupService signup = new SignupService((ISignupService) SignupActivity.this);
+                signup.execute(name,email,password);
+                validate();
+//                signup();
             }
         });
 
@@ -45,54 +59,54 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
-    public void signup() {
-        Log.d(TAG, "Signup");
+//    public void signup() {
+//        Log.d(TAG, "Signup");
+//
+//        if (!validate()) {
+//            onSignupFailed();
+//            return;
+//        }
+//
+//        _signupButton.setEnabled(false);
+//
+//        final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
+//                R.style.AppTheme_Dialog);
+//        progressDialog.setIndeterminate(true);
+//        progressDialog.setMessage("Creating Account...");
+//        progressDialog.show();
+//
+//        String name = _nameText.getText().toString();
+//        String email = _emailText.getText().toString();
+//        String password = _passwordText.getText().toString();
+//
+//        // TODO: Implement your own signup logic here.
+//
+//        new android.os.Handler().postDelayed(
+//                new Runnable() {
+//                    public void run() {
+//                        // On complete call either onSignupSuccess or onSignupFailed
+//                        // depending on success
+//                        onSignupSuccess();
+//                        // onSignupFailed();
+//                        progressDialog.dismiss();
+//                    }
+//                }, 3000);
+//    }
 
-        if (!validate()) {
-            onSignupFailed();
-            return;
-        }
 
-        _signupButton.setEnabled(false);
-
-        final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
-                R.style.AppTheme_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Creating Account...");
-        progressDialog.show();
-
-        String name = _nameText.getText().toString();
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
-
-        // TODO: Implement your own signup logic here.
-
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
-    }
-
-
-    public void onSignupSuccess() {
-        _signupButton.setEnabled(true);
-        setResult(RESULT_OK, null);
-        //finish();
-        Intent i =new Intent(this, MapsActivity.class);
-        startActivity(i);
-    }
-
-    public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
-        _signupButton.setEnabled(true);
-    }
+//    public void onSignupSuccess() {
+//        _signupButton.setEnabled(true);
+//        setResult(RESULT_OK, null);
+//        //finish();
+//        Intent i =new Intent(this, MapsActivity.class);
+//        startActivity(i);
+//    }
+//
+//    public void onSignupFailed() {
+//        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+//
+//        _signupButton.setEnabled(true);
+//    }
 
     public boolean validate() {
         boolean valid = true;
@@ -123,5 +137,38 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         return valid;
+    }
+
+
+    @Override
+       public void processUserSignup(User user) {
+
+//        if(user != null){
+//            UserInfoPreferences userInfoPreferences = new UserInfoPreferences(getApplicationContext());
+//            userInfoPreferences.setEmail(user.getEmail());
+//            userInfoPreferences.setPassword(user.getPassword());
+//            userInfoPreferences.setFullname(user.getFullName());
+//            userInfoPreferences.setUserId(user.getId());
+//
+//            //Set up user settings into SharedPreferences
+//            UserSettingsPreferences userSettingsPreferences
+//                    = new UserSettingsPreferences(getApplicationContext());
+//            userSettingsPreferences.setUserSettings(user.getUserSetting());
+//
+//            Toast.makeText(SignupActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
+//            Intent intent = new Intent(this, MapsActivity.class);
+//            startActivity(intent);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+////            finish();
+//        }
+//        else
+//        {
+//            Toast.makeText(SignupActivity.this, "Account already exist, Please Login", Toast.LENGTH_SHORT).show();
+//            Intent login = new Intent(this, LoginActivity.class);
+//            startActivity(login);
+//        }
     }
 }
