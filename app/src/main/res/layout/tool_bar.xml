@@ -26,8 +26,8 @@
 
             <TextView
                 android:id="@+id/numOfNotifcations"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:text=""
                 android:background="@drawable/notification_shape"
                 android:textColor="#FFFFFF"

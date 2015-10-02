@@ -25,7 +25,9 @@ public class RegistrationIntentService extends IntentService {
         super(TAG);
     }
 
-    public static final String[] TOPICS = {"newaccident"};
+    public static final String NEW_ACCIDENT_EVENT = "newaccident";
+
+    public static final String[] TOPICS = {NEW_ACCIDENT_EVENT};
 
     @Override
     protected void onHandleIntent(Intent intent) {

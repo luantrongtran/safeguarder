@@ -1,7 +1,7 @@
 package ifn701.safeguarder;
 
 public class Constants {
-    public static String webServiceUrl = "http://172.19.13.145:8080/_ah/api/";
+    public static String webServiceUrl = "http://192.168.0.104:8080/_ah/api/";
 
     public static String APPLICATION_ID = "safeguarder";
 
@@ -38,6 +38,11 @@ public class Constants {
     public static String sharedPreferences_event_filter_settings = "event_filter_settings";
     public static String getSharedPreferences_event_filter_settings_by_time = "event_filter_settings"
            + "_by_time";
+
+    public static String sharedPreferences_new_accident_current_location_notification
+            = "new_accident_current_location";
+    public static String sharedPreferences_new_accident_home_location_notification
+            = "new_accident_home_location";
 
     public static String broadCastService_UpdateAccidentsList = "updated_accidents_list";
 

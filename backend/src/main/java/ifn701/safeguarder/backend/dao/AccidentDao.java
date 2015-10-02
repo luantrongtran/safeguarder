@@ -79,7 +79,9 @@ public class AccidentDao extends DAOBase {
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     Accident accident = parseFromResultSet(rs);
-                    accidentVector.add(accident);
+                    if(!accidentVector.contains(accident)) {
+                        accidentVector.add(accident);
+                    }
                 }
             }
         } catch (SQLException e) {

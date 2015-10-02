@@ -136,4 +136,19 @@ public class Accident {
 
         return jObj;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        }
+        if(!(obj instanceof Accident)) {
+            return false;
+        }
+        Accident accident = (Accident)obj;
+        if(accident.getId() == this.getId()) {
+            return true;
+        }
+        return false;
+    }
 }
