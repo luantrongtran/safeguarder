@@ -3,6 +3,8 @@ package ifn701.safeguarder.CustomSharedPreferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.Map;
+
 import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.SharedPreferencesUtilities;
 import ifn701.safeguarder.backend.myApi.model.UserSetting;

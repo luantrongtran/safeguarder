@@ -1,11 +1,15 @@
 package ifn701.safeguarder.webservices.google_cloud_service;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
+import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.NewAccidentWithinCurrentLocationSharedPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.NewAccidentWithinHomeLocationSharedPreferences;
@@ -17,16 +21,14 @@ import ifn701.safeguarder.backend.myApi.model.Accident;
  */
 public class SafeGuarderGCMListenerService extends GcmListenerService {
     public static String TAG = "SafeGuarderGCMListenerService";
-    public static final String ACTION_NEW_ACCIDENT_NEAR_CURRENT_LOCATION = "new_accident_current_location";
-    public static final String ACTION_NEW_ACCIDENT_NEAR_HOME_LOCATION = "new_accident_home_location";
+    public static final String ACTION_NEW_ACCIDENT = "new_accident_current_location";
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        Log.i(TAG, from);
-        String message = data.toString();
-        Log.i(TAG, message);
-
+        Log.i(TAG, "GCM msg received");
         String accidentTopic = "/topics/" + RegistrationIntentService.NEW_ACCIDENT_EVENT;
-        if(from == accidentTopic) {
+        if(from.equals(accidentTopic)) {
+//            Toast.makeText(SafeGuarderGCMListenerService.this, "New accident", Toast.LENGTH_SHORT).show();
+            Log.i(Constants.APPLICATION_ID, "New accident topic GCM");
             Accident accident = parseFromData(data);
             if(checkAnAccidentWithinHomeLocation(accident)) {
                 NewAccidentWithinHomeLocationSharedPreferences newAccident =
@@ -39,17 +41,20 @@ public class SafeGuarderGCMListenerService extends GcmListenerService {
 
                 newAccident.putNewAccident(accident.getId()+"", accident.toString());
             }
+
+            Intent broadcastIntent = new Intent(ACTION_NEW_ACCIDENT);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
         }
     }
 
     private Accident parseFromData(Bundle data) {
         Accident accident = new Accident();
-        accident.setId(data.getInt("id"));
-        accident.setUserId(data.getInt("userId"));
+        accident.setId(Integer.valueOf(data.getString("id")));
+        accident.setUserId(Integer.valueOf(data.getString("userId")));
         accident.setName(data.getString("name"));
-        accident.setObservationLevel(data.getInt("observation_level"));
-        accident.setLat(data.getDouble("lat"));
-        accident.setLon(data.getDouble("lon"));
+        accident.setObservationLevel(Integer.valueOf(data.getString("observation_level")));
+        accident.setLat(Double.valueOf(data.getString("lat")));
+        accident.setLon(Double.valueOf(data.getString("lon")));
 
         return accident;
     }
