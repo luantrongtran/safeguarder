@@ -78,7 +78,6 @@
             </intent-filter>
         </service>
         <service android:name=".webservices.google_cloud_service.RegistrationIntentService" />
-
         <service
             android:name=".webservices.google_cloud_service.SafeGuarderGCMListenerService"
             android:exported="false" >
@@ -108,7 +107,6 @@
             android:name=".activities.ReportActivity"
             android:label="@string/title_activity_report" >
         </activity>
-
         <activity
             android:name=".Observation.ObservationDetailed"
             android:label="@string/title_activity_observation_detailed" >
@@ -116,8 +114,7 @@
         <activity
             android:name=".Observation.ObservationList"
             android:label="@string/title_activity_observation_list" >
-	</activity>
-
+        </activity>
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name" >
@@ -127,7 +124,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".SignupActivity"
             android:label="@string/title_activity_signup" >
@@ -135,6 +131,10 @@
         <activity
             android:name=".activities.EventFilterActivity"
             android:label="@string/title_activity_event_filter" >
+        </activity>
+        <activity
+            android:name=".activities.NotificationActivity"
+            android:label="@string/title_activity_notification" >
         </activity>
     </application>
 

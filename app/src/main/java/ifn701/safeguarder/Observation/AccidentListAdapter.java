@@ -76,5 +76,4 @@ public class AccidentListAdapter extends ArrayAdapter<Accident> {
 
         return convertView;
     }
-
 }

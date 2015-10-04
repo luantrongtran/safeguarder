@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -62,6 +63,7 @@ import ifn701.safeguarder.Observation.ObservationList;
 import ifn701.safeguarder.Parcelable.AccidentListParcelable;
 import ifn701.safeguarder.activities.EventFilterActivity;
 import ifn701.safeguarder.activities.LeftMenuAdapter;
+import ifn701.safeguarder.activities.NotificationActivity;
 import ifn701.safeguarder.activities.ReportActivity;
 import ifn701.safeguarder.activities.ZoneSettingActivity;
 import ifn701.safeguarder.backend.myApi.model.AccidentList;
@@ -134,6 +136,8 @@ public class MapsActivity extends AppCompatActivity
 //        setUpDummyData();
 
         registerReceiver();
+
+        registerListener();
 
         setUpNavigationMenu();
 
@@ -224,6 +228,10 @@ public class MapsActivity extends AppCompatActivity
         registerNewAccidentAdded();
     }
 
+    public void registerListener() {
+        registerNotificationListChanged();
+    }
+
     public void registerAccidentListUpdateReceiver() {
         IntentFilter onAccidentListUpdatedFilter
                 = new IntentFilter(UpdateAccidentsInRangeService.ACTION);
@@ -296,6 +304,8 @@ public class MapsActivity extends AppCompatActivity
                     }
                     else if (index == LeftMenuAdapter.OBSERVATION_LIST) {
                         goToObsListActivity();
+                    } else if (index == LeftMenuAdapter.NOTIFICATION_LIST) {
+                        goToNotificationListActivity();
                     }
 
                     return true;
@@ -320,7 +330,7 @@ public class MapsActivity extends AppCompatActivity
 
     public void goToSettings() {
         Intent intent = new Intent(this, ZoneSettingActivity.class);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, LeftMenuAdapter.ZONE_SETTING);
     }
 
     public void goToEventFilterSetting() {
@@ -334,7 +344,21 @@ public class MapsActivity extends AppCompatActivity
         userDrawer.updateCurrentLocationInterestedArea();
         userDrawer.updateHomeLocation();
 
-        updateAccidentsInRange();//Update accidents within the range after settings had changed
+        if(resultCode == RESULT_OK) {
+            if(requestCode == LeftMenuAdapter.ZONE_SETTING) {
+                updateAccidentsInRange();//Update accidents within the range after settings had changed
+            } else if (requestCode == LeftMenuAdapter.NOTIFICATION_LIST) {
+                double lat = data.getDoubleExtra(
+                        Constants.notification_activity_intent_result_accident_lat,
+                        Constants.sharedPreferences_double_default_value);
+                double lon = data.getDoubleExtra(
+                        Constants.notification_activity_intent_result_accident_lon,
+                        Constants.sharedPreferences_float_default_value);
+
+                LatLng latLng = new LatLng(lat, lon);
+                panToLatLng(latLng, true);
+            }
+        }
     }
 
     public void cancelServiceOnStop() {
@@ -509,8 +533,7 @@ public class MapsActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i(Constants.APPLICATION_ID, "Received new accident event");
-
-            updateToolBar();
+//            updateToolBar();
         }
     };
 
@@ -774,5 +797,28 @@ thousands
             textView.setText(total+"");
             textView.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void goToNotificationListActivity() {
+        Intent intent = new Intent(this, NotificationActivity.class);
+        startActivityForResult(intent, LeftMenuAdapter.NOTIFICATION_LIST);
+    }
+
+    SharedPreferences.OnSharedPreferenceChangeListener notificationListChanged
+            = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            updateToolBar();
+        }
+    };
+
+    private void registerNotificationListChanged() {
+        newAccidentHomeLocation.getSharedPreferences().registerOnSharedPreferenceChangeListener(
+                notificationListChanged
+        );
+
+        newAccidentCurrentLocation.getSharedPreferences().registerOnSharedPreferenceChangeListener(
+                notificationListChanged
+        );
     }
 }

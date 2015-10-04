@@ -143,6 +143,7 @@ public class AccidentManager {
             LatLng position = new LatLng(accident.getLat(), accident.getLon());
 
             markerOptions = markerOptions.snippet(accident.toString());
+            Log.i(Constants.APPLICATION_ID, "Marker snippet: " + accident.toString());
 
             BitmapDescriptor typeIcon = null;
             if(newAccidentCurrentLocation.contains(accident.getId()) ||
@@ -210,4 +211,6 @@ public class AccidentManager {
         newAccidentCurrentLocation.remove(accident.getId() + "");
         newAccidentHomeLocation.remove(accident.getId() + "");
     }
+
+
 }

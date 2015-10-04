@@ -21,9 +21,9 @@ public class LeftMenuAdapter extends RecyclerView.Adapter<LeftMenuAdapter.LeftMe
 
     private static final int TYPE_ITEM = 1;
 
+    public static final int NOTIFICATION_LIST = 0;
     public static final int OBSERVATION_LIST = 1;
     public static final int ZONE_SETTING = 2;
-
     public static final int EVENT_FILTER_SETTING = 3;
 
     Context context;

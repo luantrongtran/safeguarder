@@ -45,4 +45,8 @@ public class NewAccidentWithinHomeLocationSharedPreferences {
     public void remove(String key) {
         sharedPreferences.edit().remove(key).apply();
     }
+
+    public SharedPreferences getSharedPreferences() {
+        return sharedPreferences;
+    }
 }

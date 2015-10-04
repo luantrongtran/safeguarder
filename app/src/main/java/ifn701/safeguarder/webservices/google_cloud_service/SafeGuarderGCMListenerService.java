@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmListenerService;
+import com.google.api.client.json.jackson2.JacksonFactory;
 
 import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
@@ -30,6 +31,8 @@ public class SafeGuarderGCMListenerService extends GcmListenerService {
 //            Toast.makeText(SafeGuarderGCMListenerService.this, "New accident", Toast.LENGTH_SHORT).show();
             Log.i(Constants.APPLICATION_ID, "New accident topic GCM");
             Accident accident = parseFromData(data);
+            accident.setFactory(new JacksonFactory());
+            Log.i(Constants.APPLICATION_ID, "GCM accident json string: " + accident.toString());
             if(checkAnAccidentWithinHomeLocation(accident)) {
                 NewAccidentWithinHomeLocationSharedPreferences newAccident =
                         new NewAccidentWithinHomeLocationSharedPreferences(this);
@@ -55,6 +58,12 @@ public class SafeGuarderGCMListenerService extends GcmListenerService {
         accident.setObservationLevel(Integer.valueOf(data.getString("observation_level")));
         accident.setLat(Double.valueOf(data.getString("lat")));
         accident.setLon(Double.valueOf(data.getString("lon")));
+        accident.setType(data.getString("type"));
+        accident.setDescription(data.getString("description"));
+        accident.setImage1(data.getString("image1"));
+        accident.setImage2(data.getString("image2"));
+        accident.setImage3(data.getString("image3"));
+        accident.setTime(Long.valueOf(data.getString("time")));
 
         return accident;
     }

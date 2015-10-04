@@ -130,9 +130,15 @@ public class Accident {
         jObj.put("id", id);
         jObj.put("userId", userId);
         jObj.put("name", name);
-        jObj.put("observation_level", observation_level);
+        jObj.put("type", type);
+        jObj.put("time", time);
         jObj.put("lat", lat);
         jObj.put("lon", lon);
+        jObj.put("observation_level", observation_level);
+        jObj.put("description", description);
+        jObj.put("image1", image1);
+        jObj.put("image2", image2);
+        jObj.put("image3", image3);
 
         return jObj;
     }

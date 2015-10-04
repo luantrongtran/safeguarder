@@ -51,4 +51,7 @@ public class Constants {
     public static String search_location_lon = "search_location_lon";
 
     public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
+    public static String notification_activity_intent_result_accident_lat = "accident_lat";
+    public static String notification_activity_intent_result_accident_lon = "accident_lon";
 }

@@ -119,4 +119,7 @@
     <string name="just_now">just now</string>
 
     <string name="observation_list_activity_empty_accident_list">You have not posted any accident</string>
+    <string name="title_activity_notification">NotificationActivity</string>
+
+    <string name="notification_list_activity_empty_list">No new accidents</string>
 </resources>
