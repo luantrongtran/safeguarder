@@ -1,8 +1,13 @@
 package ifn701.safeguarder.webservices.google_cloud_service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,6 +20,8 @@ import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.NewAccidentWithinCurrentLocationSharedPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.NewAccidentWithinHomeLocationSharedPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
+import ifn701.safeguarder.MapsActivity;
+import ifn701.safeguarder.R;
 import ifn701.safeguarder.backend.myApi.model.Accident;
 
 /**
@@ -23,6 +30,9 @@ import ifn701.safeguarder.backend.myApi.model.Accident;
 public class SafeGuarderGCMListenerService extends GcmListenerService {
     public static String TAG = "SafeGuarderGCMListenerService";
     public static final String ACTION_NEW_ACCIDENT = "new_accident_current_location";
+
+    public static final int NEW_ACCIDENT_NOTIFICATION_HOME_LOCATION_ID = 1;
+    public static final int NEW_ACCIDENT_NOTIFICATION_CURRENT_LOCATION_ID = 2;
     @Override
     public void onMessageReceived(String from, Bundle data) {
         Log.i(TAG, "GCM msg received");
@@ -38,11 +48,13 @@ public class SafeGuarderGCMListenerService extends GcmListenerService {
                         new NewAccidentWithinHomeLocationSharedPreferences(this);
 
                 newAccident.putNewAccident(accident.getId()+"", accident.toString());
+                pushNotificationNewAccidentHomeLocation();//push notification
             } else if (checkAnAccidentWithinCurrentLocation(accident)) {
                 NewAccidentWithinCurrentLocationSharedPreferences newAccident
                         = new NewAccidentWithinCurrentLocationSharedPreferences(this);
 
                 newAccident.putNewAccident(accident.getId()+"", accident.toString());
+                pushNotificationNewAccidentCurrentLocation();//push notification
             }
 
             Intent broadcastIntent = new Intent(ACTION_NEW_ACCIDENT);
@@ -91,5 +103,57 @@ public class SafeGuarderGCMListenerService extends GcmListenerService {
         Location.distanceBetween(lat, lon, accident.getLat(), accident.getLon(), distance);
 
         return distance[0] < radius;
+    }
+
+    private void pushNotificationNewAccidentHomeLocation() {
+        NewAccidentWithinHomeLocationSharedPreferences newAccident =
+                new NewAccidentWithinHomeLocationSharedPreferences(this);
+        String title = "New events";
+        String content = newAccident.size() + " new event(s) near your home";
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setPriority(2)
+                        .setSmallIcon(R.drawable.home_icon)
+                        .setContentTitle(title)
+                        .setContentText(content)
+                        .setAutoCancel(true)
+                        .setDefaults(Notification.DEFAULT_SOUND);
+        // Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(this, MapsActivity.class);
+        resultIntent.putExtra(Constants.start_from_intent_data, Constants.start_from_notification);
+        resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, 0);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(this.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        mNotificationManager.notify(NEW_ACCIDENT_NOTIFICATION_HOME_LOCATION_ID, mBuilder.build());
+    }
+
+    private void pushNotificationNewAccidentCurrentLocation() {
+        NewAccidentWithinCurrentLocationSharedPreferences newAccident
+                = new NewAccidentWithinCurrentLocationSharedPreferences(this);
+        String title = "New events";
+        String content = newAccident.size() + " new event(s) near your place";
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setPriority(2)
+                        .setSmallIcon(R.drawable.ic_my_location_black_24dp)
+                        .setContentTitle(title)
+                        .setContentText(content)
+                        .setDefaults(Notification.DEFAULT_SOUND);
+        // Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(this, MapsActivity.class);
+        resultIntent.putExtra(Constants.start_from_intent_data, Constants.start_from_notification);
+        resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, 0);
+
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(this.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        mNotificationManager.notify(NEW_ACCIDENT_NOTIFICATION_CURRENT_LOCATION_ID, mBuilder.build());
     }
 }

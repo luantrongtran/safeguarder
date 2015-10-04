@@ -44,6 +44,8 @@ public class Constants {
     public static String sharedPreferences_new_accident_home_location_notification
             = "new_accident_home_location";
 
+    public static String sharedPreferences_application_status = "application_status";
+
     public static String broadCastService_UpdateAccidentsList = "updated_accidents_list";
 
     public static String search_location_address = "search_location_address";
@@ -54,4 +56,7 @@ public class Constants {
 
     public static String notification_activity_intent_result_accident_lat = "accident_lat";
     public static String notification_activity_intent_result_accident_lon = "accident_lon";
+
+    public static String start_from_intent_data = "start_from";//indicating from where the activity called.
+    public static String start_from_notification = "start_from_notfication";
 }

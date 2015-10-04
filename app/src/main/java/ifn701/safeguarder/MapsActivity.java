@@ -84,6 +84,7 @@ public class MapsActivity extends AppCompatActivity
         implements ConnectionCallbacks, OnConnectionFailedListener, IUpdateAccidentInRange,
         IGooglePlacesSearch{
 
+    public static boolean isVisible;//indicating if the acitivity is being used
     public static int requestCodeObsDetailed = 2;
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -133,8 +134,6 @@ public class MapsActivity extends AppCompatActivity
         setUpGoogleApiClient();
         setUpComponents();
 
-//        setUpDummyData();
-
         registerReceiver();
 
         registerListener();
@@ -142,8 +141,6 @@ public class MapsActivity extends AppCompatActivity
         setUpNavigationMenu();
 
         setUpGoogleCloudMessage();
-
-        accidentManager = new AccidentManager(getApplicationContext());
 
         setDefaultSharedPreferences();
 
@@ -160,6 +157,7 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
+        isVisible = false;
         cancelServiceOnStop();
         googleApiClient.disconnect();
         super.onStop();
@@ -368,12 +366,22 @@ public class MapsActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        isVisible = true;
+        accidentManager = new AccidentManager(getApplicationContext());
+
         setUpMapIfNeeded();
 
         updateGooglePlaces(); //Update health services
         updateAccidentsInRange();//Update accidents within the range
         userDrawer = new UserDrawer(getApplicationContext(), mMap);
         updateToolBar();
+
+        String startFrom = getIntent().getStringExtra(Constants.start_from_intent_data);
+        if(startFrom != null && startFrom
+                .equals(Constants.start_from_notification)){
+            getIntent().removeExtra(Constants.start_from_intent_data);
+            goToNotificationListActivity();
+        }
     }
 
     /**
