@@ -1,5 +1,7 @@
 package ifn701.safeguarder.activities;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,9 +15,12 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
@@ -33,6 +38,9 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
 
+        TextView reportNewAccidentPageTitle = (TextView) findViewById(R.id.report_page_title);
+        reportNewAccidentPageTitle.setText(R.string.report_new_accident_page_title);
+
         long l = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Date date = new Date(l);
@@ -40,6 +48,20 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
 
         EditText currentTime = (EditText) findViewById(R.id.text_time);
         currentTime.setText(str);
+
+        GPSTracker GPSTracker = new GPSTracker(getApplicationContext());
+        EditText displayLocation = (EditText) findViewById(R.id.text_location);
+        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(GPSTracker.getLatitude(),
+                    GPSTracker.getLongitude(), 1);
+            if(addresses != null & addresses.size() > 0) {
+                Address address = addresses.get(0);
+                displayLocation.setText(address.getAddressLine(0));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Spinner spinner_obslvl = (Spinner) findViewById(R.id.spinner_obslvl);
         Spinner spinner_accType = (Spinner) findViewById(R.id.spinner_accType);
@@ -141,12 +163,10 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
     @Override
     public void processReport() {
         Toast.makeText(this, "SendReportTest", Toast.LENGTH_SHORT).show();
+        this.finish();
     }
 
     private String validateForm() {
-
-        //Log.i(Constants.APPLIATION_ID, spinnerObslvl.getSelectedItemPosition() + "");
-
         String str = "";
 
         if(inputName.getText().toString().isEmpty()) {

@@ -42,6 +42,8 @@ public class AccidentEndpoint {
 
         Vector<Accident> accidentVector = accidentDao.getAccidentsWithinRangeByUserId(userId, lat, lon, radius);
         AccidentList accidentList = new AccidentList();
+        accidentList.setCurrentLocationEventSize(accidentDao.curSize);
+        accidentList.setHomeEventSize(accidentDao.homeSize);
         accidentList.setAccidentList(accidentVector);
         return accidentList;
     }
@@ -70,15 +72,12 @@ public class AccidentEndpoint {
         return accidentList;
     }
 
-
     /**
      * This inserts a new <code>Accident</code> object.
      *
      * @param accident The object to be added.
      * @return The object to be added.
      */
-
-
     private AccidentDao accidentdao = new AccidentDao();
 
     @ApiMethod(name = "insertAccident")

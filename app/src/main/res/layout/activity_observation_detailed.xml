@@ -10,6 +10,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/report_detailed_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="title"
+            android:textAllCaps="true"
+            android:gravity="center_horizontal"
+            android:textSize="27dp"
+            android:textStyle="bold"
+            android:layout_margin="10dp"
+            android:textColor="#000000"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <View
             android:id="@+id/line_1"
@@ -29,7 +46,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:onClick="accidentReport"
             android:src="@drawable/ic_report"
             android:layout_gravity="center_vertical"
             />
@@ -44,11 +60,10 @@
             android:editable="false"  />
 
         <ImageView
-            android:id="@+id/obs_share"
+            android:id="@+id/shareButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:onClick="accidentReport"
             android:src="@drawable/ic_cached_black_24dp"
             android:layout_gravity="center_vertical"
             />
@@ -129,7 +144,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:onClick="accidentReport"
             android:src="@drawable/ic_schedule"
             android:layout_gravity="center_vertical"
             />
@@ -166,7 +180,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:onClick="accidentReport"
             android:src="@drawable/ic_location"
             android:layout_gravity="center_vertical"
             />
@@ -203,7 +216,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:onClick="accidentReport"
             android:src="@drawable/ic_visibility"
             android:layout_gravity="center_vertical"
             />
@@ -240,7 +252,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:onClick="accidentReport"
             android:src="@drawable/ic_more"
             android:layout_gravity="center_vertical"
             />
@@ -277,7 +288,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:onClick="accidentReport"
             android:src="@drawable/ic_action"
             android:layout_gravity="center_vertical"
             />

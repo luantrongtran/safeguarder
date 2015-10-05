@@ -103,7 +103,8 @@
 
         <activity
             android:name=".Observation.ObservationDetailed"
-            android:label="@string/title_activity_observation_detailed" >
+            android:label="@string/title_activity_observation_detailed"
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".Observation.ObservationList"

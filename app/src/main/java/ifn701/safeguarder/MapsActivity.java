@@ -112,6 +112,8 @@ public class MapsActivity extends AppCompatActivity
     int locationSwitcherMarginTop = 0;
     int locationSwitcherBalance = 1;
 
+    private int currentSelectedPosition = 1; //1 Current, 2 Home
+
 //    ActionBarDrawerToggle mDrawerToggle;
     //end navigation menu
 
@@ -189,6 +191,8 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Log.e(Constants.APPLICATION_ID, "Pan to my location");
+                currentSelectedPosition = 1;
+                updateMapFooter();
                 panToMyLocation();
                 switchLocationBar();
                 return false;
@@ -199,6 +203,8 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Log.e(Constants.APPLICATION_ID, "Pan to home location");
+                currentSelectedPosition = 2;
+                updateMapFooter();
                 panToHomeLocation();
                 switchLocationBar();
                 return false;
@@ -479,7 +485,6 @@ public class MapsActivity extends AppCompatActivity
             updateGooglePlaces(); //Update health services
 
             updateAccidentsInRange();//Update accidents within the range
-
         }
     };
 
@@ -644,6 +649,10 @@ public class MapsActivity extends AppCompatActivity
     public void onAccidentsInRangeUpdated(AccidentList accidentList) {
         accidentManager.setAccidentList(accidentList);
         accidentManager.updateAccidentMarkers(mMap);
+
+        if(currentSelectedPosition == 1) {
+            updateMapFooter();
+        }
     }
 
     public void updateGooglePlaces() {
@@ -659,24 +668,63 @@ public class MapsActivity extends AppCompatActivity
 	}
 	
     public void updateMapFooter() {
+
+        //Toast.makeText(MapsActivity.this, "updateMapFooter() is called", Toast.LENGTH_SHORT).show();
         TextView showMyLocation = (TextView)findViewById(R.id.mylocation);
         TextView showMyRadius = (TextView) findViewById(R.id.myradius);
         TextView showRadiusEvents = (TextView) findViewById(R.id.myradiusevents);
 
-        UserSettingsPreferences getradius = new UserSettingsPreferences(getApplicationContext());
-        CurrentLocationPreferences currLocation = new CurrentLocationPreferences(getApplicationContext());
+        UserSettingsPreferences userPref = new UserSettingsPreferences(getApplicationContext());
 
-        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+        int eventSize = 0;
 
         try {
-            List<Address> addresses = geocoder.getFromLocation(currLocation.getLat(),
-                    currLocation.getLon(), 1);
-            if(addresses != null & addresses.size() > 0) {
-                Address address = addresses.get(0);
-                showMyLocation.setText(address.getLocality());
-                showMyRadius.setText("(" + (getradius.getRadius()/1000) + " km)");
-                //showRadiusEvents.setText( () + " events");
+            if(currentSelectedPosition == 1) {
+                CurrentLocationPreferences currLocation = new CurrentLocationPreferences(getApplicationContext());
+                Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                List<Address> addresses = geocoder.getFromLocation(currLocation.getLat(),
+                        currLocation.getLon(), 1);
+
+                if (addresses != null & addresses.size() > 0) {
+                    Address address = addresses.get(0);
+                    Toast.makeText(MapsActivity.this, address.getAddressLine(0), Toast.LENGTH_SHORT).show();
+                    showMyLocation.setText(address.getAddressLine(0));
+
+                    if(accidentManager.accidentList.getCurrentLocationEventSize() == null) {
+                        showRadiusEvents.setText("No event");
+                    }
+                    else {
+                        eventSize = accidentManager.accidentList.getCurrentLocationEventSize();
+
+                        if (eventSize == 1) {
+                            showRadiusEvents.setText(eventSize + " event");
+                        }
+                        else if(eventSize > 1) {
+                            showRadiusEvents.setText(eventSize + " events");
+                        }
+                    }
+                }
             }
+            else if(currentSelectedPosition == 2) {
+                showMyLocation.setText(userPref.getHomeLocationAddress());
+
+                if(accidentManager.accidentList.getHomeEventSize() == null) {
+                    showRadiusEvents.setText("No event");
+                }
+                else {
+                    eventSize = accidentManager.accidentList.getHomeEventSize();
+
+                    if (eventSize == 1) {
+                        showRadiusEvents.setText(eventSize + " event");
+                    }
+                    else if(eventSize > 1) {
+                        showRadiusEvents.setText(eventSize + " events");
+                    }
+                }
+            }
+
+            showMyRadius.setText("(" + (userPref.getRadius()/1000) + " km)");
+
         } catch (IOException e) {
             e.printStackTrace();
         }

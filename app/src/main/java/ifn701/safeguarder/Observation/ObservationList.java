@@ -34,6 +34,9 @@ public class ObservationList extends Activity implements IGetAccidentByUserIdSer
         getAccidentByUserIdService.execute(getMyUserId.getUserId());
 
         msg = (TextView) findViewById(R.id.msg);
+
+        TextView observationListPageTitle = (TextView) findViewById(R.id.report_list_title);
+        observationListPageTitle.setText(R.string.observation_list_page_title);
     }
 
 
@@ -84,10 +87,11 @@ public class ObservationList extends Activity implements IGetAccidentByUserIdSer
     @Override
     public void getAccidentListByUserIdData(AccidentList accidentList) {
         if (accidentList == null || accidentList.getAccidentList() == null) {
+            /*
             Toast.makeText(ObservationList.this,
                     R.string.observation_list_activity_empty_accident_list,
                     Toast.LENGTH_SHORT).show();
-
+            */
             msg.setVisibility(View.VISIBLE);
             return;
         }

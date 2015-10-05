@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -55,12 +56,15 @@ public class ObservationDetailed extends AppCompatActivity implements IGetAccide
 
     private void showAccidentDetails(Accident accident){
 
+        TextView observationDetailedPageTitle = (TextView) findViewById(R.id.report_detailed_title);
         EditText accType = (EditText) findViewById(R.id.obs_textType);
         EditText accWhen = (EditText) findViewById(R.id.obs_textWhen);
         EditText accLocation = (EditText) findViewById(R.id.obs_textLocation);
         EditText accObsLvl = (EditText) findViewById(R.id.obs_textObslvl);
         EditText accDesc = (EditText) findViewById(R.id.obs_textDesc);
         EditText accUser = (EditText) findViewById(R.id.obs_textUser);
+
+        observationDetailedPageTitle.setText(accident.getName());
 
         accType.setText(accident.getType());
 
@@ -101,17 +105,17 @@ public class ObservationDetailed extends AppCompatActivity implements IGetAccide
 
         double accLon = accident.getLon();
         double accLat = accident.getLat();
+
         Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(accLat, accLon, 1);
             if(addresses != null & addresses.size() > 0) {
                 Address address = addresses.get(0);
-                accLocation.setText(address.getLocality());
+                accLocation.setText(address.getAddressLine(0));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         if(accident.getObservationLevel().equals(1)) {
             accObsLvl.setText("Low");

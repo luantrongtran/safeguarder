@@ -17,6 +17,7 @@ import java.util.Vector;
 import javax.xml.transform.Result;
 
 import ifn701.safeguarder.backend.entities.Accident;
+import ifn701.safeguarder.backend.entities.AccidentList;
 import ifn701.safeguarder.backend.entities.Location;
 import ifn701.safeguarder.backend.entities.UserSetting;
 
@@ -36,6 +37,8 @@ public class AccidentDao extends DAOBase {
     public static String colImage2 = "image2";
     public static String colImage3 = "image3";
 
+    public int homeSize;
+    public int curSize;
 
     /**
      * Get all accidents in the area which has centroid is location variable
@@ -51,7 +54,6 @@ public class AccidentDao extends DAOBase {
         String sql = "SELECT * FROM " + tableName + " " +
                 "WHERE get_distance_between_2_points_in_m(" + colLat + "," + colLon + ", ?, ?) < ?";
 
-
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setDouble(1, lat);
@@ -63,6 +65,8 @@ public class AccidentDao extends DAOBase {
                 Accident accident = parseFromResultSet(rs);
                 accidentVector.add(accident);
             }
+
+            curSize = accidentVector.size();
 
             //Adding accidents near home location
             UserSettingDao userSettingDao = new UserSettingDao();
@@ -81,6 +85,7 @@ public class AccidentDao extends DAOBase {
                     accidentVector.add(accident);
                 }
             }
+            homeSize = accidentVector.size() - curSize;
         } catch (SQLException e) {
             e.printStackTrace();
         }
