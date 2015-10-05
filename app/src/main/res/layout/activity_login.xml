@@ -24,7 +24,8 @@ android:fitsSystemWindows="true">
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="SafeGuarder"
-        android:id="@+id/textView"
+        android:textStyle="bold"
+        android:id="@+id/appNametextView"
         android:layout_gravity="center_horizontal" />
 
     <!-- Email Label -->
