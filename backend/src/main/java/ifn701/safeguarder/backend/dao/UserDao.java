@@ -19,7 +19,7 @@ public class UserDao extends DAOBase {
     public static String colPassword = "password";
     public static String colActivated = "activated";
 
-public User findById(int id) {
+    public User findById(int id) {
         Connection con = getConnection();
         String sql = "SELECT * FROM user WHERE id = ?";
         PreparedStatement ps = null;
