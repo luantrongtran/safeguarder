@@ -59,8 +59,8 @@
             android:hint="[Accident Type]"
             android:editable="false"  />
 
-        <ImageView
-            android:id="@+id/shareButton"
+        <ImageButton
+            android:id="@+id/obs_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"

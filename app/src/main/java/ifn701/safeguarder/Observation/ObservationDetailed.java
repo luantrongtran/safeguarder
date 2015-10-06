@@ -1,15 +1,24 @@
 package ifn701.safeguarder.Observation;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,7 +31,6 @@ import ifn701.safeguarder.webservices.GetAccidentService;
 import ifn701.safeguarder.webservices.IGetAccidentService;
 
 public class ObservationDetailed extends AppCompatActivity implements IGetAccidentService {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +38,34 @@ public class ObservationDetailed extends AppCompatActivity implements IGetAccide
 
         GetAccidentService getAccidentService = new GetAccidentService(this);
         getAccidentService.execute(getIntent().getIntExtra("AccidentID", -1));
+        ImageButton shareBtn=(ImageButton)findViewById(R.id.obs_share);
+
+        //Share on Facebook
+        shareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                View content = findViewById(R.id.btn_image1);
+                content.setDrawingCacheEnabled(true);
+
+                Bitmap bitmap = content.getDrawingCache();
+                File root = Environment.getExternalStorageDirectory();
+                File cachePath = new File(root.getAbsolutePath() + "/DCIM/Camera/image.jpg");
+                try {
+                    cachePath.createNewFile();
+                    FileOutputStream ostream = new FileOutputStream(cachePath);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
+                    ostream.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("image/*");
+                share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(cachePath));
+                startActivity(Intent.createChooser(share, "Share via"));
+            }
+        });
     }
 
     @Override
@@ -134,7 +170,8 @@ public class ObservationDetailed extends AppCompatActivity implements IGetAccide
         accUser.setText(accident.getUser().getFullName());
     }
 
-    @Override
+
+     @Override
     public void getAccidentData(Accident accident) {
         showAccidentDetails(accident);
     }

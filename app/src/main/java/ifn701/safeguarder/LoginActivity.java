@@ -3,6 +3,7 @@ package ifn701.safeguarder;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.wallet.wobs.LabelValue;
 
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
@@ -39,6 +42,29 @@ public class LoginActivity extends AppCompatActivity implements ILoginService{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
+        // Font path
+        String fontPath = "fonts/UbuntuCondensed-Regular.ttf";
+        //String fontPathBold = "fonts/Ubuntu-B.ttf";
+
+        // text view label
+        TextView appName = (TextView) findViewById(R.id.appNametextView);
+        EditText userEmail = (EditText) findViewById(R.id.input_email);
+        EditText userPwd = (EditText) findViewById(R.id.input_password);
+        TextView signuptext = (TextView) findViewById(R.id.link_signup);
+        Button loginBtn = (Button) findViewById(R.id.btn_login);
+
+
+
+        // Loading Font Face
+        Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
+        //Typeface tfbold = Typeface.createFromAsset(getAssets(),fontPath);
+
+        // Applying font
+        appName.setTypeface(tf);
+        userEmail.setTypeface(tf);
+        userPwd.setTypeface(tf);
+        signuptext.setTypeface(tf);
+        loginBtn.setTypeface(tf);
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
@@ -186,14 +212,14 @@ public class LoginActivity extends AppCompatActivity implements ILoginService{
         String password = _passwordText.getText().toString();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a valid email address");
+            _emailText.setError("Enter a valid email address");
             valid = false;
         } else {
             _emailText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+            _passwordText.setError("Password should contain at least 4 alphanumeric characters");
             valid = false;
         } else {
             _passwordText.setError(null);

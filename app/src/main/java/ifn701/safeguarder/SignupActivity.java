@@ -2,6 +2,7 @@ package ifn701.safeguarder;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -33,6 +34,29 @@ public class SignupActivity extends AppCompatActivity implements ISignupService 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.inject(this);
+
+        // Font path
+        String fontPath = "fonts/UbuntuCondensed-Regular.ttf";
+        //String fontPathBold = "fonts/Ubuntu-B.ttf";
+
+        // text view label
+        TextView appName = (TextView) findViewById(R.id.appNametextView);
+        EditText userName = (EditText) findViewById(R.id.input_name);
+        EditText userEmail = (EditText) findViewById(R.id.input_email);
+        EditText userPwd = (EditText) findViewById(R.id.input_password);
+        TextView logintext = (TextView) findViewById(R.id.link_login);
+        Button signupBtn = (Button) findViewById(R.id.btn_signup);
+        // Loading Font Face
+        Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
+        //Typeface tfbold = Typeface.createFromAsset(getAssets(),fontPathBold);
+
+        // Applying font
+        appName.setTypeface(tf);
+        userName.setTypeface(tf);
+        userEmail.setTypeface(tf);
+        userPwd.setTypeface(tf);
+        logintext.setTypeface(tf);
+        signupBtn.setTypeface(tf);
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override

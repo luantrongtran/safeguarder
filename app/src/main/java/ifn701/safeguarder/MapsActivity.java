@@ -60,6 +60,7 @@ import ifn701.safeguarder.Observation.ObservationList;
 import ifn701.safeguarder.Parcelable.AccidentListParcelable;
 import ifn701.safeguarder.activities.EventFilterActivity;
 import ifn701.safeguarder.activities.LeftMenuAdapter;
+//import ifn701.safeguarder.activities.Logout;
 import ifn701.safeguarder.activities.ReportActivity;
 import ifn701.safeguarder.activities.ZoneSettingActivity;
 import ifn701.safeguarder.backend.myApi.model.AccidentList;
@@ -279,12 +280,24 @@ public class MapsActivity extends AppCompatActivity
 
                     int index = clickedIndex - 1;
                     if (index == LeftMenuAdapter.ZONE_SETTING) {
+                        //Change Zone Settings
                         goToSettings();
-                    } else if (index == LeftMenuAdapter.EVENT_FILTER_SETTING) {
+                    }
+                    else if (index == LeftMenuAdapter.EVENT_FILTER_SETTING) {
+                        //Filter Events based on type of event
                         goToEventFilterSetting();
                     }
                     else if (index == LeftMenuAdapter.OBSERVATION_LIST) {
+                        //List of Observations Reported
                         goToObsListActivity();
+                    }
+                    else if (index == LeftMenuAdapter.LOGOUT_SETTING){
+                        //Logout of Activity
+                        gotoLogoutActivity();
+                    }
+                    else if (index == LeftMenuAdapter.HELP_SECTION){
+                        //Help Section
+                        gotoHelpActivity();
                     }
 
                     return true;
@@ -317,6 +330,26 @@ public class MapsActivity extends AppCompatActivity
         startActivityForResult(intent, LeftMenuAdapter.EVENT_FILTER_SETTING);
     }
 
+    public void gotoLogoutActivity()
+    {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        this.finish();
+    }
+
+    public void gotoHelpActivity(){
+        AlertDialog alertDialogBuilder = new AlertDialog.Builder(this).create();
+        alertDialogBuilder.setTitle("SafeGuarder Help!!");
+        alertDialogBuilder.setMessage("Add message here!!");
+        alertDialogBuilder.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getApplicationContext(), "You clicked on OK", Toast.LENGTH_SHORT).show();
+            }
+        });
+        alertDialogBuilder.setIcon(R.drawable.ic_help_black_24dp);
+        alertDialogBuilder.show();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -750,11 +783,11 @@ public class MapsActivity extends AppCompatActivity
 
 
 /*
-found user, backend maager.
+found user, backend manager.
 add some data
 
 website or window form.
-1st: maanger add data
+1st: manager add data
 thousands
 
 2nd: can review all the data, the point of interest on  website

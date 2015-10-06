@@ -24,8 +24,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
             android:text="SafeGuarder"
-            android:id="@+id/textView"
+            android:id="@+id/appNametextView"
             android:layout_gravity="center_horizontal" />
 
         <!--  Name Label -->
@@ -81,7 +82,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="Already a member? Login"
+            android:textColor="@color/custom_login_link"
+            android:textAppearance="@color/custom_login_link"
+            android:text="@string/login_existing"
             android:gravity="center"
             android:textSize="16dip"/>
 
