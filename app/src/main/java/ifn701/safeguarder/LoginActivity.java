@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginService{
         EditText userPwd = (EditText) findViewById(R.id.input_password);
         TextView signuptext = (TextView) findViewById(R.id.link_signup);
         Button loginBtn = (Button) findViewById(R.id.btn_login);
-        
+
 
 
         // Loading Font Face
