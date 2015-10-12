@@ -148,6 +148,8 @@ public class MapsActivity extends AppCompatActivity
         setDefaultSharedPreferences();
 
         setUpPositionForLocationSwitcher();
+
+        accidentManager = new AccidentManager(getApplicationContext());
     }
 
     @Override
@@ -155,6 +157,7 @@ public class MapsActivity extends AppCompatActivity
         super.onStart();
 
         googleApiClient.connect();
+        updateMapFooter();
     }
 
     @Override
@@ -406,7 +409,6 @@ public class MapsActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         isVisible = true;
-        accidentManager = new AccidentManager(getApplicationContext());
 
         setUpMapIfNeeded();
 
@@ -421,8 +423,6 @@ public class MapsActivity extends AppCompatActivity
             getIntent().removeExtra(Constants.start_from_intent_data);
             goToNotificationListActivity();
         }
-
-        updateMapFooter();
     }
 
     /**
