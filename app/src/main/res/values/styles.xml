@@ -31,5 +31,7 @@
         <!--<item name="android:background">@color/primary</item>-->
     </style>
 
+    <string name="create_account"><u>No account yet? Create one</u></string>
+    <string name="login_existing"><u>Already a member? Login</u></string>
 </resources>
 

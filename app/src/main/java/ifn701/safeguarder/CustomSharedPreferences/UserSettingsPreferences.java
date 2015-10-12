@@ -13,6 +13,14 @@ import ifn701.safeguarder.backend.myApi.model.UserSetting;
  * Created by lua on 3/09/2015.
  */
 public class UserSettingsPreferences {
+    public SharedPreferences getSharedPreferences() {
+        return sharedPreferences;
+    }
+
+    public void setSharedPreferences(SharedPreferences sharedPreferences) {
+        this.sharedPreferences = sharedPreferences;
+    }
+
     SharedPreferences sharedPreferences;
     private Context context;
     public UserSettingsPreferences(Context applicationContext) {

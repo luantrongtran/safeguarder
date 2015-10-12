@@ -70,12 +70,12 @@ public class Login {
         return null;
     }
 
-    @ApiMethod(name = "insertUser")
-    public User insertUser(User user){
-        UserDao userdao = new UserDao();
-        userdao.signUp(user);
-        return null;
-    }
+//    @ApiMethod(name = "insertUser")
+//    public User insertUser(User user){
+//        UserDao userdao = new UserDao();
+//        userdao.signUp(user);
+//        return null;
+//    }
 
     @ApiMethod(name="saveToken", path = "savetoken")
     public ResultCode saveToken(@Named("userId")int userId, @Named("token") String token){

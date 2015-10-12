@@ -19,4 +19,23 @@ public class AccidentList {
     public AccidentList() {
         accidentList = new Vector<>();
     }
+
+    public int getHomeEventSize() {
+        return homeEventSize;
+    }
+
+    public void setHomeEventSize(int homeEventSize) {
+        this.homeEventSize = homeEventSize;
+    }
+
+    public int getCurrentLocationEventSize() {
+        return currentLocationEventSize;
+    }
+
+    public void setCurrentLocationEventSize(int currentLocationEventSize) {
+        this.currentLocationEventSize = currentLocationEventSize;
+    }
+
+    private int homeEventSize;
+    private int currentLocationEventSize;
 }

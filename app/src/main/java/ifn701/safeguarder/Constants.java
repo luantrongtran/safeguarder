@@ -1,7 +1,7 @@
 package ifn701.safeguarder;
 
 public class Constants {
-    public static String webServiceUrl = "http://192.168.0.104:8080/_ah/api/";
+    public static String webServiceUrl = "http://192.168.0.100:8080/_ah/api/";
 
     public static String APPLICATION_ID = "safeguarder";
 

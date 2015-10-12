@@ -64,6 +64,7 @@ import ifn701.safeguarder.Parcelable.AccidentListParcelable;
 import ifn701.safeguarder.activities.EventFilterActivity;
 import ifn701.safeguarder.activities.LeftMenuAdapter;
 import ifn701.safeguarder.activities.NotificationActivity;
+//import ifn701.safeguarder.activities.Logout;
 import ifn701.safeguarder.activities.ReportActivity;
 import ifn701.safeguarder.activities.ZoneSettingActivity;
 import ifn701.safeguarder.backend.myApi.model.AccidentList;
@@ -120,6 +121,8 @@ public class MapsActivity extends AppCompatActivity
     int locationSwitcherMarginTop = 0;
     int locationSwitcherBalance = 1;
 
+    private int currentSelectedPosition = 1; //1 Current, 2 Home
+
 //    ActionBarDrawerToggle mDrawerToggle;
     //end navigation menu
 
@@ -152,7 +155,6 @@ public class MapsActivity extends AppCompatActivity
         super.onStart();
 
         googleApiClient.connect();
-        updateMapFooter();
     }
 
     @Override
@@ -200,6 +202,8 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Log.e(Constants.APPLICATION_ID, "Pan to my location");
+                currentSelectedPosition = 1;
+                updateMapFooter();
                 panToMyLocation();
                 switchLocationBar();
                 return false;
@@ -210,6 +214,8 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Log.e(Constants.APPLICATION_ID, "Pan to home location");
+                currentSelectedPosition = 2;
+                updateMapFooter();
                 panToHomeLocation();
                 switchLocationBar();
                 return false;
@@ -228,6 +234,7 @@ public class MapsActivity extends AppCompatActivity
 
     public void registerListener() {
         registerNotificationListChanged();
+        registerUserSettingsChanged();
     }
 
     public void registerAccidentListUpdateReceiver() {
@@ -296,14 +303,26 @@ public class MapsActivity extends AppCompatActivity
 
                     int index = clickedIndex - 1;
                     if (index == LeftMenuAdapter.ZONE_SETTING) {
+                        //Change Zone Settings
                         goToSettings();
-                    } else if (index == LeftMenuAdapter.EVENT_FILTER_SETTING) {
+                    }
+                    else if (index == LeftMenuAdapter.EVENT_FILTER_SETTING) {
+                        //Filter Events based on type of event
                         goToEventFilterSetting();
                     }
                     else if (index == LeftMenuAdapter.OBSERVATION_LIST) {
+                        //List of Observations Reported
                         goToObsListActivity();
                     } else if (index == LeftMenuAdapter.NOTIFICATION_LIST) {
                         goToNotificationListActivity();
+                    }
+                    else if (index == LeftMenuAdapter.LOGOUT_SETTING){
+                        //Logout of Activity
+                        gotoLogoutActivity();
+                    }
+                    else if (index == LeftMenuAdapter.HELP_SECTION){
+                        //Help Section
+                        gotoHelpActivity();
                     }
 
                     return true;
@@ -336,6 +355,26 @@ public class MapsActivity extends AppCompatActivity
         startActivityForResult(intent, LeftMenuAdapter.EVENT_FILTER_SETTING);
     }
 
+    public void gotoLogoutActivity()
+    {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        this.finish();
+    }
+
+    public void gotoHelpActivity(){
+        AlertDialog alertDialogBuilder = new AlertDialog.Builder(this).create();
+        alertDialogBuilder.setTitle("SafeGuarder Help!!");
+        alertDialogBuilder.setMessage("Add message here!!");
+        alertDialogBuilder.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getApplicationContext(), "You clicked on OK", Toast.LENGTH_SHORT).show();
+            }
+        });
+        alertDialogBuilder.setIcon(R.drawable.ic_help_black_24dp);
+        alertDialogBuilder.show();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -382,6 +421,8 @@ public class MapsActivity extends AppCompatActivity
             getIntent().removeExtra(Constants.start_from_intent_data);
             goToNotificationListActivity();
         }
+
+        updateMapFooter();
     }
 
     /**
@@ -530,7 +571,6 @@ public class MapsActivity extends AppCompatActivity
             updateGooglePlaces(); //Update health services
 
             updateAccidentsInRange();//Update accidents within the range
-
         }
     };
 
@@ -707,6 +747,9 @@ public class MapsActivity extends AppCompatActivity
         accidentManager.setAccidentList(accidentList);
         accidentManager.updateAccidentMarkers(mMap);
         updateToolBar();
+        if(currentSelectedPosition == 1) {
+            updateMapFooter();
+        }
     }
 
     public void updateGooglePlaces() {
@@ -722,24 +765,63 @@ public class MapsActivity extends AppCompatActivity
 	}
 	
     public void updateMapFooter() {
+
+        //Toast.makeText(MapsActivity.this, "updateMapFooter() is called", Toast.LENGTH_SHORT).show();
         TextView showMyLocation = (TextView)findViewById(R.id.mylocation);
         TextView showMyRadius = (TextView) findViewById(R.id.myradius);
         TextView showRadiusEvents = (TextView) findViewById(R.id.myradiusevents);
 
-        UserSettingsPreferences getradius = new UserSettingsPreferences(getApplicationContext());
-        CurrentLocationPreferences currLocation = new CurrentLocationPreferences(getApplicationContext());
+        UserSettingsPreferences userPref = new UserSettingsPreferences(getApplicationContext());
 
-        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+        int eventSize = 0;
 
         try {
-            List<Address> addresses = geocoder.getFromLocation(currLocation.getLat(),
-                    currLocation.getLon(), 1);
-            if(addresses != null & addresses.size() > 0) {
-                Address address = addresses.get(0);
-                showMyLocation.setText(address.getLocality());
-                showMyRadius.setText("(" + (getradius.getRadius()/1000) + " km)");
-                //showRadiusEvents.setText( () + " events");
+            if(currentSelectedPosition == 1) {
+                CurrentLocationPreferences currLocation = new CurrentLocationPreferences(getApplicationContext());
+                Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                List<Address> addresses = geocoder.getFromLocation(currLocation.getLat(),
+                        currLocation.getLon(), 1);
+
+                if (addresses != null & addresses.size() > 0) {
+                    Address address = addresses.get(0);
+                    Toast.makeText(MapsActivity.this, address.getAddressLine(0), Toast.LENGTH_SHORT).show();
+                    showMyLocation.setText(address.getAddressLine(0));
+
+                    if(accidentManager.accidentList.getCurrentLocationEventSize() == null) {
+                        showRadiusEvents.setText("No event");
+                    }
+                    else {
+                        eventSize = accidentManager.accidentList.getCurrentLocationEventSize();
+
+                        if (eventSize == 1) {
+                            showRadiusEvents.setText(eventSize + " event");
+                        }
+                        else if(eventSize > 1) {
+                            showRadiusEvents.setText(eventSize + " events");
+                        }
+                    }
+                }
             }
+            else if(currentSelectedPosition == 2) {
+                showMyLocation.setText(userPref.getHomeLocationAddress());
+
+                if(accidentManager.accidentList.getHomeEventSize() == null) {
+                    showRadiusEvents.setText("No event");
+                }
+                else {
+                    eventSize = accidentManager.accidentList.getHomeEventSize();
+
+                    if (eventSize == 1) {
+                        showRadiusEvents.setText(eventSize + " event");
+                    }
+                    else if(eventSize > 1) {
+                        showRadiusEvents.setText(eventSize + " events");
+                    }
+                }
+            }
+
+            showMyRadius.setText("(" + (userPref.getRadius()/1000) + " km)");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -765,11 +847,11 @@ public class MapsActivity extends AppCompatActivity
 
 
 /*
-found user, backend maager.
+found user, backend manager.
 add some data
 
 website or window form.
-1st: maanger add data
+1st: manager add data
 thousands
 
 2nd: can review all the data, the point of interest on  website
@@ -828,5 +910,18 @@ thousands
         newAccidentCurrentLocation.getSharedPreferences().registerOnSharedPreferenceChangeListener(
                 notificationListChanged
         );
+    }
+
+    SharedPreferences.OnSharedPreferenceChangeListener userSettingsChanged
+            = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            updateAccidentsInRange();
+        }
+    };
+
+    private void registerUserSettingsChanged() {
+        userSettingsPreferences.getSharedPreferences()
+                .registerOnSharedPreferenceChangeListener(userSettingsChanged);
     }
 }

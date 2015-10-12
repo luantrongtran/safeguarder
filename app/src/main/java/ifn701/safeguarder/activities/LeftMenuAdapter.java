@@ -23,6 +23,8 @@ public class LeftMenuAdapter extends RecyclerView.Adapter<LeftMenuAdapter.LeftMe
 
     public static final int NOTIFICATION_LIST = 0;
     public static final int OBSERVATION_LIST = 1;
+    public static final int LOGOUT_SETTING =5;
+    public static final int HELP_SECTION = 4;
     public static final int ZONE_SETTING = 2;
     public static final int EVENT_FILTER_SETTING = 3;
 
@@ -34,7 +36,7 @@ public class LeftMenuAdapter extends RecyclerView.Adapter<LeftMenuAdapter.LeftMe
     private int[] titles = {R.string.left_menu_notification, R.string.left_menu_observation,
     R.string.left_menu_zone_setting, R.string.left_menu_event_fiilter, R.string.left_menu_help,R.string.left_menu_logout};
 
-    private boolean[] splitterPositions = {false, true, false, true, false, true};
+    private boolean[] splitterPositions = {false, true, false, true, true, true};
 
     public LeftMenuAdapter(Context context) {
         this.context = context;

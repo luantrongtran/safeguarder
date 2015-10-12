@@ -8,7 +8,8 @@
             <param-value>ifn701.safeguarder.backend.MyEndpoint,
                 ifn701.safeguarder.backend.webservices.AccidentEndpoint,
                 ifn701.safeguarder.backend.webservices.Login,
-                ifn701.safeguarder.backend.webservices.UserSettingsEndpoint</param-value>
+                ifn701.safeguarder.backend.webservices.UserSettingsEndpoint,
+                ifn701.safeguarder.backend.webservices.Signup</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

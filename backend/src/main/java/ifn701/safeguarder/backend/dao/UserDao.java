@@ -73,10 +73,10 @@ public class UserDao extends DAOBase {
         return null;
     }
 
-     public void signUp(User user)
+     public User signUp(User user)
      {
         Connection con = getConnection();
-        String sql = "INSERT INTO user (fullName,email,password,activated) VALUES(?)";
+        String sql = "INSERT INTO user (fullName,email,password,activated) VALUES(?,?,?,?)";
 
         PreparedStatement ps = null;
         try {
@@ -90,7 +90,8 @@ public class UserDao extends DAOBase {
             e.printStackTrace();
         }
 
-    }
+         return user;
+     }
 
     public User parseFromResultSet(ResultSet rs) throws SQLException {
         User user = new User();
@@ -120,4 +121,5 @@ public class UserDao extends DAOBase {
         }
         return b;
     }
+
 }

@@ -5,6 +5,9 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_maps">SafeGuarder</string>
 
+    <!--Facebook ID -->
+    <string name="facebook_app_id">1562226370685896</string>
+
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
@@ -122,4 +125,6 @@
     <string name="title_activity_notification">NotificationActivity</string>
 
     <string name="notification_list_activity_empty_list">No new accidents</string>
+    <string name="observation_list_page_title">Reported</string>
+    <string name="report_new_accident_page_title">Report New Accident</string>
 </resources>
