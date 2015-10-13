@@ -682,10 +682,6 @@ public class MapsActivity extends AppCompatActivity
     public void onAccidentsInRangeUpdated(AccidentList accidentList) {
         accidentManager.setAccidentList(accidentList);
         accidentManager.updateAccidentMarkers(mMap);
-
-        if(currentSelectedPosition == 1) {
-            updateMapFooter();
-        }
     }
 
     public void updateGooglePlaces() {
@@ -698,11 +694,13 @@ public class MapsActivity extends AppCompatActivity
     public void onReceivedGooglePlacesSearch(PlacesList placesList) {
         healthServicesmanager.setPlacesListOfCurrentLocation(placesList);
         healthServicesmanager.updateHealthServicesMarkers(mMap);
+
+        if(currentSelectedPosition == 1) {
+            updateMapFooter();
+        }
 	}
 	
     public void updateMapFooter() {
-
-        //Toast.makeText(MapsActivity.this, "updateMapFooter() is called", Toast.LENGTH_SHORT).show();
         TextView showMyLocation = (TextView)findViewById(R.id.mylocation);
         TextView showMyRadius = (TextView) findViewById(R.id.myradius);
         TextView showRadiusEvents = (TextView) findViewById(R.id.myradiusevents);
@@ -720,7 +718,7 @@ public class MapsActivity extends AppCompatActivity
 
                 if (addresses != null & addresses.size() > 0) {
                     Address address = addresses.get(0);
-                    Toast.makeText(MapsActivity.this, address.getAddressLine(0), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MapsActivity.this, address.getAddressLine(0), Toast.LENGTH_SHORT).show();
                     showMyLocation.setText(address.getAddressLine(0));
 
                     if(accidentManager.accidentList.getCurrentLocationEventSize() == null) {

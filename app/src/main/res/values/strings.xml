@@ -124,4 +124,10 @@
     <string name="observation_list_activity_empty_accident_list">You have not posted any accident</string>
     <string name="observation_list_page_title">Reported</string>
     <string name="report_new_accident_page_title">Report New Accident</string>
+
+
+    <!-- TRY TO PICK IMAGE FROM GALLERY -->
+    <string name="select_picture">Select Picture</string>
+    <string name="msg_failed_to_get_intent_data">Failed to get intent data</string>
+    <string name="msg_failed_to_get_picture">Failed to get image</string>
 </resources>
