@@ -1,6 +1,8 @@
 package ifn701.safeguarder;
 
 import android.content.Context;
+import android.location.Location;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -16,6 +18,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import ifn701.safeguarder.CustomSharedPreferences.EventFilterSharedPreferences;
+import ifn701.safeguarder.CustomSharedPreferences.NewAccidentWithinCurrentLocationSharedPreferences;
+import ifn701.safeguarder.CustomSharedPreferences.NewAccidentWithinHomeLocationSharedPreferences;
 import ifn701.safeguarder.activities.CustomWindowInfoAdapter;
 import ifn701.safeguarder.activities.EventFilterActivity;
 import ifn701.safeguarder.backend.myApi.model.Accident;
@@ -33,9 +37,19 @@ public class AccidentManager {
     public static int[] accidentTypeMarkerIds = {R.drawable.aviation_marker, R.drawable.crime_marker,
             R.drawable.earthquake_marker, R.drawable.ferry_marker, R.drawable.industry_accident_marker,
             R.drawable.traffic_accident_marker, R.drawable.weather_marker};
+
+    //newAccidentTypeMarkers should be coreresponding to the newAccidentTypeMarkerIds
+    private Map<String, BitmapDescriptor> newAccidentTypeMarkers;
+    public static int[] newAccidentTypeMarkerIds = {R.drawable.aviation_marker_1, R.drawable.crime_marker_1,
+            R.drawable.earthquake_marker_1, R.drawable.ferry_marker_1, R.drawable.industry_accident_marker_1,
+            R.drawable.traffic_accident_marker_1, R.drawable.weather_marker_1};
+
     public static int[] accidentTypeNames = {R.string.aviation_accident, R.string.criminal,
             R.string.earthquake, R.string.ferry_accident, R.string.industry_accident,
             R.string.traffic_accident, R.string.weather_accident};
+
+    NewAccidentWithinCurrentLocationSharedPreferences newAccidentCurrentLocation;
+    NewAccidentWithinHomeLocationSharedPreferences newAccidentHomeLocation;
 
     //Id used for each accident type within SharedPreferences
     public static String[] sharedPreferencesIds = {"aviation", "criminal", "earthquake", "ferry",
@@ -49,16 +63,25 @@ public class AccidentManager {
         initialiseAccidentTypeMarkers();
 
         eventFilterSharedPreferences = new EventFilterSharedPreferences(context);
+        newAccidentCurrentLocation = new NewAccidentWithinCurrentLocationSharedPreferences(context);
+        newAccidentHomeLocation = new NewAccidentWithinHomeLocationSharedPreferences(context);
     }
 
     private void initialiseAccidentTypeMarkers() {
         accidentTypeMarkers = new HashMap<>();
-
         for (int i = 0; i < accidentTypeNames.length; i++) {
             String accidentTypeName = context.getString(accidentTypeNames[i]);
             BitmapDescriptor typeIcon
                     = BitmapDescriptorFactory.fromResource(accidentTypeMarkerIds[i]);
             accidentTypeMarkers.put(accidentTypeName.toLowerCase(), typeIcon);
+        }
+
+        newAccidentTypeMarkers = new HashMap<>();
+        for (int i = 0; i < accidentTypeNames.length; i++) {
+            String accidentTypeName = context.getString(accidentTypeNames[i]);
+            BitmapDescriptor typeIcon
+                    = BitmapDescriptorFactory.fromResource(newAccidentTypeMarkerIds[i]);
+            newAccidentTypeMarkers.put(accidentTypeName.toLowerCase(), typeIcon);
         }
     }
 
@@ -102,7 +125,6 @@ public class AccidentManager {
             }
 
             //Check filter settings
-
             Log.i(Constants.APPLICATION_ID, accident.getType());
             if(!eventFilter.get(accident.getType())) {
                 //filter accidents by type
@@ -121,8 +143,15 @@ public class AccidentManager {
             LatLng position = new LatLng(accident.getLat(), accident.getLon());
 
             markerOptions = markerOptions.snippet(accident.toString());
+            Log.i(Constants.APPLICATION_ID, "Marker snippet: " + accident.toString());
 
-            BitmapDescriptor typeIcon = accidentTypeMarkers.get(accident.getType().toLowerCase());
+            BitmapDescriptor typeIcon = null;
+            if(newAccidentCurrentLocation.contains(accident.getId()) ||
+                    newAccidentHomeLocation.contains(accident.getId())) {
+                typeIcon = newAccidentTypeMarkers.get(accident.getType().toLowerCase());
+            } else {
+                typeIcon = accidentTypeMarkers.get(accident.getType().toLowerCase());
+            }
             if (typeIcon != null) {
                 markerOptions = markerOptions.icon(typeIcon);
             }
@@ -135,4 +164,53 @@ public class AccidentManager {
             }
         }
     }
+
+    /**
+     * Update the marker of an accident after being clicked. In particular, if the marker is a
+     * marker of a new accident, then redraw it and remove it from SharedPreferences
+     */
+    public void updateANewAccident(int accidentId) {
+        int index = -1;
+        Accident selectedAccident = null;
+        for(int i = 0; i < accidentList.getAccidentList().size(); i++) {
+            Accident accident = accidentList.getAccidentList().get(i);
+            if(accident.getId() == accidentId) {
+                index = i;
+                selectedAccident = accident;
+                break;
+            }
+        }
+
+        if(index == -1) {
+            return;
+        }
+
+        accidentMarkers.get(index).setIcon(newAccidentTypeMarkers.get(selectedAccident.getType()));
+        removeAnAccidentFromNotification(selectedAccident);
+    }
+
+    /**
+     * Update the marker of an accident after being clicked. In particular, if the marker is a
+     * marker of a new accident, then redraw it and remove it from SharedPreferences
+     */
+    public void updateANewMarker(Marker marker) {
+        int index = accidentMarkers.indexOf(marker);
+        if(index == -1){
+            //Couldn't find the given marker
+            return;
+        }
+
+        Accident selectedAccident = accidentList.getAccidentList().get(index);
+        BitmapDescriptor bitmapDescriptor = accidentTypeMarkers.get(selectedAccident.getType().toLowerCase());
+        marker.setIcon(bitmapDescriptor);
+
+        removeAnAccidentFromNotification(selectedAccident);
+    }
+
+    public void removeAnAccidentFromNotification(Accident accident) {
+        newAccidentCurrentLocation.remove(accident.getId() + "");
+        newAccidentHomeLocation.remove(accident.getId() + "");
+    }
+
+
 }

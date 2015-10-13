@@ -1,6 +1,7 @@
 package ifn701.safeguarder;
 
 public class Constants {
+    //172.19.22.225
     public static String webServiceUrl = "http://192.168.1.2:8080/_ah/api/";
 
     public static String APPLICATION_ID = "safeguarder";
@@ -39,6 +40,13 @@ public class Constants {
     public static String getSharedPreferences_event_filter_settings_by_time = "event_filter_settings"
            + "_by_time";
 
+    public static String sharedPreferences_new_accident_current_location_notification
+            = "new_accident_current_location";
+    public static String sharedPreferences_new_accident_home_location_notification
+            = "new_accident_home_location";
+
+    public static String sharedPreferences_application_status = "application_status";
+
     public static String broadCastService_UpdateAccidentsList = "updated_accidents_list";
 
     public static String search_location_address = "search_location_address";
@@ -46,4 +54,10 @@ public class Constants {
     public static String search_location_lon = "search_location_lon";
 
     public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
+    public static String notification_activity_intent_result_accident_lat = "accident_lat";
+    public static String notification_activity_intent_result_accident_lon = "accident_lon";
+
+    public static String start_from_intent_data = "start_from";//indicating from where the activity called.
+    public static String start_from_notification = "start_from_notfication";
 }

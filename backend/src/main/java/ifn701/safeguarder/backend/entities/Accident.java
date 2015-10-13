@@ -1,5 +1,7 @@
 package ifn701.safeguarder.backend.entities;
 
+import org.json.JSONObject;
+
 import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -121,4 +123,38 @@ public class Accident {
     private String image3;
 
     User user;
+
+    public JSONObject toJSon() {
+        JSONObject jObj = new JSONObject();
+
+        jObj.put("id", id);
+        jObj.put("userId", userId);
+        jObj.put("name", name);
+        jObj.put("type", type);
+        jObj.put("time", time);
+        jObj.put("lat", lat);
+        jObj.put("lon", lon);
+        jObj.put("observation_level", observation_level);
+        jObj.put("description", description);
+        jObj.put("image1", image1);
+        jObj.put("image2", image2);
+        jObj.put("image3", image3);
+
+        return jObj;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        }
+        if(!(obj instanceof Accident)) {
+            return false;
+        }
+        Accident accident = (Accident)obj;
+        if(accident.getId() == this.getId()) {
+            return true;
+        }
+        return false;
+    }
 }

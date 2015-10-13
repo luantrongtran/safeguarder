@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -48,6 +49,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import ifn701.safeguarder.CustomSharedPreferences.NewAccidentWithinCurrentLocationSharedPreferences;
+import ifn701.safeguarder.CustomSharedPreferences.NewAccidentWithinHomeLocationSharedPreferences;
 import ifn701.safeguarder.activities.CustomWindowInfoAdapter;
 import java.io.IOException;
 import java.util.List;
@@ -60,6 +63,7 @@ import ifn701.safeguarder.Observation.ObservationList;
 import ifn701.safeguarder.Parcelable.AccidentListParcelable;
 import ifn701.safeguarder.activities.EventFilterActivity;
 import ifn701.safeguarder.activities.LeftMenuAdapter;
+import ifn701.safeguarder.activities.NotificationActivity;
 //import ifn701.safeguarder.activities.Logout;
 import ifn701.safeguarder.activities.ReportActivity;
 import ifn701.safeguarder.activities.ZoneSettingActivity;
@@ -70,6 +74,7 @@ import ifn701.safeguarder.backgroundservices.UpdateAccidentInRangeReceiver;
 import ifn701.safeguarder.backgroundservices.UpdateAccidentsInRangeService;
 import ifn701.safeguarder.entities.google_places.PlacesList;
 import ifn701.safeguarder.webservices.google_cloud_service.RegistrationIntentService;
+import ifn701.safeguarder.webservices.google_cloud_service.SafeGuarderGCMListenerService;
 import ifn701.safeguarder.webservices.google_web_services.GooglePlacesSearch;
 import ifn701.safeguarder.webservices.google_web_services.IGooglePlacesSearch;
 import ifn701.safeguarder.webservices.IUpdateAccidentInRange;
@@ -80,6 +85,7 @@ public class MapsActivity extends AppCompatActivity
         implements ConnectionCallbacks, OnConnectionFailedListener, IUpdateAccidentInRange,
         IGooglePlacesSearch{
 
+    public static boolean isVisible;//indicating if the acitivity is being used
     public static int requestCodeObsDetailed = 2;
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -98,6 +104,8 @@ public class MapsActivity extends AppCompatActivity
     public static UserDrawer userDrawer;
 
     UserSettingsPreferences userSettingsPreferences;
+    NewAccidentWithinCurrentLocationSharedPreferences newAccidentCurrentLocation;
+    NewAccidentWithinHomeLocationSharedPreferences newAccidentHomeLocation;
 
     //Navigation menu
     private Toolbar toolbar;
@@ -129,19 +137,19 @@ public class MapsActivity extends AppCompatActivity
         setUpGoogleApiClient();
         setUpComponents();
 
-//        setUpDummyData();
-
         registerReceiver();
+
+        registerListener();
 
         setUpNavigationMenu();
 
         setUpGoogleCloudMessage();
 
-        accidentManager = new AccidentManager(getApplicationContext());
-
         setDefaultSharedPreferences();
 
         setUpPositionForLocationSwitcher();
+
+        accidentManager = new AccidentManager(getApplicationContext());
     }
 
     @Override
@@ -154,6 +162,7 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
+        isVisible = false;
         cancelServiceOnStop();
         googleApiClient.disconnect();
         super.onStop();
@@ -187,6 +196,10 @@ public class MapsActivity extends AppCompatActivity
         locationSwitcher = (LinearLayout) findViewById(R.id.locationSwitcherBar);
         switchLocationText = (TextView) findViewById(R.id.switchLocationText);
         userSettingsPreferences = new UserSettingsPreferences(getApplicationContext());
+        newAccidentCurrentLocation
+                = new NewAccidentWithinCurrentLocationSharedPreferences(getApplicationContext());
+        newAccidentHomeLocation
+                = new NewAccidentWithinHomeLocationSharedPreferences(getApplicationContext());
 
         findViewById(R.id.currentLocationButton).setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -219,6 +232,12 @@ public class MapsActivity extends AppCompatActivity
     public void registerReceiver() {
         registerAccidentListUpdateReceiver();
         registerCurrentLocationUpdatedReceiver();
+        registerNewAccidentAdded();
+    }
+
+    public void registerListener() {
+        registerNotificationListChanged();
+        registerUserSettingsChanged();
     }
 
     public void registerAccidentListUpdateReceiver() {
@@ -233,6 +252,13 @@ public class MapsActivity extends AppCompatActivity
                 = new IntentFilter(LocationTrackerService.ACTION);
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(onCurrentLocationUpdated, onCurrentLocationUpdatedFilter);
+    }
+
+    public void registerNewAccidentAdded() {
+        IntentFilter onNewAccidentAddedFilter
+                = new IntentFilter(SafeGuarderGCMListenerService.ACTION_NEW_ACCIDENT);
+        LocalBroadcastManager.getInstance(this).registerReceiver(onNewAccidentAdded,
+                onNewAccidentAddedFilter);
     }
 
     public void setUpDummyData() {
@@ -290,6 +316,8 @@ public class MapsActivity extends AppCompatActivity
                     else if (index == LeftMenuAdapter.OBSERVATION_LIST) {
                         //List of Observations Reported
                         goToObsListActivity();
+                    } else if (index == LeftMenuAdapter.NOTIFICATION_LIST) {
+                        goToNotificationListActivity();
                     }
                     else if (index == LeftMenuAdapter.LOGOUT_SETTING){
                         //Logout of Activity
@@ -322,7 +350,7 @@ public class MapsActivity extends AppCompatActivity
 
     public void goToSettings() {
         Intent intent = new Intent(this, ZoneSettingActivity.class);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, LeftMenuAdapter.ZONE_SETTING);
     }
 
     public void goToEventFilterSetting() {
@@ -356,7 +384,21 @@ public class MapsActivity extends AppCompatActivity
         userDrawer.updateCurrentLocationInterestedArea();
         userDrawer.updateHomeLocation();
 
-        updateAccidentsInRange();//Update accidents within the range after settings had changed
+        if(resultCode == RESULT_OK) {
+            if(requestCode == LeftMenuAdapter.ZONE_SETTING) {
+                updateAccidentsInRange();//Update accidents within the range after settings had changed
+            } else if (requestCode == LeftMenuAdapter.NOTIFICATION_LIST) {
+                double lat = data.getDoubleExtra(
+                        Constants.notification_activity_intent_result_accident_lat,
+                        Constants.sharedPreferences_double_default_value);
+                double lon = data.getDoubleExtra(
+                        Constants.notification_activity_intent_result_accident_lon,
+                        Constants.sharedPreferences_float_default_value);
+
+                LatLng latLng = new LatLng(lat, lon);
+                panToLatLng(latLng, true);
+            }
+        }
     }
 
     public void cancelServiceOnStop() {
@@ -366,11 +408,21 @@ public class MapsActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        isVisible = true;
+
         setUpMapIfNeeded();
 
         updateGooglePlaces(); //Update health services
         updateAccidentsInRange();//Update accidents within the range
         userDrawer = new UserDrawer(getApplicationContext(), mMap);
+        updateToolBar();
+
+        String startFrom = getIntent().getStringExtra(Constants.start_from_intent_data);
+        if(startFrom != null && startFrom
+                .equals(Constants.start_from_notification)){
+            getIntent().removeExtra(Constants.start_from_intent_data);
+            goToNotificationListActivity();
+        }
     }
 
     /**
@@ -456,8 +508,9 @@ public class MapsActivity extends AppCompatActivity
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                marker.showInfoWindow();
                 panToLatLng(marker.getPosition(), false);
+                accidentManager.updateANewMarker(marker);
+                marker.showInfoWindow();
                 if (isLocationSwitcherShowed) {
                     switchLocationBar();
                 }
@@ -518,6 +571,17 @@ public class MapsActivity extends AppCompatActivity
             updateGooglePlaces(); //Update health services
 
             updateAccidentsInRange();//Update accidents within the range
+        }
+    };
+
+    /**
+     * When a new accident added within the area of Current Location or home location
+     */
+    private BroadcastReceiver onNewAccidentAdded = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i(Constants.APPLICATION_ID, "Received new accident event");
+//            updateToolBar();
         }
     };
 
@@ -682,6 +746,11 @@ public class MapsActivity extends AppCompatActivity
     public void onAccidentsInRangeUpdated(AccidentList accidentList) {
         accidentManager.setAccidentList(accidentList);
         accidentManager.updateAccidentMarkers(mMap);
+
+        updateToolBar();
+        if(currentSelectedPosition == 1) {
+            updateMapFooter();
+        }
     }
 
     public void updateGooglePlaces() {
@@ -764,7 +833,7 @@ public class MapsActivity extends AppCompatActivity
     private void goToObsListActivity() {
         Intent intent = new Intent(this, ObservationList.class);
         startActivityForResult(intent, requestCodeObsDetailed);
-}
+    }
 
     @Override
     public void onBackPressed() {
@@ -806,5 +875,56 @@ thousands
             return false;
         }
         return true;
+    }
+
+    private void updateToolBar() {
+        int numOfAccidentHomeLocation = newAccidentHomeLocation.size();
+        int numOfAccidentCurrentLocation = newAccidentCurrentLocation.size();
+        int total = numOfAccidentHomeLocation + numOfAccidentCurrentLocation;
+
+        TextView textView = (TextView)toolbar.findViewById(R.id.numOfNotifcations);
+
+        if(total == 0){
+            textView.setVisibility(View.INVISIBLE);
+        } else {
+            textView.setText(total+"");
+            textView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void goToNotificationListActivity() {
+        Intent intent = new Intent(this, NotificationActivity.class);
+        startActivityForResult(intent, LeftMenuAdapter.NOTIFICATION_LIST);
+    }
+
+    SharedPreferences.OnSharedPreferenceChangeListener notificationListChanged
+            = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            updateToolBar();
+        }
+    };
+
+    private void registerNotificationListChanged() {
+        newAccidentHomeLocation.getSharedPreferences().registerOnSharedPreferenceChangeListener(
+                notificationListChanged
+        );
+
+        newAccidentCurrentLocation.getSharedPreferences().registerOnSharedPreferenceChangeListener(
+                notificationListChanged
+        );
+    }
+
+    SharedPreferences.OnSharedPreferenceChangeListener userSettingsChanged
+            = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            updateAccidentsInRange();
+        }
+    };
+
+    private void registerUserSettingsChanged() {
+        userSettingsPreferences.getSharedPreferences()
+                .registerOnSharedPreferenceChangeListener(userSettingsChanged);
     }
 }

@@ -12,6 +12,7 @@ import javax.inject.Named;
 import ifn701.safeguarder.backend.dao.AccidentDao;
 import ifn701.safeguarder.backend.entities.Accident;
 import ifn701.safeguarder.backend.entities.AccidentList;
+import ifn701.safeguarder.backend.entities.GCMSender;
 
 /**
  * An endpoint class we are exposing
@@ -84,8 +85,11 @@ public class AccidentEndpoint {
     public Accident insertAccident(Accident accident) {
         // TODO: Implement this function
         //logger.info("Calling insertAccident method");
-        accidentdao.insertANewAccident(accident);
-
+        int accidentId = accidentdao.insertANewAccident(accident);
+        accident = accidentdao.findById(accidentId);
+        if(accident != null) {
+            GCMSender.broadcastANewAccident(accident);
+        }
         return accident;
     }
 }

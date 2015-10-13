@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import ifn701.safeguarder.backend.entities.Accident;
@@ -18,6 +20,7 @@ public class UserDao extends DAOBase {
     public static String colEmail = "email";
     public static String colPassword = "password";
     public static String colActivated = "activated";
+    public static String colToken = "token";
 
     public User findById(int id) {
         Connection con = getConnection();
@@ -100,4 +103,23 @@ public class UserDao extends DAOBase {
 
         return user;
     }
+
+    public boolean saveToken(int userId, String token) {
+        String sql = "UPDATE " + tableName + " SET " + colToken + " = ? WHERE " + colId + " = ?";
+        PreparedStatement ps = null;
+
+        boolean b = false;
+        try {
+            ps = getConnection().prepareStatement(sql);
+            ps.setString(1, token);
+            ps.setInt(2, userId);
+
+            int i = ps.executeUpdate();
+            b = (i>0)?true:false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return b;
+    }
+
 }

@@ -127,6 +127,7 @@ public class ZoneSettingActivity extends AppCompatActivity implements IUpdateUse
             updateUserSettingIntoSharedPreferences();
             Toast.makeText(ZoneSettingActivity.this, R.string.zone_setting_update_changes_successfully,
                     Toast.LENGTH_SHORT).show();
+
             finish();
         } else {
             Toast.makeText(ZoneSettingActivity.this, R.string.zone_setting_update_changes_failed,

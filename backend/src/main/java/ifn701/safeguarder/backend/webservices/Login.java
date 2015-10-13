@@ -16,6 +16,7 @@ import javax.inject.Named;
 
 import ifn701.safeguarder.backend.dao.UserDao;
 import ifn701.safeguarder.backend.dao.UserSettingDao;
+import ifn701.safeguarder.backend.entities.ResultCode;
 import ifn701.safeguarder.backend.entities.User;
 import ifn701.safeguarder.backend.entities.UserSetting;
 //import ifn701.safeguarder.backend.entities.UserList;
@@ -76,4 +77,13 @@ public class Login {
 //        return null;
 //    }
 
+    @ApiMethod(name="saveToken", path = "savetoken")
+    public ResultCode saveToken(@Named("userId")int userId, @Named("token") String token){
+        UserDao userDao = new UserDao();
+        boolean b = userDao.saveToken(userId, token);
+        ResultCode rc = new ResultCode();
+        rc.setResult(b);
+
+        return rc;
+    }
 }
