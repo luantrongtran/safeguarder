@@ -40,6 +40,17 @@ public class LoginActivity extends AppCompatActivity implements ILoginService{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        UserInfoPreferences userInfoPreferences = new UserInfoPreferences(getApplicationContext());
+
+        if(userInfoPreferences.getUserId() != Constants.sharedPreferences_integer_default_value){
+            //User is already logged in
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
         // Font path
