@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginService{
     @InjectView(R.id.input_password) EditText _passwordText;
     @InjectView(R.id.btn_login) Button _loginButton;
     @InjectView(R.id.link_signup) TextView _signupLink;
+//    @InjectView(R.id.clear_txt) ImageButton _clearTxt;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,6 +98,12 @@ public class LoginActivity extends AppCompatActivity implements ILoginService{
             }
         });
 
+//        _clearTxt.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View view){
+//                _emailText.setText("");
+//            }
+//        });
         _signupLink.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -242,7 +250,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginService{
 
     @Override
     public void processUserLogin(User user) {
-        if(user != null){
+        if(user != null) {
             UserInfoPreferences userInfoPreferences = new UserInfoPreferences(getApplicationContext());
             userInfoPreferences.setEmail(user.getEmail());
             userInfoPreferences.setPassword(user.getPassword());
@@ -265,9 +273,9 @@ public class LoginActivity extends AppCompatActivity implements ILoginService{
         }
         else
         {
-            Toast.makeText(LoginActivity.this, "Account does not exist, Please Sign Up", Toast.LENGTH_SHORT).show();
-            Intent signup = new Intent(this, SignupActivity.class);
-            startActivity(signup);
+            Toast.makeText(LoginActivity.this, "Login failed, Please enter valid credentials", Toast.LENGTH_SHORT).show();
+//            Intent signup = new Intent(this, SignupActivity.class);
+//            startActivity(signup);
         }
     }
 }
