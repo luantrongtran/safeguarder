@@ -795,32 +795,32 @@ public class MapsActivity extends AppCompatActivity
                     }
                     else {
                         eventSize = accidentManager.accidentList.getCurrentLocationEventSize();
-
-                        if (eventSize == 1) {
-                            showRadiusEvents.setText(eventSize + " event");
-                        }
-                        else if(eventSize > 1) {
-                            showRadiusEvents.setText(eventSize + " events");
-                        }
+                        System.out.println("getCurrentLocationEventSize(): " + eventSize);
                     }
                 }
             }
             else if(currentSelectedPosition == 2) {
                 showMyLocation.setText(userPref.getHomeLocationAddress());
 
+
                 if(accidentManager.accidentList.getHomeEventSize() == null) {
                     showRadiusEvents.setText("No event");
                 }
                 else {
                     eventSize = accidentManager.accidentList.getHomeEventSize();
-
-                    if (eventSize == 1) {
-                        showRadiusEvents.setText(eventSize + " event");
-                    }
-                    else if(eventSize > 1) {
-                        showRadiusEvents.setText(eventSize + " events");
-                    }
+                    System.out.println("getCurrentLocationEventSize(): " +
+                            eventSize);
                 }
+            }
+
+            if(eventSize == 0) {
+                showRadiusEvents.setText("No event");
+            }
+            else if (eventSize == 1) {
+                showRadiusEvents.setText(eventSize + " event");
+            }
+            else if(eventSize > 1) {
+                showRadiusEvents.setText(eventSize + " events");
             }
 
             showMyRadius.setText("(" + (userPref.getRadius()/1000) + " km)");
