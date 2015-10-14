@@ -68,6 +68,7 @@ import ifn701.safeguarder.activities.NotificationActivity;
 import ifn701.safeguarder.activities.ReportActivity;
 import ifn701.safeguarder.activities.ZoneSettingActivity;
 import ifn701.safeguarder.backend.myApi.model.AccidentList;
+import ifn701.safeguarder.backend.myApi.model.User;
 import ifn701.safeguarder.backgroundservices.LocationAutoTracker;
 import ifn701.safeguarder.backgroundservices.LocationTrackerService;
 import ifn701.safeguarder.backgroundservices.UpdateAccidentInRangeReceiver;
@@ -360,6 +361,8 @@ public class MapsActivity extends AppCompatActivity
 
     public void gotoLogoutActivity()
     {
+        UserInfoPreferences userInfoPreferences = new UserInfoPreferences(getApplicationContext());
+        userInfoPreferences.setUserId(-1);
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
