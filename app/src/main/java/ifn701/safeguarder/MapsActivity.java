@@ -8,16 +8,21 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -79,6 +84,7 @@ import ifn701.safeguarder.webservices.google_web_services.GooglePlacesSearch;
 import ifn701.safeguarder.webservices.google_web_services.IGooglePlacesSearch;
 import ifn701.safeguarder.webservices.IUpdateAccidentInRange;
 import ifn701.safeguarder.webservices.UpdateAccidentsInRange;
+import ifn701.safeguarder.webservices.image_uploader_service.UpdateProfilePictureService;
 
 
 public class MapsActivity extends AppCompatActivity
@@ -86,7 +92,8 @@ public class MapsActivity extends AppCompatActivity
         IGooglePlacesSearch{
 
     public static boolean isVisible;//indicating if the acitivity is being used
-    public static int requestCodeObsDetailed = 2;
+    public static int requestCodeObsDetailed = 10;
+    public static int requestCodeSelectImage = 11;
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient googleApiClient;
@@ -397,6 +404,31 @@ public class MapsActivity extends AppCompatActivity
 
                 LatLng latLng = new LatLng(lat, lon);
                 panToLatLng(latLng, true);
+            } else if (requestCode == requestCodeSelectImage) {
+                Uri uri = data.getData();
+
+                String[] proj = { MediaStore.Images.Media.DATA };
+                Cursor cursor = this.getContentResolver().query(uri, proj, null, null, null);
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                String s = cursor.getString(column_index);
+
+                //Select image from gallery
+                UpdateProfilePictureService updateProfilePictureService
+                        = new UpdateProfilePictureService(this, s);
+
+
+                Bitmap bitmap = null;
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                    // Log.d(TAG, String.valueOf(bitmap));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (bitmap != null) {
+                    updateProfilePictureService.execute(bitmap);
+                }
             }
         }
     }
@@ -926,5 +958,14 @@ thousands
     private void registerUserSettingsChanged() {
         userSettingsPreferences.getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(userSettingsChanged);
+    }
+
+    public void updateProfilePicture(View view) {
+        Intent intent = new Intent();
+// Show only images, no videos or anything else
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+// Always show the chooser (if there are multiple options available)
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), requestCodeSelectImage);
     }
 }
