@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 public class ConnectionProvider {
     public static String GAE_DATABASE_CONFIG_FILE = "WEB-INF/database_properties/gae_connection.properties";
@@ -14,17 +15,28 @@ public class ConnectionProvider {
     Connection connection = null;
 
     ConnectionProperty conProperties = null;
+    Logger log = Logger.getLogger(ConnectionProvider.class.getName());
 
     public Connection getConnection() {
         if (connection == null) {
             conProperties = getConnectionProperty();
             System.out.print(conProperties);
             try {
-                Class.forName(conProperties.getDriverClassName());
-                connection = DriverManager.getConnection(conProperties.getUrl(), conProperties.getUsername(), conProperties.getPassword());
+                if (isGoogleAppEngineServer()) {
+                    Class.forName("com.mysql.jdbc.GoogleDriver");
+                    String url =
+                            "jdbc:google:mysql://safeguarder-1097:safeguarder?user=root";
+
+                    connection = DriverManager.getConnection(url);
+                } else {
+                    Class.forName(conProperties.getDriverClassName());
+                    connection = DriverManager.getConnection(conProperties.getUrl(),
+                            conProperties.getUsername(), conProperties.getPassword());
+                }
             } catch (Exception e) {
                 System.out.println(e);
                 e.printStackTrace();
+                log.warning(e.toString());
             }
         }
         return connection;

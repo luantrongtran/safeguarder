@@ -410,15 +410,9 @@ public class MapsActivity extends AppCompatActivity
             } else if (requestCode == requestCodeSelectImage) {
                 Uri uri = data.getData();
 
-                String[] proj = { MediaStore.Images.Media.DATA };
-                Cursor cursor = this.getContentResolver().query(uri, proj, null, null, null);
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                cursor.moveToFirst();
-                String s = cursor.getString(column_index);
-
                 //Select image from gallery
                 UpdateProfilePictureService updateProfilePictureService
-                        = new UpdateProfilePictureService(this, s);
+                        = new UpdateProfilePictureService(this);
 
 
                 Bitmap bitmap = null;
