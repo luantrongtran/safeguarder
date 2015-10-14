@@ -12,5 +12,15 @@ public class ResultCode {
         this.result = result;
     }
 
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    String msg;
+
     boolean result;
 }

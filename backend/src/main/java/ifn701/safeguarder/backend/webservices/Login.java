@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.inject.Named;
 
 
+import ifn701.safeguarder.backend.connection.ConnectionProvider;
 import ifn701.safeguarder.backend.dao.UserDao;
 import ifn701.safeguarder.backend.dao.UserSettingDao;
 import ifn701.safeguarder.backend.entities.ResultCode;
@@ -84,6 +85,17 @@ public class Login {
         ResultCode rc = new ResultCode();
         rc.setResult(b);
 
+        return rc;
+    }
+
+    @ApiMethod(name="getConnectionError")
+    public ResultCode getConnectionError() {
+        UserDao userDao = new UserDao();
+        userDao.findById(1);
+
+        ResultCode rc = new ResultCode();
+        rc.setResult(false);
+        rc.setMsg(ConnectionProvider.last_error);
         return rc;
     }
 }
