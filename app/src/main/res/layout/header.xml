@@ -13,6 +13,7 @@
         android:layout_marginTop="38dp"
         android:id="@+id/circleView"
         android:layout_gravity="center_horizontal"
+        android:onClick="updateProfilePicture"
         />
 
     <TextView
