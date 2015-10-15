@@ -17,8 +17,6 @@ public class ConnectionProvider {
     ConnectionProperty conProperties = null;
     Logger log = Logger.getLogger(ConnectionProvider.class.getName());
 
-    public static String last_error = "";
-
     public Connection getConnection() {
         if (connection == null) {
             conProperties = getConnectionProperty();
@@ -27,16 +25,15 @@ public class ConnectionProvider {
                 if (isGoogleAppEngineServer()) {
                     Class.forName("com.mysql.jdbc.GoogleDriver");
                     String url =
-                            "jdbc:google:mysql://safeguarder-1097:safeguarder";
+                            "jdbc:google:mysql://safeguarder-1097:safeguarder/safeguarder?user=root";
 
-                    connection = DriverManager.getConnection(url, "root", "");
+                    connection = DriverManager.getConnection(url);
                 } else {
                     Class.forName(conProperties.getDriverClassName());
                     connection = DriverManager.getConnection(conProperties.getUrl(),
                             conProperties.getUsername(), conProperties.getPassword());
                 }
             } catch (Exception e) {
-                last_error = e.toString();
                 System.out.println(e);
                 e.printStackTrace();
                 log.warning(e.toString());

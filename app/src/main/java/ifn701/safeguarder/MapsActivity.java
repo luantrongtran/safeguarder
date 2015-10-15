@@ -371,7 +371,7 @@ public class MapsActivity extends AppCompatActivity
         UserInfoPreferences userInfoPreferences = new UserInfoPreferences(getApplicationContext());
         userInfoPreferences.setUserId(-1);
         Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         this.finish();
     }

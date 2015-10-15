@@ -7,6 +7,9 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -85,17 +88,6 @@ public class Login {
         ResultCode rc = new ResultCode();
         rc.setResult(b);
 
-        return rc;
-    }
-
-    @ApiMethod(name="getConnectionError")
-    public ResultCode getConnectionError() {
-        UserDao userDao = new UserDao();
-        userDao.findById(1);
-
-        ResultCode rc = new ResultCode();
-        rc.setResult(false);
-        rc.setMsg(ConnectionProvider.last_error);
         return rc;
     }
 }
