@@ -566,6 +566,17 @@ public class MapsActivity extends AppCompatActivity
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         }
     }
+
+    //Map ZoomIn and ZoomOut functionality
+    public void zoomIn(View view){
+
+        if(view.getId() == R.id.zoomIn){
+            mMap.animateCamera(CameraUpdateFactory.zoomIn());
+        }
+        if(view.getId() == R.id.zoomOut) {
+            mMap.animateCamera(CameraUpdateFactory.zoomOut());
+        }
+    }
     public void scheduleUpdateCurrentLocationService(){
         Intent intent = new Intent(getApplicationContext(), LocationAutoTracker.class);
         currentLocationPendingIntent = PendingIntent.
