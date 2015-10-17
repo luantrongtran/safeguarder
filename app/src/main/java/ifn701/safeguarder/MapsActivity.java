@@ -512,7 +512,7 @@ public class MapsActivity extends AppCompatActivity
 
         // set map type
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
+        //mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         // Get latitude of the current location
         double latitude = myLocation.getLatitude();
 
@@ -556,6 +556,16 @@ public class MapsActivity extends AppCompatActivity
         updateAccidentsInRange();//Update accidents within the range after loading map
     }
 
+    //Change Map Type method
+    public void changeMapType(View view){
+        if(mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL){
+
+            mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        }
+        else {
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
+    }
     public void scheduleUpdateCurrentLocationService(){
         Intent intent = new Intent(getApplicationContext(), LocationAutoTracker.class);
         currentLocationPendingIntent = PendingIntent.

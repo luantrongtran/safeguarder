@@ -35,6 +35,23 @@
         <include android:id="@+id/mapFooter"
             layout="@layout/map_footer">
         </include>
+
+        <ImageButton
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:text="Type"
+            android:src="@drawable/ic_terrain_black_24dp"
+            android:id="@+id/mapType"
+            android:background="@drawable/roundcorner"
+            android:alpha="0.5"
+            android:layout_marginTop="50dp"
+            android:onClick="changeMapType"
+            android:layout_marginEnd="12dp"
+            android:layout_below="@+id/locationSwitcherBar"
+            android:layout_alignParentEnd="true" />
+
+
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
