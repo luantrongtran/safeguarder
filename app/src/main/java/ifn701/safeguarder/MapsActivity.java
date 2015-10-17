@@ -567,7 +567,7 @@ public class MapsActivity extends AppCompatActivity
         }
     }
 
-    //Map ZoomIn and ZoomOut functionality
+    //Map ZoomIn functionality
     public void zoomIn(View view){
 
         if(view.getId() == R.id.zoomIn){
@@ -575,6 +575,16 @@ public class MapsActivity extends AppCompatActivity
         }
         if(view.getId() == R.id.zoomOut) {
             mMap.animateCamera(CameraUpdateFactory.zoomOut());
+        }
+    }
+
+    //Map ZoomOut functionality
+    public void zoomOut(View view){
+        if(view.getId() == R.id.zoomOut) {
+            mMap.animateCamera(CameraUpdateFactory.zoomOut());
+        }
+        if(view.getId() == R.id.zoomIn){
+            mMap.animateCamera(CameraUpdateFactory.zoomIn());
         }
     }
     public void scheduleUpdateCurrentLocationService(){

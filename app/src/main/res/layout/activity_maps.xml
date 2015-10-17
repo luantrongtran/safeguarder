@@ -78,7 +78,8 @@
             android:layout_marginEnd="12dp"
             android:layout_alignTop="@+id/zoomIn"
             android:layout_alignStart="@+id/zoomIn"
-            android:layout_marginTop="39dp" />
+            android:layout_marginTop="39dp"
+            android:onClick="zoomOut"/>
 
 
     </RelativeLayout>
