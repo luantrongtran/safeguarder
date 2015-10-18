@@ -3,6 +3,7 @@
     <item type="color" name="current_home_switch_bar_border">#FFCCCCCC</item>
     <item type="color" name="current_home_switch_bar_background">#FFF7F7F7</item>
     <item type="color" name="terrain_switch_button_bacckground">#FFF7F7F7</item>
+    <item type="color" name="back_button_background">#FFF7F7F7</item>
     <item type="color" name="custom_window_info_border">#FFCCCCCC</item>
     <item type="color" name="custom_window_info_background">#FFF7F7F7</item>
     <item type="color" name="custom_window_info_text_color">#000000</item>

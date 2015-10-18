@@ -31,6 +31,7 @@ import java.util.Locale;
 
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.GPSTracker;
+import ifn701.safeguarder.MapsActivity;
 import ifn701.safeguarder.R;
 import ifn701.safeguarder.backend.myApi.model.Accident;
 import ifn701.safeguarder.entities.MyOnItemSelectedListener;
@@ -94,6 +95,13 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
     public void setImageViewThree(View view) {
         selectedImagePreview = (ImageView) findViewById(R.id.btn_image3);
         createIntent();
+    }
+
+    public void goBack(View view){
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
+        startActivity(intent);
+        finish();
     }
 
     private  void createIntent() {
