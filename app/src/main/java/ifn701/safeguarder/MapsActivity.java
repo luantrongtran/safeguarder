@@ -608,6 +608,7 @@ public class MapsActivity extends AppCompatActivity
         // Build the dialog and show it.
         AlertDialog fMapTypeDialog = builder.create();
         fMapTypeDialog.setCanceledOnTouchOutside(true);
+        fMapTypeDialog.setIcon(R.drawable.ic_map_black_24dp);
         fMapTypeDialog.show();
 
     }
