@@ -31,7 +31,7 @@ public class GetUploadUrlService extends AsyncTask <Void, Void, String> {
             e.printStackTrace();
         }
 
-        return uploadUrl.getUploadUrl().replace("lua", "192.168.0.100");
+        return uploadUrl.getUploadUrl();
     }
 //
 //    @Override

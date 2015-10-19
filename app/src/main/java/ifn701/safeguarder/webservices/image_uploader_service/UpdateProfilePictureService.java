@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
+import com.google.api.client.json.jackson2.JacksonFactory;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -14,6 +16,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,25 +31,29 @@ import java.util.concurrent.ExecutionException;
 import ifn701.safeguarder.BackendApiProvider;
 import ifn701.safeguarder.backend.myApi.MyApi;
 import ifn701.safeguarder.backend.myApi.model.BlobAttributes;
+import ifn701.safeguarder.entities.blob_images.BlobImageArray;
 
 /**
  * Created by lua on 13/10/2015.
  */
 public class UpdateProfilePictureService extends AsyncTask<Bitmap, Void, String> {
     String attachmentName = "bitmap";
-    String attachmentFileName = "bitmap.bmp";
+    String attachmentFileName = "filename";
     String crlf = "\r\n";
     String twoHyphens = "--";
     String boundary =  "*****";
 
     Context context;
+    DataOutputStream request = null;
+    HttpURLConnection httpUrlConnection = null;
+
     public UpdateProfilePictureService(Context context) {
         this.context = context;
     }
 
     @Override
     protected String doInBackground(Bitmap... params) {
-        Bitmap bm = params[0];
+//        Bitmap bm = params[0];
 
         GetUploadUrlService getUploadUrlService = new GetUploadUrlService();
 
@@ -58,24 +65,11 @@ public class UpdateProfilePictureService extends AsyncTask<Bitmap, Void, String>
             e.printStackTrace();
         }
 
-        String uploadUrl = blobAttributes.getUploadUrl().replace("lua","192.168.0.100");
+        String uploadUrl = blobAttributes.getUploadUrl().replace("lua","192.168.0.102");
 
-        HttpURLConnection httpUrlConnection = null;
+//        HttpURLConnection httpUrlConnection = null;
         URL url = null;
         try {
-//            HttpClient httpclient = new DefaultHttpClient();
-//            HttpPost httppost = new HttpPost(uploadUrl);
-//
-//            FileOutputStream out = null;
-//
-//            MultipartEntity reqEntity = new MultipartEntity();
-//            File f = new File(filename);
-//            FileBody fileBody = new FileBody(f);
-//            reqEntity.addPart("file", fileBody);
-//
-//            httppost.setEntity(reqEntity);
-//            HttpResponse response = httpclient.execute(httppost);
-
             url = new URL(uploadUrl);
 
             httpUrlConnection = (HttpURLConnection) url.openConnection();
@@ -88,18 +82,14 @@ public class UpdateProfilePictureService extends AsyncTask<Bitmap, Void, String>
             httpUrlConnection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + this.boundary);
 
             //Content wrapper
-            DataOutputStream request = new DataOutputStream(httpUrlConnection.getOutputStream());
+            request = new DataOutputStream(httpUrlConnection.getOutputStream());
 
-            request.writeBytes(this.twoHyphens + this.boundary + this.crlf);
-            request.writeBytes("Content-Disposition: form-data; name=\"" + this.attachmentName +
-                    "\";filename=\"" + this.attachmentFileName + "\"" + this.crlf);
-            request.writeBytes(this.crlf);
-
-            ByteBuffer byteBuffer = ByteBuffer.allocate(bm.getByteCount());
-            bm.copyPixelsToBuffer(byteBuffer);
-            byte[] bytes = byteBuffer.array();
-
-            request.write(bytes);
+            for(int i = 0; i < params.length; i++) {
+                Bitmap bm = params[i];
+                String filename = attachmentFileName + i;
+                String fieldName = attachmentName + i;
+                addNewFile(filename, fieldName, bm);
+            }
 
             //End content wrapper
             request.writeBytes(this.crlf);
@@ -107,6 +97,7 @@ public class UpdateProfilePictureService extends AsyncTask<Bitmap, Void, String>
 
             //Flush output buffer
             request.flush();
+
             request.close();
 
             InputStream responseStream = new BufferedInputStream(httpUrlConnection.getInputStream());
@@ -124,10 +115,38 @@ public class UpdateProfilePictureService extends AsyncTask<Bitmap, Void, String>
 
             responseStream.close();
             httpUrlConnection.disconnect();
+
+            JacksonFactory jacksonFactory = new JacksonFactory();
+            BlobImageArray arr = jacksonFactory.createJsonParser(response).parse(BlobImageArray.class);
+            int size = arr.data.size();
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
 
         return null;
+    }
+
+    /**
+     * Adding new bitmap file for uploading
+     * @param filename
+     * @param fieldName
+     * @param bm
+     */
+    private void addNewFile(String filename, String fieldName, Bitmap bm) throws IOException{
+        //Convert bitmap to byte array
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] bytes = stream.toByteArray();
+
+        request.writeBytes(this.twoHyphens + this.boundary + this.crlf);
+        request.writeBytes("Content-Disposition: form-data; name=\"" + fieldName +
+                "\";filename=\"" + filename + "\"" + this.crlf);
+        request.writeBytes(this.crlf);
+        request.write(bytes);
+
+        request.writeBytes(this.crlf);
+
+        //Flush output buffer
+        request.flush();
     }
 }

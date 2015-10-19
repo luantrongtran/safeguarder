@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Vector;
 
 import ifn701.safeguarder.backend.entities.Accident;
 import ifn701.safeguarder.backend.entities.User;
+import ifn701.safeguarder.backend.entities.UserSetting;
 
 public class UserDao extends DAOBase {
 
@@ -21,6 +23,7 @@ public class UserDao extends DAOBase {
     public static String colPassword = "password";
     public static String colActivated = "activated";
     public static String colToken = "token";
+    public static String colProfilePicture = "profile_picture";
 
     public User findById(int id) {
         Connection con = getConnection();
@@ -80,12 +83,22 @@ public class UserDao extends DAOBase {
 
         PreparedStatement ps = null;
         try {
-            ps = con.prepareStatement(sql);
+            ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, user.getFullName());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPassword());
             ps.setBoolean(4, false);
             ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            while(rs.next()) {
+                //Create new settings for the new user
+                int id = rs.getInt(0);
+                UserSetting userSetting = new UserSetting();
+                userSetting.setUserId(id);
+                UserSettingDao userSettingDao = new UserSettingDao();
+                userSettingDao.insertNewUserSetting(userSetting);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -122,4 +135,24 @@ public class UserDao extends DAOBase {
         return b;
     }
 
+    /**
+     * Update user's profile picture
+     * @param url new url of the new image
+     */
+    public int updateProfilePicture(int userId, String url) {
+        String sql = "UPDATE " + tableName + " SET " + colProfilePicture + " = ? WHERE " +
+                colId + " = ?";
+
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.setString(1, url);
+            ps.setInt(2, userId);
+
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
 }
