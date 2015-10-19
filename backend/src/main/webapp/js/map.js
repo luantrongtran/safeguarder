@@ -72,8 +72,6 @@ function initialize() {
         $('#coords').val(event.overlay.getPath().getArray());
     });
 
-
-
     //Initialize the DataPicker library function
     $('#start-time').datetimepicker({
         format: 'HH:mm'

@@ -1,12 +1,12 @@
 <html>
 
-<head>
+       <head>
 
-</head>
+       </head>
 
-<body>
-    Hello world
+       <body>
+           Hello world
 
-</body>
+       </body>
 
-</html>
+       </html>
