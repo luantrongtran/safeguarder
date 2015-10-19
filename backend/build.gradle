@@ -36,6 +36,8 @@ dependencies {
     testCompile 'mysql:mysql-connector-java:5.1.16'
     testCompile  'com.google.appengine:appengine-endpoints:1.9.18'
     testCompile 'com.google.appengine:appengine-endpoints-deps:1.9.18'
+
+    compile 'org.springframework:spring-context:4.2.2.RELEASE'
 }
 
 appengine {
