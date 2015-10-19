@@ -20,11 +20,18 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" >
 
+            <ImageButton
+                android:layout_width="37dp"
+                android:layout_height="match_parent"
+                android:id="@+id/imageButton"
+                android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
+                android:background="@color/back_button_background"
+                android:onClick="goBack" />
+
             <TextView
                 android:id="@+id/report_page_title"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="1"
                 android:textColor="#000000"
                 android:background="@android:color/transparent"
                 android:textStyle="bold"

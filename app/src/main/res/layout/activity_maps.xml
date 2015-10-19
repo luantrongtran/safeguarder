@@ -35,6 +35,53 @@
         <include android:id="@+id/mapFooter"
             layout="@layout/map_footer">
         </include>
+
+        <ImageButton
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:text="Type"
+            android:src="@drawable/ic_terrain_black_24dp"
+            android:id="@+id/mapType"
+            android:background="@drawable/roundcorner"
+            android:alpha="0.8"
+            android:layout_marginTop="50dp"
+            android:onClick="changeMapType"
+            android:layout_marginEnd="12dp"
+            android:layout_below="@+id/locationSwitcherBar"
+            android:layout_alignParentEnd="true" />
+
+        <ImageButton
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:text="Zoomin"
+            android:src="@drawable/ic_plus_black_24dp"
+            android:id="@+id/zoomIn"
+            android:background="@drawable/roundcorner"
+            android:alpha="0.8"
+            android:layout_marginEnd="12dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="160dp"
+            android:onClick="zoomIn" />
+
+        <ImageButton
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:text="ZoomOut"
+            android:id="@+id/zoomOut"
+            android:src="@drawable/ic_minus_black_24dp"
+            android:background="@drawable/roundcorner"
+            android:alpha="0.8"
+            android:layout_marginEnd="12dp"
+            android:layout_alignTop="@+id/zoomIn"
+            android:layout_alignStart="@+id/zoomIn"
+            android:layout_marginTop="39dp"
+            android:onClick="zoomOut"/>
+
+
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

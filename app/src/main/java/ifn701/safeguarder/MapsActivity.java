@@ -34,6 +34,7 @@ import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -97,6 +98,8 @@ public class MapsActivity extends AppCompatActivity
     public static int requestCodeSelectImage = 11;
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private static final CharSequence[] MAP_TYPE_ITEMS =
+            {"Road Map", "Satellite", "Terrain","Hybrid"};
     private GoogleApiClient googleApiClient;
     LocationRequest mLocationRequest;
 
@@ -506,7 +509,7 @@ public class MapsActivity extends AppCompatActivity
 
         // set map type
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
+        //mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         // Get latitude of the current location
         double latitude = myLocation.getLatitude();
 
@@ -550,6 +553,79 @@ public class MapsActivity extends AppCompatActivity
         updateAccidentsInRange();//Update accidents within the range after loading map
     }
 
+
+//    //Change Map Type method
+//    public void changeMapType() {
+//        if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL) {
+//
+//            mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+//        } else {
+//            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+//        }
+//    }
+
+    public void changeMapType(View view){
+        final String fDialogTitle = "Select Map Type";
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(fDialogTitle);
+
+        // Find the current map type to pre-check the item representing the current state.
+        int checkItem = mMap.getMapType() - 1;
+
+        // Add an OnClickListener to the dialog, so that the selection will be handled.
+        builder.setSingleChoiceItems(
+                MAP_TYPE_ITEMS,
+                checkItem,
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int item) {
+                        // Locally create a finalised object.
+
+                        // Perform an action depending on which item was selected.
+                        switch (item) {
+                            case 1:
+                                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                                break;
+                            case 2:
+                                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                                break;
+                            case 3:
+                                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                                break;
+                            default:
+                                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                        }
+                        dialog.dismiss();
+                    }
+                }
+        );
+        // Build the dialog and show it.
+        AlertDialog fMapTypeDialog = builder.create();
+        fMapTypeDialog.setCanceledOnTouchOutside(true);
+        fMapTypeDialog.setIcon(R.drawable.ic_map_black_24dp);
+        fMapTypeDialog.show();
+
+    }
+    //Map ZoomIn functionality
+    public void zoomIn(View view){
+
+        if(view.getId() == R.id.zoomIn){
+            mMap.animateCamera(CameraUpdateFactory.zoomIn());
+        }
+        if(view.getId() == R.id.zoomOut) {
+            mMap.animateCamera(CameraUpdateFactory.zoomOut());
+        }
+    }
+
+    //Map ZoomOut functionality
+    public void zoomOut(View view){
+        if(view.getId() == R.id.zoomOut) {
+            mMap.animateCamera(CameraUpdateFactory.zoomOut());
+        }
+        if(view.getId() == R.id.zoomIn){
+            mMap.animateCamera(CameraUpdateFactory.zoomIn());
+        }
+    }
     public void scheduleUpdateCurrentLocationService(){
         Intent intent = new Intent(getApplicationContext(), LocationAutoTracker.class);
         currentLocationPendingIntent = PendingIntent.
