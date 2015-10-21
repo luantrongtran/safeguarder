@@ -8,14 +8,11 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -35,8 +32,6 @@ import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -61,9 +56,7 @@ import ifn701.safeguarder.CustomSharedPreferences.NewAccidentWithinCurrentLocati
 import ifn701.safeguarder.CustomSharedPreferences.NewAccidentWithinHomeLocationSharedPreferences;
 import ifn701.safeguarder.activities.CustomWindowInfoAdapter;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Locale;
 
@@ -79,7 +72,7 @@ import ifn701.safeguarder.activities.NotificationActivity;
 import ifn701.safeguarder.activities.ReportActivity;
 import ifn701.safeguarder.activities.ZoneSettingActivity;
 import ifn701.safeguarder.backend.myApi.model.AccidentList;
-import ifn701.safeguarder.backend.myApi.model.User;
+import ifn701.safeguarder.backend.myApi.model.ResultCode;
 import ifn701.safeguarder.backgroundservices.LocationAutoTracker;
 import ifn701.safeguarder.backgroundservices.LocationTrackerService;
 import ifn701.safeguarder.backgroundservices.UpdateAccidentInRangeReceiver;
@@ -91,12 +84,13 @@ import ifn701.safeguarder.webservices.google_web_services.GooglePlacesSearch;
 import ifn701.safeguarder.webservices.google_web_services.IGooglePlacesSearch;
 import ifn701.safeguarder.webservices.IUpdateAccidentInRange;
 import ifn701.safeguarder.webservices.UpdateAccidentsInRange;
-import ifn701.safeguarder.webservices.image_uploader_service.UpdateProfilePictureService;
+import ifn701.safeguarder.webservices.image_uploader_service.IUploadProfilePictureService;
+import ifn701.safeguarder.webservices.image_uploader_service.UploadProfilePictureService;
 
 
 public class MapsActivity extends AppCompatActivity
         implements ConnectionCallbacks, OnConnectionFailedListener, IUpdateAccidentInRange,
-        IGooglePlacesSearch{
+        IGooglePlacesSearch, IUploadProfilePictureService {
 
     public static boolean isVisible;//indicating if the acitivity is being used
     public static int requestCodeObsDetailed = 10;
@@ -399,12 +393,13 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        userDrawer.updateCurrentLocationInterestedArea();
-        userDrawer.updateHomeLocation();
+
 
         if(resultCode == RESULT_OK) {
             if(requestCode == LeftMenuAdapter.ZONE_SETTING) {
                 updateAccidentsInRange();//Update accidents within the range after settings had changed
+                userDrawer.updateCurrentLocationInterestedArea();
+                userDrawer.updateHomeLocation();
             } else if (requestCode == LeftMenuAdapter.NOTIFICATION_LIST) {
                 double lat = data.getDoubleExtra(
                         Constants.notification_activity_intent_result_accident_lat,
@@ -419,10 +414,6 @@ public class MapsActivity extends AppCompatActivity
                 Uri uri = data.getData();
 
                 //Select image from gallery
-                UpdateProfilePictureService updateProfilePictureService
-                        = new UpdateProfilePictureService(this);
-
-
                 Bitmap bitmap = null;
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
@@ -432,8 +423,11 @@ public class MapsActivity extends AppCompatActivity
                 }
 
                 if (bitmap != null) {
-                    Bitmap newBmp = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), false);
-                    updateProfilePictureService.execute(bitmap, newBmp);
+                    UploadProfilePictureService uploadProfilePictureService
+                            = new UploadProfilePictureService(getApplicationContext(), this);
+                    uploadProfilePictureService.execute(bitmap);
+                } else {
+                    //if cannot select image from gallery
                 }
             }
         }
@@ -532,7 +526,7 @@ public class MapsActivity extends AppCompatActivity
         // Zoom in the Google Map
         mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
 
-        mMap.setInfoWindowAdapter(new CustomWindowInfoAdapter(getApplicationContext()));
+        mMap.setInfoWindowAdapter(new CustomWindowInfoAdapter(this, mMap));
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -746,22 +740,6 @@ public class MapsActivity extends AppCompatActivity
         }
         Log.i(Constants.APPLICATION_ID, to+"");
         locationSwitcher.animate().translationY(to);
-//        int toolbarHeight = toolbar.getMeasuredHeight();
-//        int from = 0;
-//        int to = 0;
-//        if(isLocationSwitcherShowed) {
-//            //if visible
-//            from = toolbarHeight;//110;
-//            to = 0;
-//            isLocationSwitcherShowed = false;
-//        } else {
-//            //if invisible
-//            from = 0;
-//            to = 48;
-//            isLocationSwitcherShowed = true;
-//        }
-//
-//        locationSwitcher.animate().translationY(to);
     }
 
     public void panToMyLocation() {
@@ -1046,5 +1024,24 @@ thousands
         intent.setAction(Intent.ACTION_GET_CONTENT);
 // Always show the chooser (if there are multiple options available)
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), requestCodeSelectImage);
+    }
+
+    /**
+     * When a new profile picture updated
+     * @param resultCode return a BlobImage containing blob key and serving url. Returns null if
+     *                  couldn't update the new profile picture.
+     */
+    @Override
+    public void onImagesUploaded(ResultCode resultCode) {
+
+        if(resultCode.getResult() == null || resultCode.getResult() == null
+                || resultCode.getResult() == false) {
+            Toast.makeText(MapsActivity.this, R.string.update_profile_picture_failed,
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(MapsActivity.this, R.string.update_profile_picture_successfully,
+                    Toast.LENGTH_SHORT).show();
+            mLeftMenuAdapter.notifyDataSetChanged();
+        }
     }
 }

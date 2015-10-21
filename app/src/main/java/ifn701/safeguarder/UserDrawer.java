@@ -54,17 +54,29 @@ public class UserDrawer {
                 .strokeColor(currentLocationInterestedAreaStrokeColor);
         homeMarkerOption = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.home_icon));
 
-        if(currentLocationInterestedArea == null) {
-            drawCurrentLocationInterestedArea();
-        }
-        if(homeLocationInterestedArea == null) {
-            drawHomeLocation();
-        }
-
         currentLocationPreferences = new CurrentLocationPreferences(context);
         userSettingsPreferences = new UserSettingsPreferences(context);
+
+//        updateHomeLocation();
+//        updateCurrentLocationInterestedArea();
+        if(currentLocationInterestedArea == null) {
+            drawCurrentLocationInterestedArea();
+        } else {
+            currentLocationInterestedArea.remove();
+            drawCurrentLocationInterestedArea();
+        }
+
+        if(homeLocationInterestedArea == null) {
+            drawHomeLocation();
+        } else {
+            homeLocationInterestedArea.remove();
+            drawHomeLocation();
+        }
     }
 
+    /**
+     * Draw a circle around current location
+     */
     public void drawCurrentLocationInterestedArea() {
         currentLocationPreferences
                 = new CurrentLocationPreferences(context);
@@ -122,7 +134,15 @@ public class UserDrawer {
         homeLocationMarker = gMap.addMarker(homeMarkerOption);
     }
 
+
+    /**
+     * Redraw the circle around home location
+     */
     public void updateHomeLocation() {
+        if(homeLocationInterestedArea == null) {
+            drawHomeLocation();
+            return;
+        }
         float radius = userSettingsPreferences.getRadius();
         double lat = userSettingsPreferences.getHomeLocationLat();
         double lon = userSettingsPreferences.getHomeLocationLon();

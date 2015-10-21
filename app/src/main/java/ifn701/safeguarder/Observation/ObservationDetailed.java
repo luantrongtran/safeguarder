@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -25,10 +26,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import ifn701.safeguarder.Constants;
+import ifn701.safeguarder.ImageDownloader;
 import ifn701.safeguarder.R;
 import ifn701.safeguarder.backend.myApi.model.Accident;
 import ifn701.safeguarder.webservices.GetAccidentService;
 import ifn701.safeguarder.webservices.IGetAccidentService;
+import ifn701.safeguarder.webservices.ImageViewUrlLoader;
 
 public class ObservationDetailed extends AppCompatActivity implements IGetAccidentService {
     @Override
@@ -37,7 +41,8 @@ public class ObservationDetailed extends AppCompatActivity implements IGetAccide
         setContentView(R.layout.activity_observation_detailed);
 
         GetAccidentService getAccidentService = new GetAccidentService(this);
-        getAccidentService.execute(getIntent().getIntExtra("AccidentID", -1));
+        getAccidentService.execute(getIntent().getIntExtra(Constants.
+                observation_activity_intent_accident_id, -1));
         ImageButton shareBtn=(ImageButton)findViewById(R.id.obs_share);
 
         //Share on Facebook
@@ -168,11 +173,33 @@ public class ObservationDetailed extends AppCompatActivity implements IGetAccide
 
         accDesc.setText(accident.getDescription());
         accUser.setText(accident.getUser().getFullName());
+
+        //images
+        ImageView imageView1 = (ImageView) findViewById(R.id.btn_image1);
+        ImageView imageView2 = (ImageView) findViewById(R.id.btn_image2);
+        ImageView imageView3 = (ImageView) findViewById(R.id.btn_image3);
+
+        if(accident.getImage1() != null && !accident.getImage1().isEmpty()) {
+            ImageViewUrlLoader imageViewUrlLoader = new ImageViewUrlLoader(imageView1);
+            imageViewUrlLoader.execute(accident.getImage1());
+        }
+        if(accident.getImage2() !=null && !accident.getImage2().isEmpty()) {
+            ImageViewUrlLoader imageViewUrlLoader = new ImageViewUrlLoader(imageView2);
+            imageViewUrlLoader.execute(accident.getImage2());
+        }
+        if(accident.getImage3() != null && !accident.getImage3().isEmpty()){
+            ImageViewUrlLoader imageViewUrlLoader = new ImageViewUrlLoader(imageView3);
+            imageViewUrlLoader.execute(accident.getImage3());
+        }
     }
 
 
      @Override
     public void getAccidentData(Accident accident) {
         showAccidentDetails(accident);
+    }
+
+    public void goBack(View view) {
+        finish();
     }
 }

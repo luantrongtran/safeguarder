@@ -134,4 +134,8 @@ public class ZoneSettingActivity extends AppCompatActivity implements IUpdateUse
                     Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void goBack(View view) {
+        finish();
+    }
 }

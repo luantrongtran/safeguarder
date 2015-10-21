@@ -2,10 +2,12 @@ package ifn701.safeguarder.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -14,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import ifn701.safeguarder.Constants;
+import ifn701.safeguarder.Observation.ObservationDetailed;
 import ifn701.safeguarder.R;
 import ifn701.safeguarder.Utilities;
 import ifn701.safeguarder.backend.myApi.model.Accident;
@@ -22,6 +25,7 @@ import ifn701.safeguarder.webservices.ImageViewUrlLoader;
 import ifn701.safeguarder.webservices.google_web_services.GoogleImageService;
 import ifn701.safeguarder.webservices.google_web_services.GooglePlaceDetailService;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -61,10 +65,13 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
     LinearLayout.LayoutParams informationLayoutParams;
     Utilities utilities;
 
+    GoogleMap map;
+
     View view;
     Context context;
-    public CustomWindowInfoAdapter(Context context) {
+    public CustomWindowInfoAdapter(Context context, GoogleMap map) {
         this.context = context;
+        this.map = map;
 
         processDialog = new ProgressDialog(context);
         processDialog.setMessage("loading");
@@ -85,6 +92,11 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
         MarkerOptions markerOptions = new MarkerOptions().title(type);
 
         return markerOptions;
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) {
+        return null;
     }
 
     @Override
@@ -200,7 +212,7 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
 
         String snippet = marker.getSnippet();
 
-        Accident accident = new Accident();
+        final Accident accident = new Accident();
         try {
             jacksonFactory.createJsonParser(snippet).parse(accident);
         } catch (IOException e) {
@@ -208,8 +220,17 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
             return;
         }
 
-        String title = accident.getName() ;
-        titleView.setText(title);
+        String title = "<u>" + accident.getName() + "</u>" ;
+        titleView.setText(Html.fromHtml(title));
+
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent = new Intent(context, ObservationDetailed.class);
+                intent.putExtra(Constants.observation_activity_intent_accident_id, accident.getId());
+                context.startActivity(intent);
+            }
+        });
 
         String beforeImage = "";
         String time = String.format("<b>"
@@ -241,10 +262,6 @@ public class CustomWindowInfoAdapter implements InfoWindowAdapter {
         } else {
             imageView.setImageBitmap(bitmap);
         }
-    }
-    @Override
-    public View getInfoContents(Marker marker) {
-        return null;
     }
 
     public void reset() {

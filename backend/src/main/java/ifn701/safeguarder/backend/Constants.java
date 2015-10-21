@@ -8,5 +8,5 @@ public class Constants {
 
     //for development environment
     public static String computerName = "lua";
-    public static String IPAddress = "192.168.0.102";
+    public static String IPAddress = "192.168.0.101";
 }

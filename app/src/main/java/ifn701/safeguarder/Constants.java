@@ -1,7 +1,7 @@
 package ifn701.safeguarder;
 
 public class Constants {
-    public static String webServiceUrl = "http://192.168.0.102:8080/_ah/api/" ;//"https://safeguarder-1097.appspot.com/_ah/api/";
+    public static String webServiceUrl = "http://192.168.0.101:8080/_ah/api/" ;//"https://safeguarder-1097.appspot.com/_ah/api/";
 
     public static String APPLICATION_ID = "safeguarder";
 
@@ -58,5 +58,7 @@ public class Constants {
     public static String notification_activity_intent_result_accident_lon = "accident_lon";
 
     public static String start_from_intent_data = "start_from";//indicating from where the activity called.
-    public static String start_from_notification = "start_from_notfication";
+    public static String start_from_notification = "start_from_notification";
+
+    public static String observation_activity_intent_accident_id = "AccidentID";
 }

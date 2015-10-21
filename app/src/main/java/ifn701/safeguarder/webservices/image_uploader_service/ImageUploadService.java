@@ -36,23 +36,24 @@ import ifn701.safeguarder.entities.blob_images.BlobImageArray;
 /**
  * Created by lua on 13/10/2015.
  */
-public class UpdateProfilePictureService extends AsyncTask<Bitmap, Void, String> {
+public class ImageUploadService extends AsyncTask<Bitmap, Void, BlobImageArray> {
     String attachmentName = "bitmap";
     String attachmentFileName = "filename";
     String crlf = "\r\n";
     String twoHyphens = "--";
     String boundary =  "*****";
 
-    Context context;
     DataOutputStream request = null;
     HttpURLConnection httpUrlConnection = null;
 
-    public UpdateProfilePictureService(Context context) {
-        this.context = context;
+    IImageUploadService interfaceImagesUploaded;
+
+    public ImageUploadService(IImageUploadService interfaceImagesUploaded) {
+        this.interfaceImagesUploaded = interfaceImagesUploaded;
     }
 
     @Override
-    protected String doInBackground(Bitmap... params) {
+    protected BlobImageArray doInBackground(Bitmap... params) {
 //        Bitmap bm = params[0];
 
         GetUploadUrlService getUploadUrlService = new GetUploadUrlService();
@@ -65,10 +66,11 @@ public class UpdateProfilePictureService extends AsyncTask<Bitmap, Void, String>
             e.printStackTrace();
         }
 
-        String uploadUrl = blobAttributes.getUploadUrl().replace("lua","192.168.0.102");
+        String uploadUrl = blobAttributes.getUploadUrl();
 
 //        HttpURLConnection httpUrlConnection = null;
         URL url = null;
+        BlobImageArray arr = null;//each element contains a blob key and corresponding serving url
         try {
             url = new URL(uploadUrl);
 
@@ -86,6 +88,9 @@ public class UpdateProfilePictureService extends AsyncTask<Bitmap, Void, String>
 
             for(int i = 0; i < params.length; i++) {
                 Bitmap bm = params[i];
+                if(bm == null) {
+                    continue;
+                }
                 String filename = attachmentFileName + i;
                 String fieldName = attachmentName + i;
                 addNewFile(filename, fieldName, bm);
@@ -117,13 +122,13 @@ public class UpdateProfilePictureService extends AsyncTask<Bitmap, Void, String>
             httpUrlConnection.disconnect();
 
             JacksonFactory jacksonFactory = new JacksonFactory();
-            BlobImageArray arr = jacksonFactory.createJsonParser(response).parse(BlobImageArray.class);
+            arr = jacksonFactory.createJsonParser(response).parse(BlobImageArray.class);
             int size = arr.data.size();
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return arr;
     }
 
     /**
@@ -148,5 +153,13 @@ public class UpdateProfilePictureService extends AsyncTask<Bitmap, Void, String>
 
         //Flush output buffer
         request.flush();
+    }
+
+    @Override
+    protected void onPostExecute(BlobImageArray blobImageArray) {
+        if(interfaceImagesUploaded == null) {
+            return;
+        }
+        interfaceImagesUploaded.onImagesUploaded(blobImageArray);
     }
 }

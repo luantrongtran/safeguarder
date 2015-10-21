@@ -101,7 +101,7 @@ public class EventFilterActivity extends AppCompatActivity {
         timeSelectionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(!checkBoxEnablingFilterByTime.isChecked()){
+                if (!checkBoxEnablingFilterByTime.isChecked()) {
                     return;
                 }
                 eventFilterSharedPreferences.setTimeSetting(timeFrames[position]);
@@ -134,5 +134,9 @@ public class EventFilterActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void goBack(View view) {
+        finish();
     }
 }

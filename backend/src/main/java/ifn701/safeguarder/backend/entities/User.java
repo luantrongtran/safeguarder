@@ -8,6 +8,16 @@ public class User {
     private String password;
     private boolean activated;
 
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
+    }
+
+    private String profilePictureUrl;
+
     private UserSetting userSetting;
 
     public UserSetting getUserSetting() {

@@ -10,7 +10,6 @@ import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import java.io.IOException;
 
 import ifn701.safeguarder.Constants;
-import ifn701.safeguarder.MainActivity;
 import ifn701.safeguarder.backend.myApi.MyApi;
 import ifn701.safeguarder.backend.myApi.model.Accident;
 
@@ -57,6 +56,6 @@ public class AccidentService extends AsyncTask<Accident, Void, Accident>{
     protected void onPostExecute(Accident accident) {
         //super.onPostExecute(accident);
         System.out.println("Your report has been sent.");
-        accidentService.processReport();
+        accidentService.onNewAccidentReported(accident);
     }
 }

@@ -38,6 +38,9 @@ public class UpdateUserSettingService extends AsyncTask<UserSetting, Void, Resul
 
     @Override
     protected void onPostExecute(ResultCode resultCode) {
+        if(interfaceUpdate == null) {
+            return;
+        }
         interfaceUpdate.onUserSettingsUpdated(resultCode);
     }
 }

@@ -18,17 +18,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.GPSTracker;
 import ifn701.safeguarder.MapsActivity;
@@ -36,14 +33,21 @@ import ifn701.safeguarder.R;
 import ifn701.safeguarder.backend.myApi.model.Accident;
 import ifn701.safeguarder.entities.MyOnItemSelectedListener;
 import ifn701.safeguarder.entities.LoadImage;
+import ifn701.safeguarder.entities.blob_images.BlobImage;
+import ifn701.safeguarder.entities.blob_images.BlobImageArray;
 import ifn701.safeguarder.webservices.AccidentService;
 import ifn701.safeguarder.webservices.IAccidentService;
+import ifn701.safeguarder.webservices.image_uploader_service.IImageUploadService;
+import ifn701.safeguarder.webservices.image_uploader_service.ImageUploadService;
 
-public class ReportActivity extends AppCompatActivity implements IAccidentService{
+public class ReportActivity extends AppCompatActivity implements IAccidentService,
+        IImageUploadService{
 
     private static final int SELECT_SINGLE_PICTURE = 101;
     public static final String IMAGE_TYPE = "image/*";
     private ImageView selectedImagePreview;
+
+    Accident accident;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +84,10 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
 
         spinner_obslvl.setOnItemSelectedListener(new MyOnItemSelectedListener());
         spinner_accType.setOnItemSelectedListener(new MyOnItemSelectedListener());
+
+        spinnerType = (Spinner) findViewById(R.id.spinner_accType);
+        spinnerObslvl = (Spinner) findViewById(R.id.spinner_obslvl);
+        inputName = (EditText) findViewById(R.id.text_name);
     }
 
     public void setImageViewOne(View view) {
@@ -154,51 +162,76 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
     private EditText inputName;
     private Spinner spinnerType;
     private Spinner spinnerObslvl;
-    private Bitmap bitmap;
-    public void submitReport(View view) {
 
-        EditText inputTime;
-        EditText inputDesc;
+    /**
+     * Upload selected images for the Report
+     * @return the number of images selected
+     */
+    public int uploadImages() {
         ImageView inputImage1 = (ImageView) findViewById(R.id.btn_image1);
         ImageView inputImage2 = (ImageView) findViewById(R.id.btn_image2);
         ImageView inputImage3 = (ImageView) findViewById(R.id.btn_image3);
 
+        Bitmap bm1 = null;
+        Bitmap bm2 = null;
+        Bitmap bm3 = null;
+        int sum = 0;
         if(inputImage1.getDrawable() != null) {
-            bitmap = ((BitmapDrawable)inputImage1.getDrawable()).getBitmap();
-            sendImage(bitmap);
+            bm1 = ((BitmapDrawable)inputImage1.getDrawable()).getBitmap();
+            sum++;
         }
         if(inputImage2.getDrawable() != null) {
-            bitmap = ((BitmapDrawable)inputImage2.getDrawable()).getBitmap();
-            sendImage(bitmap);
+            bm2 = ((BitmapDrawable)inputImage2.getDrawable()).getBitmap();
+            sum++;
         }
         if(inputImage3.getDrawable() != null) {
-            bitmap = ((BitmapDrawable)inputImage3.getDrawable()).getBitmap();
-            sendImage(bitmap);
+            bm3 = ((BitmapDrawable)inputImage3.getDrawable()).getBitmap();
+            sum++;
         }
 
-        UserInfoPreferences userInfo = new UserInfoPreferences(getApplicationContext());
+        if(sum == 0) {
+            //if no image selected
+            return 0;
+        }
 
-        inputName = (EditText) findViewById(R.id.text_name);
-        inputTime = (EditText) findViewById(R.id.text_time);
-        inputDesc = (EditText) findViewById(R.id.text_desc);
+        ImageUploadService imageUploadService = new ImageUploadService(this);
+        imageUploadService.execute(bm1, bm2, bm3);
 
-        spinnerType = (Spinner) findViewById(R.id.spinner_accType);
-        spinnerObslvl = (Spinner) findViewById(R.id.spinner_obslvl);
+        return sum;
+    }
 
-        Accident acc = new Accident();
+    public void submitReport(View view) {
+//        inputName = (EditText) findViewById(R.id.text_name);
+//        spinnerType = (Spinner) findViewById(R.id.spinner_accType);
+//        spinnerObslvl = (Spinner) findViewById(R.id.spinner_obslvl);
+        accident = new Accident();
 
+        //Validate form
         String validate = null;
         validate = validateForm();
-
         if(!validate.isEmpty()) {
             Toast.makeText(ReportActivity.this, validate, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        acc.setUserId(userInfo.getUserId());
-        acc.setType(spinnerType.getSelectedItem().toString());
-        acc.setName(inputName.getText().toString());
-        acc.setDescription(inputDesc.getText().toString());
+        //Uploading images
+        int noOfImages = uploadImages();
+        if(noOfImages == 0) {
+            //if no image selected
+            submitForm();
+            return;
+        }
+    }
+
+    public void submitForm() {
+        EditText inputTime = (EditText) findViewById(R.id.text_time);
+        EditText inputDesc = (EditText) findViewById(R.id.text_desc);
+        UserInfoPreferences userInfo = new UserInfoPreferences(getApplicationContext());
+
+        accident.setUserId(userInfo.getUserId());
+        accident.setType(spinnerType.getSelectedItem().toString());
+        accident.setName(inputName.getText().toString());
+        accident.setDescription(inputDesc.getText().toString());
 
         String str = inputTime.getText().toString();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -211,69 +244,44 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
             e.printStackTrace();
         }
 
-        acc.setTime(currentTime);
+        accident.setTime(currentTime);
 
-        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
-        double lat = gpsTracker.getLatitude();
-        double lon = gpsTracker.getLongitude();
-        acc.setLat(lat);
-        acc.setLon(lon);
+//        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
+//        double lat = gpsTracker.getLatitude();
+//        double lon = gpsTracker.getLongitude();
+        CurrentLocationPreferences currentLocationPreferences
+                = new CurrentLocationPreferences(getApplicationContext());
+        double lat = currentLocationPreferences.getLat();
+        double lon = currentLocationPreferences.getLon();
+        accident.setLat(lat);
+        accident.setLon(lon);
 
         if(spinnerObslvl.getSelectedItem().toString().equals("Highest")) {
-            acc.setObservationLevel(4);
+            accident.setObservationLevel(4);
         }
         if(spinnerObslvl.getSelectedItem().toString().equals("High")) {
-            acc.setObservationLevel(3);
+            accident.setObservationLevel(3);
         }
         if(spinnerObslvl.getSelectedItem().toString().equals("Medium")) {
-            acc.setObservationLevel(2);
+            accident.setObservationLevel(2);
         }
         if(spinnerObslvl.getSelectedItem().toString().equals("Low")) {
-            acc.setObservationLevel(1);
+            accident.setObservationLevel(1);
         }
 
         AccidentService as = new AccidentService(this);
-        as.execute(acc);
-    }
-
-    private void sendImage(Bitmap currentBitmap) {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            currentBitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos);
-            byte[] bitmapData = baos.toByteArray();
-            String bitmapEncoded = android.util.Base64.encodeToString(bitmapData, android.util.Base64.DEFAULT);
-            String urlParameters = "message=" + bitmapEncoded;
-            //NEED TO CHANGE THIS REQUEST TO INTEGRATE WITH JAVA
-            String request = "http://www.mutanthybrid.com/images/UploadToServer.php";
-            URL url = new URL(request);
-
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-            connection.setInstanceFollowRedirects(false);
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestProperty("charset", "utf-8");
-            connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
-            connection.setUseCaches(false);
-
-            DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
-            dos.writeBytes(urlParameters);
-
-            int code = connection.getResponseCode();
-            System.out.println(code);
-            dos.flush();
-            dos.close();
-            connection.disconnect();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        as.execute(accident);
     }
 
     @Override
-    public void processReport() {
-        Toast.makeText(this, "SendReportTest", Toast.LENGTH_SHORT).show();
+    public void onNewAccidentReported(Accident accident) {
+        if(accident == null) {
+            Toast.makeText(ReportActivity.this, R.string.new_accident_failed_to_report,
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(ReportActivity.this, R.string.new_accident_reported,
+                    Toast.LENGTH_SHORT).show();
+        }
         this.finish();
     }
 
@@ -290,5 +298,34 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
             str += "Select accident type";
         }
         return str;
+    }
+
+    @Override
+    public void onImagesUploaded(BlobImageArray blobImageArray) {
+        List<BlobImage> lst = blobImageArray.data;
+        for(int i = 0; i < lst.size(); i++) {
+            BlobImage blobImage = lst.get(i);
+            if(i == 0) {
+                accident.setImage1(blobImage.servingUrl);
+            } else if(i == 1) {
+                accident.setImage2(blobImage.servingUrl);
+            } else if (i == 3) {
+                accident.setImage3(blobImage.servingUrl);
+            }
+        }
+
+        //Make sure there is no null value
+        if(accident.getImage1() == null) {
+            accident.setImage1("");
+            accident.setImage2("");
+            accident.setImage3("");
+        } else if (accident.getImage2() == null) {
+            accident.setImage2("");
+            accident.setImage3("");
+        } else if (accident.getImage3() == null) {
+            accident.setImage3("");
+        }
+
+        submitForm();
     }
 }

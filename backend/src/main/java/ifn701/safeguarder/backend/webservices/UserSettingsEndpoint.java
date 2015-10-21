@@ -6,6 +6,7 @@ import com.google.api.server.spi.config.ApiNamespace;
 
 import javax.inject.Named;
 
+import ifn701.safeguarder.backend.dao.UserDao;
 import ifn701.safeguarder.backend.dao.UserSettingDao;
 import ifn701.safeguarder.backend.entities.ResultCode;
 import ifn701.safeguarder.backend.entities.UserSetting;

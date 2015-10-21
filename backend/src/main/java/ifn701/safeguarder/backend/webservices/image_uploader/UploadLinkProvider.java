@@ -22,11 +22,11 @@ import ifn701.safeguarder.backend.Constants;
 )
 public class UploadLinkProvider  {
     @ApiMethod (name = "getUploadUrl")
-    public BlobAttributes getUoploadUrl() {
+    public BlobAttributes getUploadUrl() {
         BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
         String blobUploadUrl = blobstoreService.createUploadUrl("/upload");
 
-        blobUploadUrl.replace(Constants.computerName, Constants.IPAddress);
+        blobUploadUrl = blobUploadUrl.replace(Constants.computerName, Constants.IPAddress);
 
         BlobAttributes blobAttributes = new BlobAttributes();
         blobAttributes.setUploadUrl(blobUploadUrl);

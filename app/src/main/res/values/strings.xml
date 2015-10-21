@@ -18,6 +18,7 @@
 
     <string name="home_setting_search_address_failed">Cannot find the address</string>
 
+    <string name="zone_activity_title">Zone Settings</string>
     <string name="zone_setting_radius">Radius(m)</string>
     <string name="zone_setting_update_setting">Update changes</string>
     <string name="zone_setting_invalid_radius">The radius should be positive number larger than 0</string>
@@ -100,7 +101,7 @@
         <item>@string/weather_accident</item>
     </string-array>
 
-    <string name="title_activity_event_filter">Filter events displayed</string>
+    <string name="title_activity_event_filter">Event filters</string>
     <string name="event_filter_activity_filter_by_time_label">Show accidents happened within</string>
     <string-array name="event_filter_by_time_array">
         <item>1 hour</item>
@@ -124,6 +125,7 @@
     <string name="observation_list_activity_empty_accident_list">You have not posted any accident</string>
     <string name="title_activity_notification">NotificationActivity</string>
 
+    <string name="notification_activity_title">New Accidents</string>
     <string name="notification_list_activity_empty_list">No new accidents</string>
     <string name="observation_list_page_title">Reported</string>
     <string name="report_new_accident_page_title">Report New Accident</string>
@@ -133,4 +135,10 @@
     <string name="select_picture">Select Picture</string>
     <string name="msg_failed_to_get_intent_data">Failed to get intent data</string>
     <string name="msg_failed_to_get_picture">Failed to get image</string>
+
+    <string name="update_profile_picture_failed">Failed to update new profile picture</string>
+    <string name="update_profile_picture_successfully">Profile picture has been updated</string>
+
+    <string name="new_accident_reported">Report has been sent</string>
+    <string name="new_accident_failed_to_report">Couldn\'t report the accident</string>
 </resources>

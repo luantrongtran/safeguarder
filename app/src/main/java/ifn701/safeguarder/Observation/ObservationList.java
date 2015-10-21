@@ -100,4 +100,8 @@ public class ObservationList extends Activity implements IGetAccidentByUserIdSer
         }
         showAccidentByUserIdList(accidentList);
     }
+
+    public void goBack(View view) {
+        finish();
+    }
 }

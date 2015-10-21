@@ -92,4 +92,8 @@ public class NotificationActivity extends AppCompatActivity implements IGetNotif
         }
         showAccidentByUserIdList(accidentList);
     }
+
+    public void goBack(View view) {
+        finish();
+    }
 }

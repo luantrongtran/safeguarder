@@ -18,7 +18,7 @@ import ifn701.safeguarder.webservices.IAccidentService;
 import ifn701.safeguarder.webservices.ISayHi;
 import ifn701.safeguarder.webservices.SayHi;
 
-public class MainActivity extends AppCompatActivity implements ISayHi, IAccidentService {
+public class MainActivity extends AppCompatActivity implements ISayHi {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +69,6 @@ public class MainActivity extends AppCompatActivity implements ISayHi, IAccident
 
     public void imageUpload(View view) {
 
-    }
-
-    @Override
-    public void processReport() {
-        Toast.makeText(this, "ReportTest", Toast.LENGTH_SHORT).show();
     }
 
     @Override

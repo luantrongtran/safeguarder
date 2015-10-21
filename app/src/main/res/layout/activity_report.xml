@@ -20,13 +20,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" >
 
-            <ImageButton
-                android:layout_width="37dp"
-                android:layout_height="match_parent"
+            <ImageView
+                android:layout_width="@dimen/header_back_button_size"
+                android:layout_height="@dimen/header_back_button_size"
                 android:id="@+id/imageButton"
                 android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
-                android:background="@color/back_button_background"
-                android:onClick="goBack" />
+                android:onClick="goBack"
+                android:layout_gravity="center_vertical"
+                />
 
             <TextView
                 android:id="@+id/report_page_title"
@@ -35,10 +36,10 @@
                 android:textColor="#000000"
                 android:background="@android:color/transparent"
                 android:textStyle="bold"
-                android:textSize="27dp"
+                android:textSize="@dimen/header_font_size"
                 android:text="title"
                 android:textAllCaps="true"
-                android:gravity="center_horizontal"
+                android:gravity="center_horizontal|center_vertical"
                 />
 
         </LinearLayout>
@@ -134,20 +135,23 @@
 
             <ImageView
                 android:id="@+id/btn_image1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/report_image_width"
+                android:layout_height="@dimen/report_image_height"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:padding="5dip"
                 android:layout_weight="1"
                 android:src="@drawable/icon_img"
                 android:onClick="setImageViewOne"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+               />
 
             <ImageView
                 android:id="@+id/btn_image2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/report_image_width"
+                android:layout_height="@dimen/report_image_height"
                 android:padding="5dip"
                 android:layout_weight="1"
                 android:layout_marginTop="10dp"
@@ -155,12 +159,15 @@
                 android:layout_toRightOf="@+id/btn_image1"
                 android:src="@drawable/icon_img"
                 android:onClick="setImageViewTwo"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+                />
 
             <ImageView
                 android:id="@+id/btn_image3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/report_image_width"
+                android:layout_height="@dimen/report_image_height"
                 android:padding="5dip"
                 android:layout_weight="1"
                 android:layout_marginTop="10dp"
@@ -168,7 +175,10 @@
                 android:layout_toRightOf="@+id/btn_image2"
                 android:src="@drawable/icon_img"
                 android:onClick="setImageViewThree"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+                />
         </LinearLayout>
 
         <LinearLayout

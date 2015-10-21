@@ -256,6 +256,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginService{
             userInfoPreferences.setPassword(user.getPassword());
             userInfoPreferences.setFullname(user.getFullName());
             userInfoPreferences.setUserId(user.getId());
+            userInfoPreferences.setProfilePicture(user.getProfilePictureUrl());
 
             //Set up user settings into SharedPreferences
             UserSettingsPreferences userSettingsPreferences

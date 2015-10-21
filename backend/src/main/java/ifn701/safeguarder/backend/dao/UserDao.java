@@ -113,6 +113,7 @@ public class UserDao extends DAOBase {
         user.setEmail(rs.getString(colEmail));
         user.setPassword(rs.getString(colPassword));
         user.setActivated(rs.getBoolean(colActivated));
+        user.setProfilePictureUrl(rs.getString(colProfilePicture));
 
         return user;
     }

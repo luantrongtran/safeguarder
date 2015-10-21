@@ -36,7 +36,7 @@ public class LeftMenuAdapter extends RecyclerView.Adapter<LeftMenuAdapter.LeftMe
     private int[] titles = {R.string.left_menu_notification, R.string.left_menu_observation,
     R.string.left_menu_zone_setting, R.string.left_menu_event_fiilter, R.string.left_menu_help,R.string.left_menu_logout};
 
-    private boolean[] splitterPositions = {false, true, false, true, true, true};
+    private static boolean[] splitterPositions = {false, true, false, true, true, true};
 
     public LeftMenuAdapter(Context context) {
         this.context = context;
@@ -71,6 +71,8 @@ public class LeftMenuAdapter extends RecyclerView.Adapter<LeftMenuAdapter.LeftMe
             holder.imageView.setImageResource(icons[position - 1]);
             if(!splitterPositions[position - 1]) {
                 holder.spliterView.setVisibility(View.GONE);
+            } else {
+                holder.spliterView.setVisibility(View.VISIBLE);
             }
         } else {
             UserInfoPreferences userPrefs = new UserInfoPreferences(context);

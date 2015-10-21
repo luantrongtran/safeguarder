@@ -10,7 +10,8 @@
                 ifn701.safeguarder.backend.webservices.Login,
                 ifn701.safeguarder.backend.webservices.UserSettingsEndpoint,
                 ifn701.safeguarder.backend.webservices.Signup,
-                ifn701.safeguarder.backend.webservices.image_uploader.UploadLinkProvider
+                ifn701.safeguarder.backend.webservices.image_uploader.UploadLinkProvider,
+                ifn701.safeguarder.backend.webservices.UserEndpoint
             </param-value>
         </init-param>
     </servlet>
