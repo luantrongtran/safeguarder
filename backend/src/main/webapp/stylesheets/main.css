@@ -1,0 +1,31 @@
+.map-container {
+    width: 1270px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body {
+    padding-top: 70px;
+}
+
+.alert-heading {
+    color: darkorange;
+}
+
+.active_fence {
+    background-color: #D1EDC7;
+}
+
+#active-tag {
+    color: gray;
+}
+
+#map_canvas {
+    width: 1270px;
+    height: 700px;
+}
+
+#loc_map_canvas {
+    width: 1270px;
+    height: 500px;
+}
