@@ -31,16 +31,6 @@
         <url-pattern>/upload/*</url-pattern>
     </servlet-mapping>
 
-    <!--View Map Controller-->
-    <servlet>
-        <servlet-name>ViewMapController</servlet-name>
-        <servlet-class>com.ifn701-safeguarder.controllers.ViewMapController</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ViewMap</servlet-name>
-        <url-pattern>/view-map</url-pattern>
-    </servlet-mapping>
-
     <welcome-file-list>
         <welcome-file>main_page.jsp</welcome-file>
     </welcome-file-list>
