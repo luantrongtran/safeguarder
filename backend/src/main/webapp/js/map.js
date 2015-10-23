@@ -1,12 +1,21 @@
       var map;
       function initialize() {
+      var myLatLng = {lat: -27.477228, lng: 153.028317};
         var mapOptions ={
            zoom: 15,
-           center: new google.maps.LatLng(-27.477228, 153.028317),
+           center: myLatLng,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
+
+
         map = new google.maps.Map(document.getElementById("map-canvas"),
             mapOptions);
+
+        var marker = new google.maps.Marker({
+           position: myLatLng,
+           map: map,
+           title: 'You are here!'
+           });
       }
       google.maps.event.addDomListener(window, 'load', initialize);
 
