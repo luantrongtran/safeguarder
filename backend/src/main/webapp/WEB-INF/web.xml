@@ -51,6 +51,16 @@
         <url-pattern>/autoloadevents</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ViewMapController</servlet-name>
+        <servlet-class>ifn701.safeguarder.backend.controllers.ViewMapController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ViewMapController</servlet-name>
+        <url-pattern>/viewmap</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>web-inf/jsp/index.jsp</welcome-file>
     </welcome-file-list>
