@@ -16,15 +16,15 @@
         </init-param>
     </servlet>
 
-    <servlet>
-        <servlet-name>UploadImageServlet</servlet-name>
-        <servlet-class>ifn701.safeguarder.backend.webservices.image_uploader.UploadImageServlet</servlet-class>
-    </servlet>
-
     <servlet-mapping>
         <servlet-name>SystemServiceServlet</servlet-name>
         <url-pattern>/_ah/spi/*</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UploadImageServlet</servlet-name>
+        <servlet-class>ifn701.safeguarder.backend.webservices.image_uploader.UploadImageServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>UploadImageServlet</servlet-name>
@@ -41,17 +41,28 @@
         <url-pattern>/HelloWorld</url-pattern>
     </servlet-mapping>
 
+    <!-- Auto upload events-->
     <servlet>
         <servlet-name>GoToAutoLoadEventsPage</servlet-name>
-        <servlet-class>ifn701.safeguarder.backend.controllers.GoToAutoLoadEventsPageServlet</servlet-class>
+        <servlet-class>ifn701.safeguarder.backend.controllers.auto_upload_events.GoToAutoLoadEventsPageServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>GoToAutoLoadEventsPage</servlet-name>
         <url-pattern>/autoloadevents</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ReceiveUploadFiles</servlet-name>
+        <servlet-class>ifn701.safeguarder.backend.controllers.auto_upload_events.RecieveUploadFilesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReceiveUploadFiles</servlet-name>
+        <url-pattern>/receiveUploadFiles</url-pattern>
+    </servlet-mapping>
+    <!-- End Auto upload events-->
+
     <welcome-file-list>
-        <welcome-file>web-inf/jsp/index.jsp</welcome-file>
+        <!--<welcome-file>index.html</welcome-file>-->
+        <welcome-file>WEB-INF/jsp/index.jsp</welcome-file>
     </welcome-file-list>
 </web-app>

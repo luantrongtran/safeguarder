@@ -1,4 +1,4 @@
-package ifn701.safeguarder.backend.controllers;
+package ifn701.safeguarder.backend.controllers.auto_upload_events;
 
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -21,7 +21,21 @@ public class GoToAutoLoadEventsPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-        String blobUploadUrl = blobstoreService.createUploadUrl("/AutoUploadEvents");
+        String blobUploadUrl = blobstoreService.createUploadUrl("/receiveUploadFiles");
+        blobUploadUrl = blobUploadUrl.replace(Constants.computerName, Constants.IPAddress);
+
+        String jspPage = Constants.jsp_prefix + "auto_load_events.jsp";
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(jspPage);
+
+        req.setAttribute("uploadUrl", blobUploadUrl);
+        dispatcher.forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+        String blobUploadUrl = blobstoreService.createUploadUrl("/receiveUploadFiles");
         blobUploadUrl = blobUploadUrl.replace(Constants.computerName, Constants.IPAddress);
 
         String jspPage = Constants.jsp_prefix + "auto_load_events.jsp";

@@ -13,7 +13,7 @@
 
         <a href="./HelloWorld?name=Luan" class="btn btn-info">Hello World</a>
         <a href="/view-map"><button class="btn btn-info">View Map</button></a>
-        <a href="./autoloadevents?name=Luan" class="btn bn-info">Auto load events</a>
+        <a href="./autoloadevents" class="btn bn-info">Auto load events</a>
     </div>
   </div>
   <%@include file="../templates/scripts.html"%>
