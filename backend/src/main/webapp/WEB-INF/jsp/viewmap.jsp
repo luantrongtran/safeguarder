@@ -5,7 +5,7 @@
 <%@include file="../templates/header.html"%>
 <link href="../stylesheets/main.css" rel="stylesheet">
 <body onload="initialize()">
-<%@include file="../templates/navigation.html"%>
+<%@include file="../templates/navigation.jsp"%>
     <div class="container">
         <h1>Google Map</h1>
         <p>You can view the maps and events that are reported in your surroundings here!</p>

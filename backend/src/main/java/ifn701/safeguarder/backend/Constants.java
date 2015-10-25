@@ -15,4 +15,6 @@ public class Constants {
     public static String GoogleCloudBucket = "safeguarder";
 
     public static int administrator_id = 0;
+
+    public static String session_user_id = "userid";
 }

@@ -2,7 +2,7 @@
 <html lang="en">
 <%@include file="../templates/header.html"%>
 <body>
-<%@include file="../templates/navigation.html"%>
+<%@include file="../templates/navigation.jsp"%>
   <div class="container">
         <h1>Features</h3>
         <br>

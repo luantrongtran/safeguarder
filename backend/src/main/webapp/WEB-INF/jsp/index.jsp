@@ -2,7 +2,7 @@
 <html lang="en">
 <%@include file="../templates/header.html"%>
 <body>
-<%@include file="../templates/navigation.html"%>
+<%@include file="../templates/navigation.jsp"%>
   <div class="container">
        <div class="jumbotron">
       <h2>Welcome to SafeGuarder</h2>
@@ -16,7 +16,8 @@
 
         <a href="./viewmap"><button class="btn btn-info">View Map</button></a>
         <a href="./autoloadevents"><button class="btn btn-info">Auto load events</button></a>
-    </div>
+        <a href="./login"><button class="btn btn-info">Login</button></a>
+       </div>
   </div>
   <%@include file="../templates/scripts.html"%>
 </body>

@@ -29,7 +29,7 @@
 </head>
 
 <body >
-<%@include file="../templates/navigation.html"%>
+<%@include file="../templates/navigation.jsp"%>
 
 <div style="margin-top: 50px; margin-left: 10px;">
     <h1>Auto load events</h1>
@@ -269,8 +269,8 @@
         return true;
     }
 </script>
-<%@include file="../templates/footer.html"%>
 
 </body>
+<%@include file="../templates/footer.html"%>
 
 </html>

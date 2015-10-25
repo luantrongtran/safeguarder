@@ -16,9 +16,10 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="/">Home</a></li>
-                <li><a href="/features">Features</a></li>
+                <li><a href="#">Hello Admin,</a></li>
+                <li><a href="/logout" style="text-decoration: underline">Sign out</a></li>
             </ul>
         </div>
+
     </div>
 </nav>
