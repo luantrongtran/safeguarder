@@ -40,11 +40,11 @@ import ifn701.safeguarder.backend.entities.Accident;
 public class RecieveUploadFilesServlet extends HttpServlet {
 
     private int checkFilenameBelongToWhichAccident(Accident accident, String filename) {
-        if (accident.getImage1() == filename) {
+        if (accident.getImage1().equalsIgnoreCase(filename)) {
             return 1;
-        } else if (accident.getImage2() == filename) {
+        } else if (accident.getImage2().equalsIgnoreCase(filename)) {
             return 2;
-        } else if (accident.getImage3() == filename) {
+        } else if (accident.getImage3().equalsIgnoreCase(filename)) {
             return 3;
         }
         return 0;
@@ -69,7 +69,7 @@ public class RecieveUploadFilesServlet extends HttpServlet {
 
         String name = "name";
         String type = "type";
-        String time = "time";
+//        String time = "time";
         String lat = "lat";
         String lon = "lon";
         String observation = "observation";
@@ -81,7 +81,7 @@ public class RecieveUploadFilesServlet extends HttpServlet {
         for(int i = 0; i < numOfItems; i++) {
             String name_ = name + i;
             String type_ = type + i;
-            String time_ = time + i;
+//            String time_ = time + i;
             String lat_ = lat + i;
             String lon_ = lon + i;
             String observation_ = observation + i;
@@ -173,7 +173,8 @@ public class RecieveUploadFilesServlet extends HttpServlet {
         }
 
         AccidentDao accidentDao = new AccidentDao();
-        //modify invalid image to empty string
+        //modify invalid image to empty string, and re-arrange image into the order of image1,
+        //image 2 and image3
         for(Accident acc : lstAccidents) {
             if(!acc.getImage1().startsWith("http")) {
                 //if image1 is not valid
