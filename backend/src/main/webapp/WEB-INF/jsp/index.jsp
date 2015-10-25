@@ -13,9 +13,9 @@
         <br>
 
         <a href="./HelloWorld?name=Luan" class="btn btn-info">Hello World</a>
-
         <a href="./viewmap"><button class="btn btn-info">View Map</button></a>
         <a href="./autoloadevents"><button class="btn btn-info">Auto load events</button></a>
+        <a href="./getAccidentById?accidentId=1"><button class="btn btn-info">Accident 1</button></a>
     </div>
   </div>
   <%@include file="../templates/scripts.html"%>

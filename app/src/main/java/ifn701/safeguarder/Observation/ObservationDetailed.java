@@ -135,7 +135,7 @@ public class ObservationDetailed extends AppCompatActivity implements IGetAccide
             else if(hours > 1) {
                 if(minutes > 1)  accWhen.setText(hours + " hours " + minutes + " minutes ago");
                 else if(minutes == 1)  accWhen.setText(hours + " hours " + minutes + " minutes ago");
-                else if(minutes < 1) accWhen.setText(hours + "hours ago");
+                else if(minutes < 1) accWhen.setText(hours + " hours ago");
             }
         }
         else if(days == 1) accWhen.setText(days + " day ago");
@@ -192,7 +192,6 @@ public class ObservationDetailed extends AppCompatActivity implements IGetAccide
             imageViewUrlLoader.execute(accident.getImage3());
         }
     }
-
 
      @Override
     public void getAccidentData(Accident accident) {

@@ -41,6 +41,17 @@
         <url-pattern>/HelloWorld</url-pattern>
     </servlet-mapping>
 
+    <!-- getAccidentById -->
+    <servlet>
+        <servlet-name>AccidentById</servlet-name>
+        <servlet-class>ifn701.safeguarder.backend.controllers.AccidentController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AccidentById</servlet-name>
+        <url-pattern>/getAccidentById</url-pattern>
+    </servlet-mapping>
+
     <!-- Auto upload events-->
     <servlet>
         <servlet-name>GoToAutoLoadEventsPage</servlet-name>
@@ -59,6 +70,7 @@
         <servlet-name>ReceiveUploadFiles</servlet-name>
         <url-pattern>/receiveUploadFiles</url-pattern>
     </servlet-mapping>
+
     <!-- End Auto upload events-->
     <servlet>
 	    <servlet-name>ViewMapController</servlet-name>
