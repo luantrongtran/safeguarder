@@ -60,7 +60,8 @@
         <url-pattern>/receiveUploadFiles</url-pattern>
     </servlet-mapping>
     <!-- End Auto upload events-->
-	<servlet-name>ViewMapController</servlet-name>
+    <servlet>
+	    <servlet-name>ViewMapController</servlet-name>
         <servlet-class>ifn701.safeguarder.backend.controllers.ViewMapController</servlet-class>
     </servlet>
 
