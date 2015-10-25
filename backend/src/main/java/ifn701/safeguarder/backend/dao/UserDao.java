@@ -24,6 +24,7 @@ public class UserDao extends DAOBase {
     public static String colActivated = "activated";
     public static String colToken = "token";
     public static String colProfilePicture = "profile_picture";
+    public static String colAdmin = "is_admin";
 
     public User findById(int id) {
         Connection con = getConnection();
@@ -114,6 +115,7 @@ public class UserDao extends DAOBase {
         user.setPassword(rs.getString(colPassword));
         user.setActivated(rs.getBoolean(colActivated));
         user.setProfilePictureUrl(rs.getString(colProfilePicture));
+        user.setAdmin(rs.getBoolean(colAdmin));
 
         return user;
     }

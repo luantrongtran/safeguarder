@@ -203,4 +203,22 @@ public class AccidentDao extends DAOBase {
 
         return accident;
     }
+
+    public List<Accident> getAllAccidents() {
+        String sql = "SELECT * FROM " + tableName + " ORDER BY " + colTime + " DESC";
+
+        List<Accident> lstAccidents = new ArrayList<>();
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Accident accident = parseFromResultSet(rs);
+                lstAccidents.add(accident);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lstAccidents;
+    }
 }

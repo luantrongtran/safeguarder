@@ -1,4 +1,5 @@
       var map;
+
       function initialize() {
       var myLatLng = {lat: -27.477228, lng: 153.028317};
         var mapOptions ={
@@ -28,5 +29,8 @@
 
      window.onload = loadScript;
 
-
+    function panTo(lat, lon) {
+        var latLng = new google.maps.LatLng(lat, lon);
+        map.panTo(latLng);
+    }
 

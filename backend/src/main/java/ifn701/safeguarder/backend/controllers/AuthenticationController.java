@@ -43,7 +43,15 @@ public class AuthenticationController extends HttpServlet {
             RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher(jspPage);
             requestDispatcher.forward(req, resp);
             return;
+        } else if(!user.isAdmin()) {
+            //Only admin allowed to be logged in(Admin id should be 0)
+            //login faield
+            String jspPage = Constants.jsp_prefix + "login_failed.jsp";
+            RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher(jspPage);
+            requestDispatcher.forward(req, resp);
+            return;
         } else {
+
             //login successfully
             HttpSession session = req.getSession(true);
             session.setAttribute(Constants.session_user_id, user.getId());

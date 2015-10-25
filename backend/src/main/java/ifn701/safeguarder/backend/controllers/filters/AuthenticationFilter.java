@@ -37,15 +37,15 @@ public class AuthenticationFilter implements Filter {
 
         HttpSession session = req.getSession(false);
 
-        if(uri.endsWith("/authenticate")) {
+        if(uri.endsWith("/controlpanel/authenticate")) {
             //if authenticate account
             chain.doFilter(request, response);
-        } else if(uri.endsWith("/login")) {
+        } else if(uri.endsWith("/controlpanel/login")) {
             //if go to login page
             chain.doFilter(request, response);
         }else if(isLoggedIn(session)== false) {
             //if the user has not been logged in
-            String loginPage = "/login";
+            String loginPage = "/controlpanel/login";
             res.sendRedirect(loginPage);
         } else {
             chain.doFilter(request, response);

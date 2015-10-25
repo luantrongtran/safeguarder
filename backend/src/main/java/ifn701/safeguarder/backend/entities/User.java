@@ -8,6 +8,16 @@ public class User {
     private String password;
     private boolean activated;
 
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean isAdmin) {
+        this.admin = isAdmin;
+    }
+
+    private boolean admin;
+
     public String getProfilePictureUrl() {
         return profilePictureUrl;
     }

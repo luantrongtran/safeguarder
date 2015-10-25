@@ -21,6 +21,6 @@ public class LogoutController extends HttpServlet {
             session.removeAttribute(Constants.session_user_id);
         }
 
-        resp.sendRedirect("/login");
+        resp.sendRedirect("/controlpanel/login");
     }
 }

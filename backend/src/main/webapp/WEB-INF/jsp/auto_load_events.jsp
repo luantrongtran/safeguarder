@@ -29,7 +29,7 @@
 </head>
 
 <body >
-<%@include file="../templates/navigation.jsp"%>
+<%@include file="../templates/navigation.html"%>
 
 <div style="margin-top: 50px; margin-left: 10px;">
     <h1>Auto load events</h1>
@@ -99,8 +99,8 @@
 <script src="/js/ssf.js"></script>
 
 <script src="/js/jquery.js"></script>
-<script src="resources/bootstrap/js/bootstrap.min.js"></script>
-<link rel="stylesheet" type="text/css" href="resources/bootstrap/css/bootstrap.min.css">
+<script src="/resources/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/resources/bootstrap/css/bootstrap.min.css">
 <script>
 
     <%--https://github.com/SheetJS/js-harb/blob/master/bits/22_helpers.js#L7-L17--%>

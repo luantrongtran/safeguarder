@@ -38,7 +38,7 @@
 
     <servlet-mapping>
         <servlet-name>HelloWorld</servlet-name>
-        <url-pattern>/HelloWorld</url-pattern>
+        <url-pattern>/controlpanel/HelloWorld</url-pattern>
     </servlet-mapping>
 
     <!-- Auto upload events-->
@@ -48,7 +48,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>GoToAutoLoadEventsPage</servlet-name>
-        <url-pattern>/autoloadevents</url-pattern>
+        <url-pattern>/controlpanel/autoloadevents</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -57,7 +57,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>ReceiveUploadFiles</servlet-name>
-        <url-pattern>/receiveUploadFiles</url-pattern>
+        <url-pattern>/controlpanel/receiveUploadFiles</url-pattern>
     </servlet-mapping>
     <!-- End Auto upload events-->
     <servlet>
@@ -67,7 +67,7 @@
 
     <servlet-mapping>
         <servlet-name>ViewMapController</servlet-name>
-        <url-pattern>/viewmap</url-pattern>
+        <url-pattern>/controlpanel/viewmap</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -77,7 +77,7 @@
 
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
-        <url-pattern>/login</url-pattern>
+        <url-pattern>/controlpanel/login</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -87,7 +87,7 @@
 
     <servlet-mapping>
         <servlet-name>Authentication</servlet-name>
-        <url-pattern>/authenticate</url-pattern>
+        <url-pattern>/controlpanel/authenticate</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -97,7 +97,27 @@
     
     <servlet-mapping>
         <servlet-name>LogoutController</servlet-name>
-        <url-pattern>/logout</url-pattern>
+        <url-pattern>/controlpanel/logout</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>HomePage</servlet-name>
+        <servlet-class>ifn701.safeguarder.backend.controllers.MainServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>HomePage</servlet-name>
+        <url-pattern>/controlpanel/homepage</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetAccidentsController</servlet-name>
+        <servlet-class>ifn701.safeguarder.backend.controllers.GetAccidentsController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetAccidentsController</servlet-name>
+        <url-pattern>/controlpanel/getaccidents</url-pattern>
     </servlet-mapping>
 
     <filter>
@@ -107,12 +127,12 @@
 
     <filter-mapping>
         <filter-name>AuthenticationFilter</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/controlpanel/*</url-pattern>
     </filter-mapping>
 
     <welcome-file-list>
         <!--<welcome-file>index.html</welcome-file>-->
-        <welcome-file>WEB-INF/jsp/index.jsp</welcome-file>
+        <welcome-file>HomePage</welcome-file>
     </welcome-file-list>
 
     <session-config>
