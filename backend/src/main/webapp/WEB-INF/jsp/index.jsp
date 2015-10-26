@@ -12,12 +12,10 @@
         <h3>Features</h3>
         <br>
 
-        <a href="/controlpanel/HelloWorld?name=Luan" class="btn btn-info">Hello World</a>
-
         <a href="/controlpanel/viewmap"><button class="btn btn-info">View Map</button></a>
         <a href="/controlpanel/autoloadevents"><button class="btn btn-info">Auto load events</button></a>
-        <a href="/controlpanel/login"><button class="btn btn-info">Login</button></a>
-       </div>
+
+    </div>
   </div>
   <%@include file="../templates/scripts.html"%>
 </body>
