@@ -44,22 +44,23 @@ public class AccidentController extends HttpServlet{
 
         //getObservation_Level
         if (acc.getObservation_level() == 1) {
-            req.setAttribute("accObsLvl", "Accident Severity: Low");
+            req.setAttribute("accObsLvl", "Low");
         }
         if (acc.getObservation_level() == 2) {
-            req.setAttribute("accObsLvl", "Accident Severity:  Medium");
+            req.setAttribute("accObsLvl", "Medium");
         }
         if (acc.getObservation_level() == 3) {
-            req.setAttribute("accObsLvl", "Accident Severity:  High");
+            req.setAttribute("accObsLvl", "High");
         }
         if (acc.getObservation_level() == 4) {
-            req.setAttribute("accObsLvl", "Accident Severity:  Highest");
+            req.setAttribute("accObsLvl", "Highest");
         }
 
-        req.setAttribute("accName", "Accident Name:  " + acc.getName());
-        req.setAttribute("accType", "Accident Type:  " + acc.getType());
-        req.setAttribute("accTime", "Accident Time:  " + strTime);
-        req.setAttribute("accLoc", "Accident Loc:  ");
+        req.setAttribute("accName", "" + acc.getName());
+        req.setAttribute("accType", "" + acc.getType());
+        req.setAttribute("accTime", "" + strTime);
+        req.setAttribute("accLoc", "");
+        req.setAttribute("accDesc", "" + acc.getDescription());
 
         dispatcher.forward(req, resp);
     }
