@@ -56,6 +56,16 @@ public class AccidentController extends HttpServlet{
             req.setAttribute("accObsLvl", "Highest");
         }
 
+        if(acc.getImage1() != null) {
+            req.setAttribute("Image1", acc.getImage1());
+        }
+        if(acc.getImage2() != null) {
+            req.setAttribute("Image2", acc.getImage2());
+        }
+        if(acc.getImage3() != null) {
+            req.setAttribute("Image3", acc.getImage3());
+        }
+
         req.setAttribute("accName", "" + acc.getName());
         req.setAttribute("accType", "" + acc.getType());
         req.setAttribute("accTime", "" + strTime);

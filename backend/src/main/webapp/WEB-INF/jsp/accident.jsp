@@ -55,6 +55,10 @@
         String aTime = request.getAttribute("accTime").toString();
         String aObs = request.getAttribute("accObsLvl").toString();
         String aDesc = request.getAttribute("accDesc").toString();
+
+        String image1 = request.getAttribute("Image1").toString();
+        String image2 = request.getAttribute("Image2").toString();
+        String image3 = request.getAttribute("Image3").toString();
     %>
 
     <div class="row" id="container">
@@ -77,11 +81,25 @@
         </div>
 
         <div class="col-md-4" id="images">
-            <img src="http://www.firstaidforfree.com/wp-content/uploads/2013/12/accident2.jpg" alt="Img1" height="170" width="280">
+            <%
+                if(!image1.isEmpty()) {
+            %>
+            <img src="<%=image1%>" height="170" width="280">
             <br />
-            <img src="http://b.fastcompany.net/multisite_files/coexist/article_feature/bike-accident-report-card-main.jpg" alt="Img2" height="170" width="280">
+            <%
+                }
+                if(!image2.isEmpty()) {
+            %>
+            <img src="<%=image2%>" height="170" width="280">
             <br />
-            <img src="http://www.slatergordon.co.uk/media/2250683/car-accident-header.jpg" alt="Img3" height="170" width="280">
+            <%
+                }
+                if(!image3.isEmpty()) {
+            %>
+            <img src="<%=image3%>" height="170" width="280">
+            <%
+                }
+            %>
         </div>
 
         <div class="col-md-2"></div>

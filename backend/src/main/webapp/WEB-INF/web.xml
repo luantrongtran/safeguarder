@@ -49,7 +49,7 @@
 
     <servlet-mapping>
         <servlet-name>AccidentById</servlet-name>
-        <url-pattern>/getAccidentById</url-pattern>
+        <url-pattern>/controlpanel/getAccidentById</url-pattern>
     </servlet-mapping>
 
     <!-- Auto upload events-->
