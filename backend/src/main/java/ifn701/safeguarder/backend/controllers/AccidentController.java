@@ -35,7 +35,7 @@ public class AccidentController extends HttpServlet{
         if(acc == null) {
             return;
         }
-
+        
         //getTime
         long time = acc.getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -61,6 +61,7 @@ public class AccidentController extends HttpServlet{
         req.setAttribute("accTime", "" + strTime);
         req.setAttribute("accLoc", "");
         req.setAttribute("accDesc", "" + acc.getDescription());
+        req.setAttribute("accId", "" + acc.getId());
 
         dispatcher.forward(req, resp);
     }

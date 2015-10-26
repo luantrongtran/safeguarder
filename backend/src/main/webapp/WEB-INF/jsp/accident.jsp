@@ -32,15 +32,21 @@
             -webkit-border-radius: 10px;
             border-radius: 10px;
             width: 400px;
-            height: 480px;
+            height: 450px;
             padding: 10px 10px 25px 40px;
-            background-color: lightblue;
+            background-color: #F0F0F0;
             font-size: 20px;
             line-height: 60px;
         }
 
         .att {
             font-weight: bold;
+        }
+
+        #delete {
+            width: 400px;
+            text-align: center;
+            margin-top: 20px;
         }
     </style>
 
@@ -55,6 +61,7 @@
         String aTime = request.getAttribute("accTime").toString();
         String aObs = request.getAttribute("accObsLvl").toString();
         String aDesc = request.getAttribute("accDesc").toString();
+        String id = request.getAttribute("accId").toString();
     %>
 
     <div class="row" id="container">
@@ -73,6 +80,11 @@
                 <span class="att">Severity </span>:&nbsp;<%=aObs%>
                 <br />
                 <span class="att">Description </span>:&nbsp;<%=aDesc%>
+            </div>
+
+            <div id="delete">
+                <a href="/deleteAccidentById?accidentId=<%=id%>" class="btn btn-info" id="dltBtn" onClick="return confirm('Delete <%=aName%>?');">
+                Delete Accident</a>
             </div>
         </div>
 

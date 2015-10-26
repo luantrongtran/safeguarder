@@ -186,6 +186,22 @@ public class AccidentDao extends DAOBase {
         return lastInsertedId;
     }
 
+    public boolean deleteAccidentById(int accidentId) {
+        String sql = "DELETE FROM " + tableName + " WHERE " + colId + " = ?";
+        int result = 0;
+
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.setInt(1, accidentId);
+
+            result = ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result > 0;
+    }
+
     public Accident parseFromResultSet(ResultSet rs) throws SQLException {
         Accident accident = new Accident();
         accident.setId(rs.getInt(colId));

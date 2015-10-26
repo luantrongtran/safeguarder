@@ -52,6 +52,19 @@
         <url-pattern>/getAccidentById</url-pattern>
     </servlet-mapping>
 
+
+    <!-- DeleteAccidentById -->
+    <servlet>
+        <servlet-name>DeleteAccidentById</servlet-name>
+        <servlet-class>ifn701.safeguarder.backend.controllers.DeleteAccidentController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DeleteAccidentById</servlet-name>
+        <url-pattern>/deleteAccidentById</url-pattern>
+    </servlet-mapping>
+
+
     <!-- Auto upload events-->
     <servlet>
         <servlet-name>GoToAutoLoadEventsPage</servlet-name>
