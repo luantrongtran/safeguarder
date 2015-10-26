@@ -97,6 +97,13 @@ public class RecieveUploadFilesServlet extends HttpServlet {
             }
             if(req.getParameter(type_) != null) {
                 accident.setType(req.getParameter(type_));
+                if(accident.getType().trim().split(" ").length == 1) {
+                    String firstEle = accident.getType().trim().split(" ")[0].trim();
+                    if (!firstEle.equalsIgnoreCase("Earthquake") || !firstEle.equalsIgnoreCase("Criminal")) {
+                        String temp = accident.getType() + " Accident";
+                        accident.setType(temp);
+                    }
+                }
             }
             if(req.getParameter(millisecond_) != null) {
                 accident.setTime(Long.valueOf(req.getParameter(millisecond_)));

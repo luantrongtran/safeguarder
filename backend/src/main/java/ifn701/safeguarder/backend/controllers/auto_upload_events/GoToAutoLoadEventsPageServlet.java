@@ -21,7 +21,7 @@ public class GoToAutoLoadEventsPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-        String blobUploadUrl = blobstoreService.createUploadUrl("/receiveUploadFiles");
+        String blobUploadUrl = blobstoreService.createUploadUrl("/controlpanel/receiveUploadFiles");
         blobUploadUrl = blobUploadUrl.replace(Constants.computerName, Constants.IPAddress);
 
         String jspPage = Constants.jsp_prefix + "auto_load_events.jsp";
