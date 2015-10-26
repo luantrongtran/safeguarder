@@ -121,7 +121,9 @@
                 });
 
                 var windowInfoContent = "<h3>" + accident.name + "</h3>";
-                windowInfoContent += "<div style='display: inline-block;'>";
+                windowInfoContent += "<div style='display: inline-block; font-size: 16px;'>";
+                windowInfoContent += "<a href='/controlpanel/getAccidentById?accidentId=" + accident.id + "'>Detail</a>";
+                windowInfoContent += "<br>";
                 windowInfoContent += "<b style='margin-right:3px;'>Type:</b> " + accident.type;
                 windowInfoContent += "<br>";
                 windowInfoContent += "<b style='margin-right:3px;'>Time:</b> " + strDate;

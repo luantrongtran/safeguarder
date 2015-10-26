@@ -25,7 +25,7 @@
       <file leaf-file-name="auto_load_events.jsp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/jsp/auto_load_events.jsp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
+            <state vertical-scroll-proportion="0.0">
               <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
               <folding />
             </state>
@@ -35,15 +35,26 @@
       <file leaf-file-name="viewmap.jsp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/jsp/viewmap.jsp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.461538">
-              <caret line="105" column="118" selection-start-line="105" selection-start-column="118" selection-end-line="105" selection-end-column="118" />
+            <state vertical-scroll-proportion="-12.115385">
+              <caret line="109" column="69" selection-start-line="109" selection-start-column="69" selection-end-line="109" selection-end-column="69" />
               <folding>
-                <marker date="1445840853117" expanded="true" signature="4563:4585" placeholder="..." />
-                <marker date="1445840853117" expanded="true" signature="4638:4655" placeholder="..." />
-                <marker date="1445840853117" expanded="true" signature="4779:4796" placeholder="..." />
-                <marker date="1445840853117" expanded="true" signature="4914:4931" placeholder="..." />
-                <marker date="1445840853117" expanded="true" signature="5121:5143" placeholder="..." />
+                <marker date="1445865957664" expanded="true" signature="4563:4585" placeholder="..." />
+                <marker date="1445865957664" expanded="true" signature="4563:4602" placeholder="..." />
+                <marker date="1445865957664" expanded="true" signature="4822:4839" placeholder="..." />
+                <marker date="1445865957664" expanded="true" signature="4963:4980" placeholder="..." />
+                <marker date="1445865957664" expanded="true" signature="5098:5115" placeholder="..." />
+                <marker date="1445865957664" expanded="true" signature="5305:5327" placeholder="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="web.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/web.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.36996734">
+              <caret line="20" column="31" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="31" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -51,17 +62,17 @@
       <file leaf-file-name="accident.jsp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/jsp/accident.jsp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-8.846154">
-              <caret line="60" column="65" selection-start-line="60" selection-start-column="65" selection-end-line="60" selection-end-column="65" />
+            <state vertical-scroll-proportion="-14.384615">
+              <caret line="79" column="56" selection-start-line="79" selection-start-column="56" selection-end-line="79" selection-end-column="56" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="auto_load_events_success.jsp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="auto_load_events_success.jsp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/jsp/auto_load_events_success.jsp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.15229563">
+            <state vertical-scroll-proportion="-5.230769">
               <caret line="8" column="23" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="23" />
               <folding />
             </state>
@@ -71,7 +82,7 @@
       <file leaf-file-name="header.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/templates/header.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.576923">
+            <state vertical-scroll-proportion="0.0">
               <caret line="7" column="29" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
               <folding />
             </state>
@@ -132,9 +143,9 @@
         <option value="$PROJECT_DIR$/main/webapp/js/map.js" />
         <option value="$PROJECT_DIR$/main/webapp/WEB-INF/templates/header.html" />
         <option value="$PROJECT_DIR$/main/webapp/js/utils.js" />
+        <option value="$PROJECT_DIR$/main/webapp/WEB-INF/jsp/auto_load_events_success.jsp" />
         <option value="$PROJECT_DIR$/main/webapp/WEB-INF/jsp/accident.jsp" />
         <option value="$PROJECT_DIR$/main/webapp/WEB-INF/jsp/viewmap.jsp" />
-        <option value="$PROJECT_DIR$/main/webapp/WEB-INF/jsp/auto_load_events_success.jsp" />
       </list>
     </option>
   </component>
@@ -174,9 +185,9 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -706,15 +717,16 @@
       <workItem from="1445745315300" duration="25528000" />
       <workItem from="1445820354181" duration="8099000" />
       <workItem from="1445830981552" duration="3969000" />
+      <workItem from="1445861105280" duration="5616000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="78304000" />
+    <option name="totallyTimeSpent" value="83920000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1924" height="1056" extended-state="0" />
-    <editor active="false" />
+    <frame x="-8" y="-8" width="1924" height="1056" extended-state="1" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -757,6 +769,22 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/templates/header.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="29" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/webapp/js/map.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="28" selection-start-line="11" selection-start-column="28" selection-end-line="11" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/jsp/auto_load_events.jsp">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -770,11 +798,12 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1445840853117" expanded="true" signature="4563:4585" placeholder="..." />
-            <marker date="1445840853117" expanded="true" signature="4638:4655" placeholder="..." />
-            <marker date="1445840853117" expanded="true" signature="4779:4796" placeholder="..." />
-            <marker date="1445840853117" expanded="true" signature="4914:4931" placeholder="..." />
-            <marker date="1445840853117" expanded="true" signature="5121:5143" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="4563:4585" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="4563:4602" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="4822:4839" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="4963:4980" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="5098:5115" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="5305:5327" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -808,11 +837,12 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1445840853117" expanded="true" signature="4563:4585" placeholder="..." />
-            <marker date="1445840853117" expanded="true" signature="4638:4655" placeholder="..." />
-            <marker date="1445840853117" expanded="true" signature="4779:4796" placeholder="..." />
-            <marker date="1445840853117" expanded="true" signature="4914:4931" placeholder="..." />
-            <marker date="1445840853117" expanded="true" signature="5121:5143" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="4563:4585" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="4563:4602" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="4822:4839" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="4963:4980" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="5098:5115" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="5305:5327" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1021,14 +1051,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/web.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="138" column="0" selection-start-line="138" selection-start-column="0" selection-end-line="138" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main/webapp/stylesheets/login.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="1.3688792">
@@ -1093,36 +1115,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.092491835">
           <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/templates/header.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.576923">
+        <state vertical-scroll-proportion="0.0">
           <caret line="7" column="29" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/jsp/viewmap.jsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.461538">
-          <caret line="105" column="118" selection-start-line="105" selection-start-column="118" selection-end-line="105" selection-end-column="118" />
-          <folding>
-            <marker date="1445840853117" expanded="true" signature="4563:4585" placeholder="..." />
-            <marker date="1445840853117" expanded="true" signature="4638:4655" placeholder="..." />
-            <marker date="1445840853117" expanded="true" signature="4779:4796" placeholder="..." />
-            <marker date="1445840853117" expanded="true" signature="4914:4931" placeholder="..." />
-            <marker date="1445840853117" expanded="true" signature="5121:5143" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/jsp/accident.jsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.846154">
-          <caret line="60" column="65" selection-start-line="60" selection-start-column="65" selection-end-line="60" selection-end-column="65" />
           <folding />
         </state>
       </provider>
@@ -1145,8 +1144,39 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/jsp/auto_load_events_success.jsp">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.15229563">
+        <state vertical-scroll-proportion="-5.230769">
           <caret line="8" column="23" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/jsp/accident.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-14.384615">
+          <caret line="79" column="56" selection-start-line="79" selection-start-column="56" selection-end-line="79" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/jsp/viewmap.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.115385">
+          <caret line="109" column="69" selection-start-line="109" selection-start-column="69" selection-end-line="109" selection-end-column="69" />
+          <folding>
+            <marker date="1445865957664" expanded="true" signature="4563:4585" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="4563:4602" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="4822:4839" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="4963:4980" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="5098:5115" placeholder="..." />
+            <marker date="1445865957664" expanded="true" signature="5305:5327" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.36996734">
+          <caret line="20" column="31" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="31" />
           <folding />
         </state>
       </provider>

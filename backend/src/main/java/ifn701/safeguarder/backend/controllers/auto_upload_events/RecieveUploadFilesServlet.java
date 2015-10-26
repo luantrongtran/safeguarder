@@ -35,6 +35,7 @@ import javax.servlet.http.HttpSession;
 import ifn701.safeguarder.backend.Constants;
 import ifn701.safeguarder.backend.dao.AccidentDao;
 import ifn701.safeguarder.backend.entities.Accident;
+import ifn701.safeguarder.backend.entities.GCMSender;
 
 /**
  * Created by lua on 23/10/2015.
@@ -218,7 +219,10 @@ public class RecieveUploadFilesServlet extends HttpServlet {
 
 //            acc.setUserId(Constants.administrator_id);
             acc.setUserId(userId);
-            accidentDao.insertANewAccident(acc);
+            int lastInsertedId = accidentDao.insertANewAccident(acc);
+            acc.setId(lastInsertedId);
+
+            GCMSender.broadcastANewAccident(acc);
         }
 
         String jspPage = Constants.jsp_prefix + "auto_load_events_success.jsp";

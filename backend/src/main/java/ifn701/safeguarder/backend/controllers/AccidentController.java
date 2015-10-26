@@ -77,6 +77,7 @@ public class AccidentController extends HttpServlet{
         req.setAttribute("accTime", "" + strTime);
         req.setAttribute("accLoc", "");
         req.setAttribute("accDesc", "" + acc.getDescription());
+        req.setAttribute("accId", "" + acc.getId());
 
         dispatcher.forward(req, resp);
     }
