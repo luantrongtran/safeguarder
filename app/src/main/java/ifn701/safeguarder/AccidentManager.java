@@ -126,7 +126,7 @@ public class AccidentManager {
 
             //Check filter settings
             Log.i(Constants.APPLICATION_ID, accident.getType());
-            if(!eventFilter.get(accident.getType())) {
+            if(!eventFilterSharedPreferences.getEventFilter(accident.getType())) {
                 //filter accidents by type
                 continue;
             }

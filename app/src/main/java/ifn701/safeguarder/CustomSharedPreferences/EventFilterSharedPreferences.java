@@ -46,6 +46,11 @@ public class EventFilterSharedPreferences {
         return sharedPreferences.getBoolean(key.toLowerCase(), true);
     }
 
+    /**
+     * Get all the settings in form of a java.Util.Map.
+     * Note: becareful when using the Map returned by this method. Because the key is case sensitive
+     * @return java.Util.Map object
+     */
     public Map<String, Boolean> getSettings() {
         Map<String, Boolean> map = new HashMap<>();
 

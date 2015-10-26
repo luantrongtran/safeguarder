@@ -47,6 +47,15 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
     public static final String IMAGE_TYPE = "image/*";
     private ImageView selectedImagePreview;
 
+    /**
+     *
+     */
+    int selectedImagePreviewIndex = -1;
+    /**
+     * indicates if the images are selected.
+     */
+    private boolean[] isSelected = new boolean[3];
+
     Accident accident;
 
     @Override
@@ -91,16 +100,19 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
     }
 
     public void setImageViewOne(View view) {
+        selectedImagePreviewIndex = 0;
         selectedImagePreview = (ImageView) findViewById(R.id.btn_image1);
         createIntent();
     }
 
     public void setImageViewTwo(View view) {
+        selectedImagePreviewIndex = 1;
         selectedImagePreview = (ImageView) findViewById(R.id.btn_image2);
         createIntent();
     }
 
     public void setImageViewThree(View view) {
+        selectedImagePreviewIndex = 2;
         selectedImagePreview = (ImageView) findViewById(R.id.btn_image3);
         createIntent();
     }
@@ -127,6 +139,7 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
                 Uri selectedImageUri = data.getData();
                 try {
                     selectedImagePreview.setImageBitmap(new LoadImage(selectedImageUri, getContentResolver()).getBitmap());
+                    isSelected[selectedImagePreviewIndex] = true;
                 } catch (IOException e) {
                     Log.e(ReportActivity.class.getSimpleName(), "Failed to load image", e);
                 }
@@ -176,15 +189,15 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
         Bitmap bm2 = null;
         Bitmap bm3 = null;
         int sum = 0;
-        if(inputImage1.getDrawable() != null) {
+        if(isSelected[0] && inputImage1.getDrawable() != null) {
             bm1 = ((BitmapDrawable)inputImage1.getDrawable()).getBitmap();
             sum++;
         }
-        if(inputImage2.getDrawable() != null) {
+        if(isSelected[1] && inputImage2.getDrawable() != null) {
             bm2 = ((BitmapDrawable)inputImage2.getDrawable()).getBitmap();
             sum++;
         }
-        if(inputImage3.getDrawable() != null) {
+        if(isSelected[2] && inputImage3.getDrawable() != null) {
             bm3 = ((BitmapDrawable)inputImage3.getDrawable()).getBitmap();
             sum++;
         }
@@ -200,6 +213,11 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
         return sum;
     }
 
+    /**
+     * Subimt report includes two steps. The first step is uploading selected images. The second
+     * step is received the url of uploaded images and submitForm()
+     * @param view
+     */
     public void submitReport(View view) {
 //        inputName = (EditText) findViewById(R.id.text_name);
 //        spinnerType = (Spinner) findViewById(R.id.spinner_accType);
@@ -214,13 +232,15 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
             return;
         }
 
-        //Uploading images
+        //1st step: Uploading images
         int noOfImages = uploadImages();
         if(noOfImages == 0) {
-            //if no image selected
+            //if no image selected, submit the form immediately
             submitForm();
             return;
         }
+        //if there are selected images. The form will be submited after uploading images. In particular,
+        //the form will be submitted in onImagesUploaded() method
     }
 
     public void submitForm() {
@@ -309,7 +329,7 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
                 accident.setImage1(blobImage.servingUrl);
             } else if(i == 1) {
                 accident.setImage2(blobImage.servingUrl);
-            } else if (i == 3) {
+            } else if (i == 2) {
                 accident.setImage3(blobImage.servingUrl);
             }
         }

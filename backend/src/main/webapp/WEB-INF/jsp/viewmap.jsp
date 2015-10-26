@@ -103,7 +103,7 @@
                 var strDate = day + "/" + month + "/" + year + " " + hours + ":" + mins;
 
                 $('<tr>').appendTo(table)
-                        .append($('<td>').text(accident.name))
+                        .append($('<td>').html("<a href='/controlpanel/getAccidentById?accidentId=" + accident.id + "'>" + accident.name + "</a>"))
                         .append($('<td>').text(accident.type))
                         .append($('<td>').text(strDate))
                         .append($('<td>').text(obsLvl))

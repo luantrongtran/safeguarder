@@ -25,10 +25,12 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import ifn701.safeguarder.backend.Constants;
 import ifn701.safeguarder.backend.dao.AccidentDao;
@@ -52,6 +54,9 @@ public class RecieveUploadFilesServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession(false);
+        String strUserId = session.getAttribute(Constants.session_user_id).toString();
+        int userId = Integer.valueOf(strUserId);
 
         String str = req.getParameter("numOfItems");
         int numOfItems = 0;
@@ -99,7 +104,7 @@ public class RecieveUploadFilesServlet extends HttpServlet {
                 accident.setType(req.getParameter(type_));
                 if(accident.getType().trim().split(" ").length == 1) {
                     String firstEle = accident.getType().trim().split(" ")[0].trim();
-                    if (!firstEle.equalsIgnoreCase("Earthquake") || !firstEle.equalsIgnoreCase("Criminal")) {
+                    if (!firstEle.equalsIgnoreCase("Earthquake") && !firstEle.equalsIgnoreCase("Criminal")) {
                         String temp = accident.getType() + " Accident";
                         accident.setType(temp);
                     }
@@ -211,8 +216,15 @@ public class RecieveUploadFilesServlet extends HttpServlet {
                 acc.setImage3("");
             }
 
-            acc.setUserId(Constants.administrator_id);
+//            acc.setUserId(Constants.administrator_id);
+            acc.setUserId(userId);
             accidentDao.insertANewAccident(acc);
         }
+
+        String jspPage = Constants.jsp_prefix + "auto_load_events_success.jsp";
+        String successMsg = lstAccidents.size() + " items inserted";
+        req.setAttribute("msg", successMsg);
+        RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher(jspPage);
+        requestDispatcher.forward(req, resp);
     }
 }

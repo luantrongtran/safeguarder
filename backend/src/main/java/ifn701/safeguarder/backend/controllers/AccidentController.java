@@ -58,12 +58,18 @@ public class AccidentController extends HttpServlet{
 
         if(acc.getImage1() != null) {
             req.setAttribute("Image1", acc.getImage1());
+        } else {
+            req.setAttribute("Image1", "");
         }
         if(acc.getImage2() != null) {
             req.setAttribute("Image2", acc.getImage2());
+        } else {
+            req.setAttribute("Image2", "");
         }
         if(acc.getImage3() != null) {
             req.setAttribute("Image3", acc.getImage3());
+        } else {
+            req.setAttribute("Image3", "");
         }
 
         req.setAttribute("accName", "" + acc.getName());
