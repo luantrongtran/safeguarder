@@ -45,4 +45,10 @@ public class UserEndpoint {
 
         return rc;
     }
+
+    @ApiMethod(name = "removeGCMToken")
+    public void removeGCMToken(@Named("userId") int userId) {
+        UserDao userDao = new UserDao();
+        userDao.removeGCMToken(userId);
+    }
 }

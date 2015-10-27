@@ -59,6 +59,9 @@ import ifn701.safeguarder.activities.CustomWindowInfoAdapter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
@@ -80,6 +83,7 @@ import ifn701.safeguarder.backgroundservices.UpdateAccidentsInRangeService;
 import ifn701.safeguarder.entities.google_places.PlacesList;
 import ifn701.safeguarder.webservices.google_cloud_service.RegistrationIntentService;
 import ifn701.safeguarder.webservices.google_cloud_service.SafeGuarderGCMListenerService;
+import ifn701.safeguarder.webservices.google_cloud_service.UnregisterGCMService;
 import ifn701.safeguarder.webservices.google_web_services.GooglePlacesSearch;
 import ifn701.safeguarder.webservices.google_web_services.IGooglePlacesSearch;
 import ifn701.safeguarder.webservices.IUpdateAccidentInRange;
@@ -370,6 +374,18 @@ public class MapsActivity extends AppCompatActivity
 
     public void gotoLogoutActivity()
     {
+        //Remove GCM token before logging out
+        UnregisterGCMService unregisterGCMService = new UnregisterGCMService(this);
+        try {
+            unregisterGCMService.execute().get(5000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+
         UserInfoPreferences userInfoPreferences = new UserInfoPreferences(getApplicationContext());
         userInfoPreferences.setUserId(-1);
         Intent intent = new Intent(this, LoginActivity.class);
@@ -753,8 +769,8 @@ public class MapsActivity extends AppCompatActivity
         switchLocationText.setText(R.string.my_location);
         panToLatLng(new LatLng(lat, lon), true);
 
-        GooglePlacesSearch placesSearch = new GooglePlacesSearch(getApplicationContext(), this);
-        placesSearch.execute();
+//        GooglePlacesSearch placesSearch = new GooglePlacesSearch(getApplicationContext(), this);
+//        placesSearch.execute();
     }
 
     public void panToHomeLocation(){

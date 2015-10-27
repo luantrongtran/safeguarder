@@ -189,4 +189,20 @@ public class UserDao extends DAOBase {
 
         return false;
     }
+
+    /**
+     * remove GCM token for a user
+     * @param userId
+     */
+    public void removeGCMToken(int userId) {
+        String sql = "UPDATE " + tableName + " SET " + colToken + "='' WHERE " + colId + " = ?";
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.setInt(1, userId);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

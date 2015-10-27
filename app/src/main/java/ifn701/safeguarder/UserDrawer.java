@@ -131,6 +131,10 @@ public class UserDrawer {
                 userSettingsPreferences.getHomeLocationAddress();
         homeMarkerOption.snippet(snippet)
                 .title(context.getString(R.string.window_info_home_location_title));
+
+        if(homeLocationMarker != null) {
+            homeLocationMarker.remove();
+        }
         homeLocationMarker = gMap.addMarker(homeMarkerOption);
     }
 
