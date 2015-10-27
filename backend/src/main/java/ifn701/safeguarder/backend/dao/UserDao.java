@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import ifn701.safeguarder.backend.Constants;
 import ifn701.safeguarder.backend.entities.Accident;
 import ifn701.safeguarder.backend.entities.User;
 import ifn701.safeguarder.backend.entities.UserSetting;
@@ -77,32 +78,37 @@ public class UserDao extends DAOBase {
         return null;
     }
 
-     public User signUp(User user)
-     {
-        Connection con = getConnection();
-        String sql = "INSERT INTO user (fullName,email,password,activated) VALUES(?,?,?,?)";
+     public User signUp(User user) {
 
-        PreparedStatement ps = null;
-        try {
-            ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, user.getFullName());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getPassword());
-            ps.setBoolean(4, false);
-            ps.executeUpdate();
+         if(isEmailUsed(user.getEmail())){
+             return null;
+         }
 
-            ResultSet rs = ps.getGeneratedKeys();
-            while(rs.next()) {
-                //Create new settings for the new user
-                int id = rs.getInt(0);
-                UserSetting userSetting = new UserSetting();
-                userSetting.setUserId(id);
-                UserSettingDao userSettingDao = new UserSettingDao();
-                userSettingDao.insertNewUserSetting(userSetting);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+         Connection con = getConnection();
+         String sql = "INSERT INTO user (fullName,email,password,activated) VALUES(?,?,?,?)";
+
+         PreparedStatement ps = null;
+         try {
+             ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+             ps.setString(1, user.getFullName());
+             ps.setString(2, user.getEmail());
+             ps.setString(3, user.getPassword());
+             ps.setBoolean(4, false);
+             ps.executeUpdate();
+
+             ResultSet rs = ps.getGeneratedKeys();
+             while (rs.next()) {
+                 //Create new settings for the new user
+                 int id = rs.getInt(1);
+                 UserSetting userSetting = new UserSetting();
+                 userSetting.setUserId(id);
+                 userSetting.setRadius(Constants.defaultUserRadius);//default radius is 100
+                 UserSettingDao userSettingDao = new UserSettingDao();
+                 userSettingDao.insertNewUserSetting(userSetting);
+             }
+         } catch (SQLException e) {
+             e.printStackTrace();
+         }
 
          return user;
      }
@@ -157,5 +163,30 @@ public class UserDao extends DAOBase {
         }
 
         return -1;
+    }
+
+    /**
+     * Checks if an emails is used for signing up or not
+     * @param email
+     * @return true if the email is already existing, otherwise, returns false
+     */
+    public boolean isEmailUsed(String email) {
+        Connection con = getConnection();
+        String sql = "SELECT * FROM user WHERE " + colEmail + " = ?";
+        PreparedStatement ps = null;
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setString(1, email);
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                //if could find a user then the email has been used
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

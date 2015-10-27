@@ -34,6 +34,7 @@ public class UploadImageServlet extends HttpServlet {
         BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
         Map<String, List<BlobKey>> map = blobstoreService.getUploads(req);
+        System.out.println("num of files: " + map.size());
 
         ImagesService imagesService = ImagesServiceFactory.getImagesService();
         JSONArray jsonArr = new JSONArray();

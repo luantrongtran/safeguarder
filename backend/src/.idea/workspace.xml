@@ -52,8 +52,8 @@
       <file leaf-file-name="web.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/web.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.36996734">
-              <caret line="20" column="31" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="31" />
+            <state vertical-scroll-proportion="0.35146898">
+              <caret line="19" column="31" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -130,7 +130,6 @@
         <option value="$PROJECT_DIR$/main/webapp/js/jquery.js" />
         <option value="$PROJECT_DIR$/main/webapp/js/jszip.js" />
         <option value="$PROJECT_DIR$/main/webapp/js/ssf.js" />
-        <option value="$PROJECT_DIR$/main/webapp/WEB-INF/web.xml" />
         <option value="$PROJECT_DIR$/main/webapp/stylesheets/login.css" />
         <option value="$PROJECT_DIR$/main/webapp/WEB-INF/jsp/login_failed.html" />
         <option value="$PROJECT_DIR$/main/webapp/WEB-INF/appengine-web.xml" />
@@ -146,6 +145,7 @@
         <option value="$PROJECT_DIR$/main/webapp/WEB-INF/jsp/auto_load_events_success.jsp" />
         <option value="$PROJECT_DIR$/main/webapp/WEB-INF/jsp/accident.jsp" />
         <option value="$PROJECT_DIR$/main/webapp/WEB-INF/jsp/viewmap.jsp" />
+        <option value="$PROJECT_DIR$/main/webapp/WEB-INF/web.xml" />
       </list>
     </option>
   </component>
@@ -717,15 +717,15 @@
       <workItem from="1445745315300" duration="25528000" />
       <workItem from="1445820354181" duration="8099000" />
       <workItem from="1445830981552" duration="3969000" />
-      <workItem from="1445861105280" duration="5616000" />
+      <workItem from="1445861105280" duration="6213000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="83920000" />
+    <option name="totallyTimeSpent" value="84517000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1924" height="1056" extended-state="1" />
+    <frame x="-8" y="-8" width="1924" height="1056" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1175,8 +1175,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main/webapp/WEB-INF/web.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.36996734">
-          <caret line="20" column="31" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="31" />
+        <state vertical-scroll-proportion="0.35146898">
+          <caret line="19" column="31" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="31" />
           <folding />
         </state>
       </provider>

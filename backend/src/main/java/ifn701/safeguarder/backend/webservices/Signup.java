@@ -40,12 +40,13 @@ public class Signup {
         UserDao userDao = new UserDao();
         user = userDao.signUp(user);
 
-        UserSetting usersetting = new UserSetting();
-        usersetting.setUserId(user.getId());
-
-        UserSettingDao userSettingDao = new UserSettingDao();
-        userSettingDao.updateUserSettings(usersetting);
-
+//        if(user!=null) {
+//            UserSetting usersetting = new UserSetting();
+//            usersetting.setUserId(user.getId());
+//
+//            UserSettingDao userSettingDao = new UserSettingDao();
+//            userSettingDao.updateUserSettings(usersetting);
+//        }
         return user;
     }
 

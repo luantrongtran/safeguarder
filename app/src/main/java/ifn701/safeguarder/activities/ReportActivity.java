@@ -144,9 +144,6 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
                     Log.e(ReportActivity.class.getSimpleName(), "Failed to load image", e);
                 }
             }
-        } else {
-            Toast.makeText(getApplicationContext(), R.string.msg_failed_to_get_intent_data, Toast.LENGTH_LONG).show();
-            Log.d(ReportActivity.class.getSimpleName(), "Failed to get intent data, result code is " + resultCode);
         }
     }
 

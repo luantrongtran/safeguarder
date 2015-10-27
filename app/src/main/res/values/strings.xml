@@ -141,4 +141,7 @@
 
     <string name="new_accident_reported">Report has been sent</string>
     <string name="new_accident_failed_to_report">Couldn\'t report the accident</string>
+
+    <string name="new_account_created">New Account Created</string>
+    <string name="email_is_used">Your email has been used, please use another email</string>
 </resources>

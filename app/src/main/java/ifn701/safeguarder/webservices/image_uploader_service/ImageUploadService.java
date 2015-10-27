@@ -85,6 +85,7 @@ public class ImageUploadService extends AsyncTask<Bitmap, Void, BlobImageArray> 
 
             //Content wrapper
             request = new DataOutputStream(httpUrlConnection.getOutputStream());
+//            request.writeBytes(this.twoHyphens + this.boundary + this.crlf);
 
             for(int i = 0; i < params.length; i++) {
                 Bitmap bm = params[i];
@@ -97,12 +98,11 @@ public class ImageUploadService extends AsyncTask<Bitmap, Void, BlobImageArray> 
             }
 
             //End content wrapper
-            request.writeBytes(this.crlf);
+            //request.writeBytes(this.crlf);
             request.writeBytes(this.twoHyphens + this.boundary + this.twoHyphens + this.crlf);
 
             //Flush output buffer
             request.flush();
-
             request.close();
 
             InputStream responseStream = new BufferedInputStream(httpUrlConnection.getInputStream());
@@ -149,10 +149,10 @@ public class ImageUploadService extends AsyncTask<Bitmap, Void, BlobImageArray> 
         request.writeBytes(this.crlf);
         request.write(bytes);
 
-        request.writeBytes(this.crlf);
+//        request.writeBytes(this.crlf);
 
         //Flush output buffer
-        request.flush();
+//        request.flush();
     }
 
     @Override

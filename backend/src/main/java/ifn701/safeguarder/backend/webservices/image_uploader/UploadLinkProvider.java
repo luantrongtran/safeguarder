@@ -5,6 +5,7 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.utils.SystemProperty;
 
 import ifn701.safeguarder.backend.Constants;
 
@@ -26,7 +27,11 @@ public class UploadLinkProvider  {
         BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
         String blobUploadUrl = blobstoreService.createUploadUrl("/upload");
 
-        blobUploadUrl = blobUploadUrl.replace(Constants.computerName, Constants.IPAddress);
+        if (SystemProperty.environment.value() !=
+                SystemProperty.Environment.Value.Production) {
+            //if localhost
+            blobUploadUrl = blobUploadUrl.replace(Constants.computerName, Constants.IPAddress);
+        }
 
         BlobAttributes blobAttributes = new BlobAttributes();
         blobAttributes.setUploadUrl(blobUploadUrl);

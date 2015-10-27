@@ -20,14 +20,19 @@ import ifn701.safeguarder.backend.myApi.model.User;
 import ifn701.safeguarder.webservices.ISignupService;
 import ifn701.safeguarder.webservices.SignupService;
 
-public class SignupActivity extends AppCompatActivity implements ISignupService  {
+public class SignupActivity extends AppCompatActivity implements ISignupService {
     private static final String TAG = "SignupActivity";
 
-    @InjectView(R.id.input_name) EditText _nameText;
-    @InjectView(R.id.input_email) EditText _emailText;
-    @InjectView(R.id.input_password) EditText _passwordText;
-    @InjectView(R.id.btn_signup) Button _signupButton;
-    @InjectView(R.id.link_login) TextView _loginLink;
+    @InjectView(R.id.input_name)
+    EditText _nameText;
+    @InjectView(R.id.input_email)
+    EditText _emailText;
+    @InjectView(R.id.input_password)
+    EditText _passwordText;
+    @InjectView(R.id.btn_signup)
+    Button _signupButton;
+    @InjectView(R.id.link_login)
+    TextView _loginLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,14 +66,14 @@ public class SignupActivity extends AppCompatActivity implements ISignupService 
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText nameEdit = (EditText)findViewById(R.id.input_name);
-                EditText registeremailEdit = (EditText)findViewById(R.id.input_email);
-                EditText passEdit = (EditText)findViewById(R.id.input_password);
+                EditText nameEdit = (EditText) findViewById(R.id.input_name);
+                EditText registeremailEdit = (EditText) findViewById(R.id.input_email);
+                EditText passEdit = (EditText) findViewById(R.id.input_password);
                 String email = registeremailEdit.getText().toString();
                 String password = passEdit.getText().toString();
                 String name = nameEdit.getText().toString();
-                SignupService signup = new SignupService((ISignupService) SignupActivity.this);
-                signup.execute(name,email,password);
+                SignupService signup = new SignupService(SignupActivity.this);
+                signup.execute(name, email, password);
                 validate();
 //                signup();
             }
@@ -165,8 +170,13 @@ public class SignupActivity extends AppCompatActivity implements ISignupService 
 
 
     @Override
-       public void processUserSignup(User user) {
-
+    public void processUserSignup(User user) {
+        if(user == null) {
+            Toast.makeText(SignupActivity.this, R.string.email_is_used, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Toast.makeText(SignupActivity.this, R.string.new_account_created, Toast.LENGTH_SHORT).show();
+        finish();
 //        if(user != null){
 //            UserInfoPreferences userInfoPreferences = new UserInfoPreferences(getApplicationContext());
 //            userInfoPreferences.setEmail(user.getEmail());

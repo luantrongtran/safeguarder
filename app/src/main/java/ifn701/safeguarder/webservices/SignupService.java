@@ -42,7 +42,7 @@ public class SignupService extends AsyncTask<String, Void, User> {
 
     @Override
     protected void onPostExecute(User user) {
-        System.out.println("User Exists");
+        //System.out.println("User Exists");
         interfaceSignupService.processUserSignup(user);
     }
 }
