@@ -52,8 +52,8 @@ public class AccidentManager {
     NewAccidentWithinHomeLocationSharedPreferences newAccidentHomeLocation;
 
     //Id used for each accident type within SharedPreferences
-    public static String[] sharedPreferencesIds = {"aviation", "criminal", "earthquake", "ferry",
-            "industry", "traffic", "weather"};
+    public static String[] sharedPreferencesIds = {"aviation accident", "criminal", "earthquake", "ferry accident",
+            "industry accident", "traffic accident", "weather accident"};
 
     public AccidentManager(Context context) {
         accidentList = new AccidentList();

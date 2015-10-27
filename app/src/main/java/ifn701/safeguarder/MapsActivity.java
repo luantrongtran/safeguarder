@@ -400,6 +400,9 @@ public class MapsActivity extends AppCompatActivity
                 updateAccidentsInRange();//Update accidents within the range after settings had changed
                 userDrawer.updateCurrentLocationInterestedArea();
                 userDrawer.updateHomeLocation();
+            }
+            else if(requestCode == LeftMenuAdapter.EVENT_FILTER_SETTING) {
+                updateAccidentsInRange();//Update accidents after filter's changing
             } else if (requestCode == LeftMenuAdapter.NOTIFICATION_LIST) {
                 double lat = data.getDoubleExtra(
                         Constants.notification_activity_intent_result_accident_lat,
@@ -444,7 +447,7 @@ public class MapsActivity extends AppCompatActivity
 
         setUpMapIfNeeded();
 
-        updateGooglePlaces(); //Update health services
+        //updateGooglePlaces(); //Update health services
         updateAccidentsInRange();//Update accidents within the range
         userDrawer = new UserDrawer(getApplicationContext(), mMap);
         updateToolBar();
@@ -673,7 +676,7 @@ public class MapsActivity extends AppCompatActivity
 
             userDrawer.updateCurrentLocationInterestedArea();//draw the radius
 
-            updateGooglePlaces(); //Update health services
+            //updateGooglePlaces(); //Update health services
 
             updateAccidentsInRange();//Update accidents within the range
         }

@@ -10,7 +10,7 @@ public class  Constants {
 
     //for development environment
     public static String computerName = "lua";
-    public static String IPAddress = "172.19.48.43";
+    public static String IPAddress = "192.168.0.101";
 
     public static String GoogleCloudBucket = "safeguarder";
 

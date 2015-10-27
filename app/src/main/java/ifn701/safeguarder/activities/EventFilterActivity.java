@@ -44,7 +44,13 @@ public class EventFilterActivity extends AppCompatActivity {
                 ListAdapter listAdapter = listView.getAdapter();
                 for(int i = 0; i < listAdapter.getCount(); i++) {
                     View view = listView.getChildAt(i);
+                    if(view == null) {
+                        continue;
+                    }
                     CheckBox cb = (CheckBox)view.findViewById(R.id.cbAccidentFilter);
+                    if(cb == null) {
+                        continue;
+                    }
                     cb.setChecked(isChecked);
                 }
             }
