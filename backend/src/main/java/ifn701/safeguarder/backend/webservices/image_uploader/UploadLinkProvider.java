@@ -25,7 +25,7 @@ public class UploadLinkProvider  {
     @ApiMethod (name = "getUploadUrl")
     public BlobAttributes getUploadUrl() {
         BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-        String blobUploadUrl = blobstoreService.createUploadUrl("/upload");
+        String blobUploadUrl = blobstoreService.createUploadUrl("/uploadimages");
 
         if (SystemProperty.environment.value() !=
                 SystemProperty.Environment.Value.Production) {

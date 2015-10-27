@@ -319,18 +319,19 @@ public class ReportActivity extends AppCompatActivity implements IAccidentServic
 
     @Override
     public void onImagesUploaded(BlobImageArray blobImageArray) {
-        List<BlobImage> lst = blobImageArray.data;
-        for(int i = 0; i < lst.size(); i++) {
-            BlobImage blobImage = lst.get(i);
-            if(i == 0) {
-                accident.setImage1(blobImage.servingUrl);
-            } else if(i == 1) {
-                accident.setImage2(blobImage.servingUrl);
-            } else if (i == 2) {
-                accident.setImage3(blobImage.servingUrl);
+        if(blobImageArray != null) {
+            List<BlobImage> lst = blobImageArray.data;
+            for (int i = 0; i < lst.size(); i++) {
+                BlobImage blobImage = lst.get(i);
+                if (i == 0) {
+                    accident.setImage1(blobImage.servingUrl);
+                } else if (i == 1) {
+                    accident.setImage2(blobImage.servingUrl);
+                } else if (i == 2) {
+                    accident.setImage3(blobImage.servingUrl);
+                }
             }
         }
-
         //Make sure there is no null value
         if(accident.getImage1() == null) {
             accident.setImage1("");

@@ -516,7 +516,7 @@ public class MapsActivity extends AppCompatActivity
         // Get longitude of the current location
         double longitude = myLocation.getLongitude();
 
-//        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
+        GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
         // Create a LatLng object for the current location
         LatLng latLng = new LatLng(latitude, longitude);
 
