@@ -1,7 +1,7 @@
 /**
  * References http://android-developers.blogspot.com.au/2011/06/deep-dive-into-location.html
  */
-package ifn701.safeguarder;
+package ifn701.safeguarder.activities;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -52,9 +52,14 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import ifn701.safeguarder.AccidentManager;
+import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.CustomSharedPreferences.NewAccidentWithinCurrentLocationSharedPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.NewAccidentWithinHomeLocationSharedPreferences;
-import ifn701.safeguarder.activities.CustomWindowInfoAdapter;
+import ifn701.safeguarder.GPSTracker;
+import ifn701.safeguarder.HealthServicesManager;
+import ifn701.safeguarder.R;
+import ifn701.safeguarder.UserDrawer;
 
 import java.io.IOException;
 import java.util.List;
@@ -68,12 +73,7 @@ import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
 import ifn701.safeguarder.Observation.ObservationList;
 import ifn701.safeguarder.Parcelable.AccidentListParcelable;
-import ifn701.safeguarder.activities.EventFilterActivity;
-import ifn701.safeguarder.activities.LeftMenuAdapter;
-import ifn701.safeguarder.activities.NotificationActivity;
 //import ifn701.safeguarder.activities.Logout;
-import ifn701.safeguarder.activities.ReportActivity;
-import ifn701.safeguarder.activities.ZoneSettingActivity;
 import ifn701.safeguarder.backend.myApi.model.AccidentList;
 import ifn701.safeguarder.backend.myApi.model.ResultCode;
 import ifn701.safeguarder.backgroundservices.LocationAutoTracker;

@@ -23,6 +23,7 @@ import ifn701.safeguarder.backend.dao.UserDao;
 import ifn701.safeguarder.backend.entities.ResultCode;
 
 /**
+ * This class is an example
  * An endpoint class we are exposing
  */
 @Api(

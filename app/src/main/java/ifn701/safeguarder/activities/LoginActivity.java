@@ -1,30 +1,23 @@
-package ifn701.safeguarder;
+package ifn701.safeguarder.activities;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.wallet.wobs.LabelValue;
-
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import ifn701.safeguarder.Constants;
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
+import ifn701.safeguarder.R;
+import ifn701.safeguarder.SignupActivity;
 import ifn701.safeguarder.backend.myApi.model.User;
 import ifn701.safeguarder.webservices.ILoginService;
 import ifn701.safeguarder.webservices.LoginService;

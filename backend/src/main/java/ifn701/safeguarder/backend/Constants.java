@@ -8,13 +8,12 @@ public class  Constants {
 
     public static String jsp_prefix = "/WEB-INF/jsp/";
 
-    //for development environment
+    //for development environment (localhost)
     public static String computerName = "lua";
     public static String IPAddress = "192.168.0.101";
 
+    //Google datastore bucket name
     public static String GoogleCloudBucket = "safeguarder";
-
-    public static int administrator_id = 0;
 
     public static String session_user_id = "userid";
 

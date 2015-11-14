@@ -7,10 +7,8 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -20,7 +18,7 @@ import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.NewAccidentWithinCurrentLocationSharedPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.NewAccidentWithinHomeLocationSharedPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
-import ifn701.safeguarder.MapsActivity;
+import ifn701.safeguarder.activities.MapsActivity;
 import ifn701.safeguarder.R;
 import ifn701.safeguarder.backend.myApi.model.Accident;
 

@@ -1,4 +1,4 @@
-package ifn701.safeguarder;
+package ifn701.safeguarder.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 //import ifn701.safeguarder.backend.entities.accidentApi.model.*;
+import ifn701.safeguarder.R;
 import ifn701.safeguarder.webservices.AccidentService;
 import ifn701.safeguarder.webservices.IAccidentService;
 import ifn701.safeguarder.webservices.ISayHi;

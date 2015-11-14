@@ -1,8 +1,6 @@
 package ifn701.safeguarder;
 
 import android.content.Context;
-import android.location.Location;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -26,7 +24,7 @@ import ifn701.safeguarder.backend.myApi.model.Accident;
 import ifn701.safeguarder.backend.myApi.model.AccidentList;
 
 public class AccidentManager {
-    AccidentList accidentList;
+    public AccidentList accidentList;
 
     Vector<Marker> accidentMarkers;
     Context context;

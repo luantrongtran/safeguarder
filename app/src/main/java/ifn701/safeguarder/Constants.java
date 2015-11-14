@@ -1,7 +1,12 @@
 package ifn701.safeguarder;
 
 public class Constants {
-    public static String webServiceUrl = "https://safeguarder-1097.appspot.com/_ah/api/";//"http://192.168.0.101:8080/_ah/api/";//
+
+    //Localhost web service url
+    public static String webServiceUrl = "http://192.168.0.101:8080/_ah/api/";
+
+    //Google app engine webservice url (change according to the url where webservice deployed)
+//    public static String webServiceUrl = "https://safeguarder-1097.appspot.com/_ah/api/";
 
     public static String APPLICATION_ID = "safeguarder";
 

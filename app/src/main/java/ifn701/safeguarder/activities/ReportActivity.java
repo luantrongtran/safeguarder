@@ -28,7 +28,6 @@ import java.util.Locale;
 import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.GPSTracker;
-import ifn701.safeguarder.MapsActivity;
 import ifn701.safeguarder.R;
 import ifn701.safeguarder.backend.myApi.model.Accident;
 import ifn701.safeguarder.entities.MyOnItemSelectedListener;
