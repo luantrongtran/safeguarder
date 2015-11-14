@@ -123,12 +123,12 @@
             android:label="@string/title_activity_report" >
         </activity>
         <activity
-            android:name=".Observation.ObservationDetailed"
+            android:name=".activities.Observation.ObservationDetailed"
             android:label="@string/title_activity_observation_detailed"
             android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
-            android:name=".Observation.ObservationList"
+            android:name=".activities.Observation.ObservationList"
             android:label="@string/title_activity_observation_list" >
         </activity>
         <activity

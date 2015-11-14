@@ -71,7 +71,7 @@ import java.util.concurrent.TimeoutException;
 import ifn701.safeguarder.CustomSharedPreferences.CurrentLocationPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserInfoPreferences;
 import ifn701.safeguarder.CustomSharedPreferences.UserSettingsPreferences;
-import ifn701.safeguarder.Observation.ObservationList;
+import ifn701.safeguarder.activities.Observation.ObservationList;
 import ifn701.safeguarder.Parcelable.AccidentListParcelable;
 //import ifn701.safeguarder.activities.Logout;
 import ifn701.safeguarder.backend.myApi.model.AccidentList;

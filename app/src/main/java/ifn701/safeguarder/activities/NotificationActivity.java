@@ -13,11 +13,9 @@ import android.widget.TextView;
 import java.util.List;
 
 import ifn701.safeguarder.Constants;
-import ifn701.safeguarder.Observation.AccidentListAdapter;
-import ifn701.safeguarder.Observation.ObservationDetailed;
+import ifn701.safeguarder.activities.Observation.AccidentListAdapter;
 import ifn701.safeguarder.R;
 import ifn701.safeguarder.backend.myApi.model.Accident;
-import ifn701.safeguarder.backend.myApi.model.AccidentList;
 import ifn701.safeguarder.webservices.GetNotificationListService;
 import ifn701.safeguarder.webservices.IGetNotificationListService;
 

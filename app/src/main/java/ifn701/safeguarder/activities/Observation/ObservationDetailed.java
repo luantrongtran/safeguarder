@@ -1,4 +1,4 @@
-package ifn701.safeguarder.Observation;
+package ifn701.safeguarder.activities.Observation;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,23 +11,18 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import ifn701.safeguarder.Constants;
-import ifn701.safeguarder.ImageDownloader;
 import ifn701.safeguarder.R;
 import ifn701.safeguarder.backend.myApi.model.Accident;
 import ifn701.safeguarder.webservices.GetAccidentService;

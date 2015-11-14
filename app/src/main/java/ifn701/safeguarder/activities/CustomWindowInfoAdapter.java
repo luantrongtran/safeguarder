@@ -5,18 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import ifn701.safeguarder.Constants;
-import ifn701.safeguarder.Observation.ObservationDetailed;
+import ifn701.safeguarder.activities.Observation.ObservationDetailed;
 import ifn701.safeguarder.R;
 import ifn701.safeguarder.Utilities;
 import ifn701.safeguarder.backend.myApi.model.Accident;
@@ -32,7 +28,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
